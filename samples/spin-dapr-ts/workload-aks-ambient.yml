@@ -15,7 +15,7 @@ spec:
       runtimeClassName: wasmtime-spin-v2
       containers:
         - name: distributor
-          image: { will be replace by deployment script }
+          image: { will be replaced by deployment script }
           command: ["/"]
           env:
             - name: SPIN_VARIABLE_DAPR_URL
@@ -44,7 +44,7 @@ spec:
       runtimeClassName: wasmtime-spin-v2
       containers:
         - name: receiver-express
-          image: { will be replace by deployment script }
+          image: { will be replaced by deployment script }
           command: ["/"]
           env:
             - name: DAPR_URL
@@ -73,7 +73,7 @@ spec:
       runtimeClassName: wasmtime-spin-v2
       containers:
         - name: receiver-standard
-          image: { will be replace by deployment script }
+          image: { will be replaced by deployment script }
           command: ["/"]
           env:
             - name: DAPR_URL
