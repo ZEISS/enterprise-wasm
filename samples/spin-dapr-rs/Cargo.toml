@@ -1,0 +1,20 @@
+[package]
+name = "spin-dapr-rs"
+authors = ["Kai Walter <kai.walter@outlook.de>"]
+description = ""
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = [ "cdylib" ]
+
+[dependencies]
+anyhow = "1"
+http = "0.2"
+json = "0.12.4"
+serde = { version = "1.0.193", features = ["derive"] }
+serde_derive = "1.0.193"
+spin-sdk = { git = "https://github.com/fermyon/spin", branch = "main" }
+url = "*"
+
+[workspace]

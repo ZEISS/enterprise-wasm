@@ -1,0 +1,26 @@
+spin_manifest_version = 2
+
+[application]
+name = "spin-dapr-rs"
+version = "0.1.0"
+authors = ["Kai Walter <kai.walter@outlook.de>"]
+description = ""
+
+# here the potential variables are to be defined
+[variables]
+dapr_url = { default = "http://localhost:3500" }
+
+[[trigger.http]]
+route = "/..."
+component = "spin-dapr-rs"
+
+[component.spin-dapr-rs]
+source = "target/wasm32-wasi/release/spin_dapr_rs.wasm"
+allowed_outbound_hosts = [ "http://localhost:*" ]
+
+[component.spin-dapr-rs.variables]
+dapr_url = "{{dapr_url}}"
+
+[component.spin-dapr-rs.build]
+command = "cargo build --target wasm32-wasi --release"
+watch = ["src/**/*.rs", "Cargo.toml"]
