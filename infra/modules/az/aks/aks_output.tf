@@ -11,5 +11,9 @@ output "NODE_RESOURCE_GROUP" {
 }
 
 output "KUBE_ADMIN_CONFIG" {
+  value = azurerm_kubernetes_cluster.aks.kube_admin_config
+}
+
+output "KUBE_ADMIN_CONFIG_RAW" {
   value = azurerm_kubernetes_cluster.aks.kube_admin_config_raw
 }

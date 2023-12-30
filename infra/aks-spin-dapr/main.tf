@@ -71,3 +71,18 @@ module "storage" {
   tags                = var.tags
   resource_prefix     = local.base_name
 }
+
+module "dapr" {
+  count               = var.dapr_deploy ? 1 : 0
+  source              = "../modules/az/dapr"
+  resource_group_name = azurerm_resource_group.rg.name
+  cluster_name        = module.aks.CLUSTER_NAME
+  dapr_namespace      = var.dapr_namespace
+  dapr_version        = var.dapr_version
+  providers = {
+    helm = helm
+  }
+  depends_on = [
+    module.aks
+  ]
+}

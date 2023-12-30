@@ -65,3 +65,21 @@ variable "user_nodepools" {
     taints = []
   }]
 }
+
+variable "dapr_deploy" {
+  type        = bool
+  default     = false
+  description = "Indicate whether to deploy Dapr directly with cluster"
+}
+
+variable "dapr_version" {
+  type        = string
+  default     = "1.12.2"
+  description = "Dapr version to install with Helm charts"
+}
+
+variable "dapr_namespace" {
+  type        = string
+  default     = "dapr-system"
+  description = "Kubernetes namespace to install Dapr in"
+}
