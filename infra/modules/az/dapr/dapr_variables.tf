@@ -10,7 +10,7 @@ variable "resource_group_name" {
 
 variable "dapr_version" {
   type        = string
-  default     = "1.12.2"
+  default     = "1.10.10"
   description = "Dapr version to install with Helm charts"
 }
 

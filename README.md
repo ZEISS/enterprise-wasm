@@ -52,3 +52,9 @@ All infrastructure in this repository is defined with [Terraform templates](http
 optional:
 
 - [terraform-docs](https://terraform-docs.io/user-guide/installation/) >= `0.16.0`
+
+## Sample Workloads
+
+| sample                | infrastructure                    | workload                           |
+| --------------------- | --------------------------------- | ---------------------------------- |
+| Spin with Dapr on AKS | <./infra/aks-spin-dapr/README.md> | <./samples/spin-dapr-ts/README.md> |

@@ -1,0 +1,20 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: express-outbox
+spec:
+  type: bindings.azure.blobstorage
+  version: v1
+  metadata:
+    - name: accountName
+      secretKeyRef:
+        name: STORAGE_NAME
+        key: STORAGE_NAME
+    - name: accountKey
+      secretKeyRef:
+        name: STORAGE_ACCOUNT_KEY
+        key: STORAGE_ACCOUNT_KEY
+    - name: containerName
+      value: express-outbox
+auth:
+  secretStore: secretfile

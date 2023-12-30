@@ -17,3 +17,17 @@ variable "tags" {
   description = "A list of tags used for deployed services."
   type        = map(string)
 }
+
+variable "queues" {
+  type = list(object({
+    name = string
+  }))
+  default = []
+}
+
+variable "topics" {
+  type = list(object({
+    name = string
+  }))
+  default = []
+}

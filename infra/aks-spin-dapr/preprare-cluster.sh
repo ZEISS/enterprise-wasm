@@ -19,10 +19,16 @@ az acr build --registry $AZURE_CONTAINER_REGISTRY_NAME \
   --image shim-install:latest \
   $REPO_ROOT/../spin-containerd-shim-installer/image/
 
+# make and build Dapr Ambient image
+pushd $REPO_ROOT/../dapr-ambient
+make release
+popd
+
 az acr build --registry $AZURE_CONTAINER_REGISTRY_NAME \
   --image dapr-ambient:latest \
   $REPO_ROOT/../dapr-ambient/
 
+# install Spin ContainerD Shim from local chart with own image
 helm upgrade --install spin-containerd-shim-installer $REPO_ROOT/../spin-containerd-shim-installer/chart \
   -n kube-system \
   --set image.registry=$AZURE_CONTAINER_REGISTRY_ENDPOINT \

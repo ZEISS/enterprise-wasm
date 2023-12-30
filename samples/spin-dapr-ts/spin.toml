@@ -1,0 +1,27 @@
+spin_manifest_version = 2
+
+[application]
+authors = ["Kai Walter <kai.walter@outlook.de>"]
+description = "Test Dapr with Spin"
+name = "spin-dapr-ts"
+version = "0.1.0"
+
+# here the potential variables are to be defined
+[variables]
+dapr_url = { default = "http://localhost:3500" }
+
+[[trigger.http]]
+route = "/..."
+component = "spin-dapr-ts"
+
+[component.spin-dapr-ts]
+source = "target/spin-dapr-ts.wasm"
+allowed_outbound_hosts = [ "http://distributor-dapr" ]
+exclude_files = ["**/node_modules"]
+
+# here variables are defined, that are passed on to component
+[component.spin-dapr-ts.variables]
+dapr_url = "{{dapr_url}}"
+
+[component.spin-dapr-ts.build]
+command = "npm run build"

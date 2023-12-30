@@ -66,6 +66,26 @@ variable "user_nodepools" {
   }]
 }
 
+variable "queues" {
+  type = list(object({
+    name = string
+  }))
+  default = [{
+    name = "q-order-ingress-spin"
+    }, {
+    name = "q-order-express-spin"
+    }, {
+    name = "q-order-standard-spin"
+  }]
+}
+
+variable "topics" {
+  type = list(object({
+    name = string
+  }))
+  default = []
+}
+
 variable "dapr_deploy" {
   type        = bool
   default     = false
@@ -74,7 +94,7 @@ variable "dapr_deploy" {
 
 variable "dapr_version" {
   type        = string
-  default     = "1.12.2"
+  default     = "1.10.10"
   description = "Dapr version to install with Helm charts"
 }
 
