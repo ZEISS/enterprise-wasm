@@ -94,7 +94,7 @@ variable "dapr_deploy" {
 
 variable "dapr_version" {
   type        = string
-  default     = "1.10.10"
+  default     = "1.11.6"
   description = "Dapr version to install with Helm charts"
 }
 
