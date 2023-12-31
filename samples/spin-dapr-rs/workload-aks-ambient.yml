@@ -47,8 +47,8 @@ spec:
           image: { will be replaced by deployment script }
           command: ["/"]
           env:
-            - name: DAPR_URL
-              value: "http://receiver-express-dapr:80"
+            - name: SPIN_VARIABLE_DAPR_URL
+              value: "http://receiver-express-dapr"
           livenessProbe:
             httpGet:
               path: .well-known/spin/health
@@ -76,8 +76,8 @@ spec:
           image: { will be replaced by deployment script }
           command: ["/"]
           env:
-            - name: DAPR_URL
-              value: "http://receiver-standard-dapr:80"
+            - name: SPIN_VARIABLE_DAPR_URL
+              value: "http://receiver-standard-dapr"
           livenessProbe:
             httpGet:
               path: .well-known/spin/health

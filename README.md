@@ -1,6 +1,8 @@
 # Enterprise WebAssembly
 
-Evaluate various WebAssembly back-end frameworks and tool-chains for enterprise workloads
+Evaluate various WebAssembly back-end frameworks and tool-chains for enterprise workloads.
+
+Intention is to create an environment similar to a [performance comparison between Dapr and Azure Functions](https://dev.to/kaiwalter/comparing-azure-functions-vs-dapr-on-azure-container-apps-2noh) to get a basic indication on the scaling and performance behavior of various setups.
 
 > STATUS : **UNDER CONSTRUCTION**
 

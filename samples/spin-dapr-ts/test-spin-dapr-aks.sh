@@ -39,30 +39,32 @@ echo -e "\r::: Dapr metadata indirect from Spin service :::"
 curl -v http://127.0.0.1:$LOCAL_SERVICE_PORT/dapr-metadata
 echo -e "\r"
 
-echo q-order-ingress Standard
-curl -X POST http://127.0.0.1:$LOCAL_DAPR_PORT/v1.0/bindings/q-order-ingress \
-  -H "Content-Type: application/json" \
-  -d '{
-        "data": {
-          "OrderId": 1,
-          "Delivery": "Standard"
-        },
-        "metadata": {
-          "ttlInSeconds": "60"
-        },
-        "operation": "create"
-      }'
+if [ "$SERVICE" = "distributor-svc" ]; then
+  echo q-order-ingress Standard
+  curl -X POST http://127.0.0.1:$LOCAL_DAPR_PORT/v1.0/bindings/q-order-ingress \
+    -H "Content-Type: application/json" \
+    -d '{
+          "data": {
+            "orderId": 1,
+            "delivery": "Standard"
+          },
+          "metadata": {
+            "ttlInSeconds": "60"
+          },
+          "operation": "create"
+        }'
 
-echo q-order-ingress Express
-curl -X POST http://127.0.0.1:$LOCAL_DAPR_PORT/v1.0/bindings/q-order-ingress \
-  -H "Content-Type: application/json" \
-  -d '{
-        "data": {
-          "OrderId": 2,
-          "Delivery": "Express"
-        },
-        "metadata": {
-          "ttlInSeconds": "60"
-        },
-        "operation": "create"
-      }'
+  echo q-order-ingress Express
+  curl -X POST http://127.0.0.1:$LOCAL_DAPR_PORT/v1.0/bindings/q-order-ingress \
+    -H "Content-Type: application/json" \
+    -d '{
+          "data": {
+            "orderId": 2,
+            "delivery": "Express"
+          },
+          "metadata": {
+            "ttlInSeconds": "60"
+          },
+          "operation": "create"
+        }'
+fi
