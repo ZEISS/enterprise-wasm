@@ -34,8 +34,8 @@ yq eval ".spec|=select(.selector.matchLabels.app==\"receiver-standard\")
 kubectl apply -f -
 
 if [ $PATTERN = 'ambient' ]; then
-  apps=("distributor")
-  # apps=("distributor" "receiver-express" "receiver-standard")
+
+  apps=("distributor" "receiver-express" "receiver-standard")
 
   for app in "${apps[@]}"
   do
