@@ -1,7 +1,7 @@
 apiVersion: dapr.io/v1alpha1
 kind: Component
 metadata:
-  name: q-order-standard-out
+  name: q-order-express-out
 spec:
   type: bindings.azure.servicebusqueues
   version: v1
@@ -11,7 +11,7 @@ spec:
         name: SERVICEBUS_CONNECTION
         key: SERVICEBUS_CONNECTION
     - name: queueName
-      value: q-order-standard-spin
+      value: q-order-express-spin
     - name: direction
       value: output
 auth:

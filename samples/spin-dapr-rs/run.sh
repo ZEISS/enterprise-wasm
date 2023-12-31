@@ -25,7 +25,7 @@ echo $JSON_STRING > ./.secrets.json
 dapr run --app-id ${APP_ID} \
     --app-port ${APP_PORT} \
     --dapr-http-port ${DAPR_HTTP_PORT} \
-    --log-level warn \
+    --log-level info \
     --enable-app-health-check \
     --app-health-probe-interval 60 \
     --app-health-check-path=/healthz \

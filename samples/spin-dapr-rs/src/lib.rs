@@ -1,53 +1,75 @@
-use http::Request;
 use spin_sdk::{
     http::{
-        send, IncomingResponse, IntoResponse, Json, Method, Params, RequestBuilder, Response,
+        send, IncomingResponse, IntoResponse, Method, Params, Request, RequestBuilder, Response,
         Router,
     },
     http_component, variables,
 };
 
-#[derive(serde::Deserialize, Debug)]
+#[derive(serde::Serialize, serde::Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
 struct Order {
-    name: String,
+    order_id: u32,
+    delivery: String,
+}
+
+#[derive(serde::Serialize)]
+struct OutboundMessage {
+    data: Order,
+    operation: String,
+}
+
+impl OutboundMessage {
+    pub fn new(data: Order) -> Self {
+        Self {
+            data,
+            operation: "create".to_owned(),
+        }
+    }
 }
 
 #[http_component]
-async fn handle_route(req: Request<()>) -> Response {
+async fn handle_route(req: Request) -> Response {
     let mut router = Router::new();
     router.get("/healthz", health);
     router.post_async("/q-order-ingress", ingress);
     router.handle(req)
 }
 
-fn health(_req: Request<()>, _param: Params) -> anyhow::Result<impl IntoResponse> {
+fn health(_req: Request, _param: Params) -> anyhow::Result<impl IntoResponse> {
     Ok(Response::new(200, format!("Healthy")))
 }
 
-async fn ingress(
-    req: http::Request<Json<Order>>,
-    _param: Params,
-) -> anyhow::Result<impl IntoResponse> {
-    let dapr_url = variables::get("dapr_url")?;
+async fn ingress(req: http::Request<String>, _param: Params) -> anyhow::Result<impl IntoResponse> {
+    match serde_json::from_str::<Order>(req.body()) {
+        Ok(order) => {
+            let outbound_message = OutboundMessage::new(order);
 
-    println!("name: {}", req.body().name);
-    println!("dapr_url: {}", dapr_url);
+            let body = serde_json::to_string(&outbound_message)?;
+            println!("body {}", body);
 
-    let request = RequestBuilder::new(Method::Post, "/v1.0/bindings/q-order-standard")
-        .uri(dapr_url)
-        .method(Method::Post)
-        .body("xx")
-        .build();
+            let dapr_url = variables::get("dapr_url")?;
+            let mut url = url::Url::parse(&dapr_url)?;
+            url.set_path("v1.0/bindings/q-order-standard-out");
 
-    let response: IncomingResponse = match send(request).await {
-        Ok(response) => response,
-        Err(_) => panic!("error when calling outbound binding"),
-    };
+            let request = RequestBuilder::new(Method::Post, url.as_str())
+                .body(body)
+                .build();
 
-    let status = response.status();
-    Ok(Response::builder()
-        .status(200)
-        .header("content-type", "text/plain")
-        .body(format!("response status: {status}"))
-        .build())
+            let response: IncomingResponse = send(request).await?;
+            let status = response.status();
+
+            Ok(Response::builder()
+                .status(status)
+                .header("content-type", "text/plain")
+                .body(format!("response status: {status}"))
+                .build())
+        }
+
+        Err(e) => Ok(Response::builder()
+            .status(400)
+            .header("content-type", "text/plain")
+            .body(format!("invalid Order body {}", e))
+            .build()),
+    }
 }
