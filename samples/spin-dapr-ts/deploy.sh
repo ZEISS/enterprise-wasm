@@ -49,9 +49,7 @@ if [ $PATTERN = 'ambient' ]; then
       --set ambient.remoteURL=$app-svc \
       --set ambient.remotePort=80 \
       --set ambient.serviceAccount.name=$app \
-      --set ambient.daprd.listenAddresses=127.0.0.1
-
-      # --set ambient.controlPlane.sentryAddress=dapr-sentry.dapr-system.svc.cluster.local:80
+      --set ambient.daprd.listenAddresses=0.0.0.0
 
   done
 fi
