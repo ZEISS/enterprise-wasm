@@ -1,3 +1,4 @@
 target/
 .spin/
 .secrets.json
+.dapr

@@ -4,15 +4,26 @@ set -e
 
 # curl -v http://localhost:3500/v1.0/metadata
 
-# curl -v http://localhost:3000/q-order-ingress \
-#   -H "Content-Type: application/json" \
-#   -d '{ "name": "Hi" }'
+curl -v http://localhost:3001/dapr-metadata
 
-curl -v http://localhost:3500/v1.0/bindings/q-order-ingress \
+curl -v http://localhost:3501/v1.0/bindings/q-order-ingress \
   -H "Content-Type: application/json" \
   -d '{
         "data": {
           "orderId": 1,
+          "delivery": "Express"
+        },
+        "metadata": {
+          "ttlInSeconds": "60"
+        },
+        "operation": "create"
+      }'
+
+curl -v http://localhost:3501/v1.0/bindings/q-order-ingress \
+  -H "Content-Type: application/json" \
+  -d '{
+        "data": {
+          "orderId": 2,
           "delivery": "Standard"
         },
         "metadata": {
@@ -20,3 +31,4 @@ curl -v http://localhost:3500/v1.0/bindings/q-order-ingress \
         },
         "operation": "create"
       }'
+
