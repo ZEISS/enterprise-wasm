@@ -8,7 +8,23 @@ spin build
 
 ## verify
 
-### run single instance covering all workloads
+### run with local resources and Dapr multi run
+
+> based on **Azurite** local Azure storage and queue emulator
+
+in 1st terminal session
+
+```
+./run-local-resources.sh
+```
+
+in 2nd terminal session
+
+```
+./test-local-binding.sh
+```
+
+### run single instance covering all workloads with Azure resources
 
 in 1st terminal session
 
@@ -19,19 +35,13 @@ in 1st terminal session
 in 2nd terminal session
 
 ```
-./test-binding.sh
+./test-local-binding.sh
 ```
 
-### run separate instances with Dapr multi run
-
-in 1st terminal session
+### build & run on AKS with Azure resources
 
 ```
-dapr run -f dapr-multi-run.yml
-```
-
-in 2nd terminal session
-
-```
-./test-binding.sh
+./build.sh
+./deploy.sh
+./test-spin-dapr-aks.sh
 ```
