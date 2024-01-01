@@ -16,13 +16,13 @@ struct Order {
 
 #[derive(serde::Serialize)]
 #[serde(rename_all = "camelCase")]
-struct OutboundMessage {
-    data: Order,
+struct OutboundMessage<'a> {
+    data: &'a Order,
     operation: String,
 }
 
-impl OutboundMessage {
-    pub fn new(data: Order) -> Self {
+impl<'a> OutboundMessage<'a> {
+    pub fn new(data: &'a Order) -> Self {
         Self {
             data,
             operation: "create".to_owned(),
@@ -37,16 +37,16 @@ struct OutboxMetadata {
 }
 
 #[derive(serde::Serialize)]
-struct OutboxCreate {
-    data: Order,
+struct OutboxCreate<'a> {
+    data: &'a Order,
     operation: String,
     metadata: OutboxMetadata,
 }
 
-impl OutboxCreate {
-    pub fn new(order: Order) -> Self {
+impl<'a> OutboxCreate<'a> {
+    pub fn new(order: &'a Order) -> Self {
         Self {
-            data: order.clone(),
+            data: order,
             operation: "create".to_owned(),
             metadata: OutboxMetadata {
                 blob_name: order.order_id.to_string(),
@@ -97,7 +97,7 @@ async fn distributor(
             let mut url = url::Url::parse(&dapr_url)?;
             url.set_path(&path);
 
-            let outbound_message = OutboundMessage::new(order);
+            let outbound_message = OutboundMessage::new(&order);
             let body = serde_json::to_string(&outbound_message)?;
             println!("Distributor body {}", body);
 
@@ -133,7 +133,7 @@ async fn receiver(req: http::Request<String>, _param: Params) -> anyhow::Result<
             let mut url = url::Url::parse(&dapr_url)?;
             url.set_path(&path);
 
-            let outbox_create = OutboxCreate::new(order);
+            let outbox_create = OutboxCreate::new(&order);
             let body = serde_json::to_string(&outbox_create)?;
             println!("Receiver body {}", body);
 
