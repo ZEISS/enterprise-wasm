@@ -4,21 +4,23 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "npx tsc && node dist/app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "npx tsc",
+    "start": "npx tsc && dapr run --app-id=test-data --dapr-http-port=3500 --app-port=3000 --resources-path ./components/ -- node dist/app.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/faker": "^6.6.9",
+    "@types/node": "^20.10.6",
     "@typescript-eslint/eslint-plugin": "^6.16.0",
     "@typescript-eslint/parser": "^6.16.0",
     "eslint": "^8.56.0",
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@faker-js/faker": "^8.3.1",
-    "dapr-client": "^3.2.0"
+    "@billjs/query-string": "^1.0.2",
+    "@dapr/dapr": "^3.2.0",
+    "@faker-js/faker": "^8.3.1"
   }
 }

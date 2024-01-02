@@ -4,12 +4,8 @@
       "module": "commonjs",
       "esModuleInterop": true,
       "outDir": "dist",
+      "rootDir":"src",
+      "esModuleInterop":true,
       "sourceMap": true
-    },
-    "include": [
-      "src/*.ts"
-    ],
-    "exclude": [
-      "node_modules"
-    ]
-  } 
+    }
+} 
