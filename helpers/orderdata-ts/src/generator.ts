@@ -1,12 +1,12 @@
 import { faker } from "@faker-js/faker";
 
-interface OrderItem {
+export interface OrderItem {
   orderItemId: number;
   sku: string;
   quantity: number;
 }
 
-interface OrderHeader {
+export interface OrderHeader {
   orderId: number;
   orderGuid: string;
   description: string;
@@ -42,8 +42,8 @@ function createRandomOrder(): OrderHeader {
   };
 }
 
-let orders: OrderHeader[] = faker.helpers.multiple(createRandomOrder, {
-  count: 5,
-});
-
-console.log(JSON.stringify(orders));
+export function generateOrders(count: number): OrderHeader[] {
+  return faker.helpers.multiple(createRandomOrder, {
+    count: count,
+  });
+}
