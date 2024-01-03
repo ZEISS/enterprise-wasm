@@ -8,10 +8,28 @@ use spin_sdk::{
 
 #[derive(serde::Serialize, serde::Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
-#[derive(Clone)]
+struct OrderItem {
+    order_item_id: u32,
+    sku: String,
+    quantity: u32,
+}
+
+#[derive(serde::Serialize, serde::Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+#[allow(dead_code)]
 struct Order {
     order_id: u32,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    order_guid: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    description: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    first_name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    last_name: Option<String>,
     delivery: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    items: Option<Vec<OrderItem>>,
 }
 
 #[derive(serde::Serialize)]
