@@ -40,6 +40,8 @@ in 2nd terminal session
 
 ### build & run on AKS with Azure resources
 
+> deploy infrastructure [from here](../../infra/aks-spin-dapr/README.md)
+
 ```
 ./build.sh
 ./deploy.sh

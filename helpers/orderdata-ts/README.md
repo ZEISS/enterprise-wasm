@@ -19,3 +19,11 @@ then in a final session generate test data to flow into the Rust sample
 ```
 curl -v -d '{"count":10}' http://localhost:3000/test-data -H 'Content-Type: application/json'
 ```
+
+## use with cloud resource Rust implementation
+
+> deploy all required Azure resources from [Rust sample](../../samples/spin-dapr-rs/README.md)
+
+```
+./run-aks-spin-dapr.sh
+```
