@@ -12,10 +12,13 @@ import { parse } from "querystring";
 const daprHost = process.env.DAPR_HTTP_HOST || "127.0.0.1";
 const daprPort = process.env.DAPR_HTTP_PORT || "3500";
 const serverHost = "127.0.0.1";
-const serverPort = "3000";
+const serverPort = process.env.PORT || "3000";
+
+async function getHealth(_data: DaprInvokerCallbackContent) {
+  return "Ok";
+}
 
 async function getTestdata(data: DaprInvokerCallbackContent) {
-  console.log(data.query);
   const query = parse(data.query.split("?")[1] || "");
   const count = Number(query["count"]) || 5;
 
@@ -24,17 +27,29 @@ async function getTestdata(data: DaprInvokerCallbackContent) {
 }
 
 async function postTestdata(data: DaprInvokerCallbackContent) {
-  const count = Number(JSON.parse(data.body)["count"]) || 5;
+  const body = JSON.parse(data.body);
+  const count = Number(body["count"]) || 5;
+  const scheduleDelayMinutes = Number(body["scheduleDelayMinutes"]) || 0;
 
   const client = new DaprClient({ daprHost, daprPort });
 
   const orders = generateOrders(count);
 
+  const metadata = {};
+  let responseBody = {};
+
+  if (scheduleDelayMinutes > 0) {
+    const utcTime = new Date(Date.now());
+    utcTime.setUTCMinutes(utcTime.getUTCMinutes() + scheduleDelayMinutes);
+    metadata["ScheduledEnqueueTimeUtc"] = utcTime.toISOString();
+    responseBody = { scheduledTimestamp: utcTime.toISOString() };
+  }
+
   orders.forEach((order) => {
-    client.binding.send("q-order-ingress", "create", order);
+    client.binding.send("q-order-ingress", "create", order, metadata);
   });
 
-  return orders;
+  return responseBody;
 }
 
 async function start() {
@@ -48,7 +63,9 @@ async function start() {
     },
   });
 
+  await server.invoker.listen("healthz", getHealth);
   await server.invoker.listen("test-data", getTestdata);
+
   await server.invoker.listen("test-data", postTestdata, {
     method: HttpMethod.POST,
   });

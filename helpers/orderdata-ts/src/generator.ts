@@ -16,8 +16,8 @@ export interface OrderHeader {
   items: OrderItem[];
 }
 
-let orderId = 0;
-let orderItemId = 0;
+let orderId: number = 0;
+let orderItemId: number = 0;
 
 function createRandomItems(): OrderItem {
   return {
@@ -43,6 +43,7 @@ function createRandomOrder(): OrderHeader {
 }
 
 export function generateOrders(count: number): OrderHeader[] {
+  orderId = 0;
   return faker.helpers.multiple(createRandomOrder, {
     count: count,
   });

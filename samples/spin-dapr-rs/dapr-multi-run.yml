@@ -30,3 +30,13 @@ apps:
     command: ["spin", "up", "--listen", "localhost:3003"]
     env:
       SPIN_VARIABLE_DAPR_URL: http://localhost:3503
+  - appID: test-data
+    appDirPath: ../../helpers/orderdata-ts/
+    resourcesPath: ./local-components
+    configFilePath: ./local-components/config.yaml
+    appProtocol: http
+    appPort: 3004
+    daprHTTPPort: 3504
+    command: ["node", "dist/app.js"]
+    env:
+      PORT: 3004

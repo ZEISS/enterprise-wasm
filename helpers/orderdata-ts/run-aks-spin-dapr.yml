@@ -1,0 +1,12 @@
+version: 1
+apps:
+  - appID: test-data
+    appDirPath: ../../helpers/orderdata-ts/
+    resourcesPath: ./cloud-components
+    appProtocol: http
+    appPort: 3001
+    daprHTTPPort: 3501
+    logLevel: WARN
+    command: ["node", "dist/app.js"]
+    env:
+      PORT: 3001

@@ -31,4 +31,6 @@ curl -v http://localhost:3501/v1.0/bindings/q-order-ingress \
         },
         "operation": "create"
       }'
-
+curl -v http://localhost:3004/test-data \
+  -H 'Content-Type: application/json' \
+  -d '{"count":5}' 
