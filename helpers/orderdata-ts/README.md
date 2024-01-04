@@ -1,8 +1,8 @@
 # Helper to generate test data
 
-## use with local resource Rust implementation
+## use with local resources / Rust implementation
 
-in one terminal session from folder `/samples/spin-dapr-rs` start
+in one terminal session from folder [/samples/spin-dapr-rs](../../samples/spin-dapr-rs/) start
 
 ```
 ./run-local-resources.sh
@@ -20,7 +20,7 @@ then in a final session generate test data to flow into the Rust sample
 curl -v -d '{"count":10}' http://localhost:3000/test-data -H 'Content-Type: application/json'
 ```
 
-## use with cloud resource Rust implementation
+## use with cloud resources / Rust implementation
 
 > deploy all required Azure resources from [Rust sample](../../samples/spin-dapr-rs/README.md)
 
