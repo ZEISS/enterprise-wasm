@@ -8,18 +8,25 @@ RESOURCE_GROUP_NAME=`terraform output -json script_vars | jq -r .resource_group`
 AZURE_CONTAINER_REGISTRY_NAME=`az resource list -g $RESOURCE_GROUP_NAME --resource-type Microsoft.ContainerRegistry/registries --query '[0].name' -o tsv`
 AZURE_CONTAINER_REGISTRY_ENDPOINT=`az acr show -n $AZURE_CONTAINER_REGISTRY_NAME --query loginServer -o tsv`
 
-#-- this does not get spin-v2 installed ...
-# helm upgrade --install spin-containerd-shim-installer oci://ghcr.io/fermyon/charts/spin-containerd-shim-installer \
-#   -n kube-system \
-#   --version 0.10.0 \
-#   --values ../../spin-k8s-bench/manifests/spin-values.yaml
+# ---- use installer from repo to get Spin v2
+az acr login -n $AZURE_CONTAINER_REGISTRY_NAME
 
-#-- ... hence install from repo
-az acr build --registry $AZURE_CONTAINER_REGISTRY_NAME \
-  --image shim-install:latest \
-  $REPO_ROOT/../spin-containerd-shim-installer/image/
+IMAGE_NAME=$AZURE_CONTAINER_REGISTRY_ENDPOINT/shim-install:latest
 
-# make and build Dapr Ambient image
+pushd $REPO_ROOT/../kwasm-node-installer/
+docker build --push -t $IMAGE_NAME -f images/installer/Dockerfile .
+popd
+
+cat $REPO_ROOT/../kwasm-node-installer/example/daemonset.yaml | \
+yq eval ".spec|=select(.selector.matchLabels.app==\"default-init\")
+    .template.spec.initContainers[0].image = \"$IMAGE_NAME\"" | \
+kubectl apply -f -
+kubectl apply -f ./runtimeclass.yaml
+
+# kubectl apply -f $REPO_ROOT/../kwasm-node-installer/example/debug.yaml
+# kubectl -it kwasm-debug-5mfzs -- ls -l /mnt/node-root/opt/kwasm/bin
+
+# # ---- make and build Dapr Ambient image
 pushd $REPO_ROOT/../dapr-ambient
 make release
 popd
@@ -27,10 +34,3 @@ popd
 az acr build --registry $AZURE_CONTAINER_REGISTRY_NAME \
   --image dapr-ambient:latest \
   $REPO_ROOT/../dapr-ambient/
-
-# install Spin ContainerD Shim from local chart with own image
-helm upgrade --install spin-containerd-shim-installer $REPO_ROOT/../spin-containerd-shim-installer/chart \
-  -n kube-system \
-  --set image.registry=$AZURE_CONTAINER_REGISTRY_ENDPOINT \
-  --set image.repository=shim-install \
-  --set image.tag=latest 
