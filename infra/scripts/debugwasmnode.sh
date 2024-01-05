@@ -1,2 +1,3 @@
 #!/bin/bash
-kubectl debug $(kubectl get node -l=agentpool=npspin -o name) -it --image=mcr.microsoft.com/dotnet/runtime-deps:6.0
+kubectl apply -f https://raw.githubusercontent.com/KWasm/kwasm-node-installer/main/example/debug.yaml
+kubectl exec -it $(kubectl get pod -l=name=kwasm-debug -o name) -- /bin/bash
