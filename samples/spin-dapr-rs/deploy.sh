@@ -35,7 +35,8 @@ kubectl apply -f -
 
 if [ $PATTERN = 'ambient' ]; then
 
-  apps=("distributor" "receiver-express" "receiver-standard")
+  # apps=("distributor" "receiver-express" "receiver-standard")
+  apps=("distributor")
 
   for app in "${apps[@]}"
   do
