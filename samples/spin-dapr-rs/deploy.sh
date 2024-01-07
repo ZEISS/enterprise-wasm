@@ -41,8 +41,10 @@ if [ $PATTERN = 'ambient' ]; then
   do
     echo "$app"
 
-    helm upgrade --install $app-dapr $REPO_ROOT/../dapr-ambient/chart/dapr-ambient/ \
+    helm upgrade --install $app-dapr $REPO_ROOT/../dapr-shared/chart/dapr-ambient/ \
       --set fullnameOverride=$app-dapr \
+      --set ambient.strategy=deployment \
+      --set ambient.deployment.replicas=3 \
       --set ambient.initContainer.image.registry=$AZURE_CONTAINER_REGISTRY_ENDPOINT \
       --set ambient.daprd.image.tag=1.11.6 \
       --set ambient.appId=$app \

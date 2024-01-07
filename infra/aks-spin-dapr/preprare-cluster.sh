@@ -19,8 +19,13 @@ done
 AZURE_CONTAINER_REGISTRY_ENDPOINT=`az acr show -n $AZURE_CONTAINER_REGISTRY_NAME --query loginServer -o tsv`
 
 # ---- install Wasm Shims
-kubectl apply -f https://raw.githubusercontent.com/KWasm/kwasm-node-installer/main/example/daemonset.yaml
+wget -q -O- https://raw.githubusercontent.com/KWasm/kwasm-node-installer/main/example/daemonset.yaml | \
+yq eval ".spec|=select(.selector.matchLabels.app==\"default-init\")
+    .template.spec.nodeSelector.agentpool = \"backend\"" | \
+kubectl apply -f -
+
 kubectl apply -f ./runtimeclass.yaml
+kubectl apply -f ./namespaces.yaml
 
 # ---- make and build Dapr Ambient image
 pushd $REPO_ROOT/../dapr-ambient

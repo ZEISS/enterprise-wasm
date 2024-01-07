@@ -49,7 +49,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "user_nodepools" {
 
   mode    = "User"
   os_type = "Linux"
-  os_sku  = "Ubuntu"
+  os_sku  = "Mariner"
 
   node_count = var.user_nodepools[count.index].node_count
 

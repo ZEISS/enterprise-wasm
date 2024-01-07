@@ -7,6 +7,11 @@ resource "helm_release" "dapr" {
   timeout          = 1200
 
   set {
+    name  = "global.nodeSelector.agentpool"
+    value = "default"
+  }
+
+  set {
     name  = "global.ha.enabled"
     value = "true"
   }
