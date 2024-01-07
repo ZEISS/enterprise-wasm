@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: distributor
 spec:
-  replicas: 1
+  replicas: 9
   selector:
     matchLabels:
       app: distributor
@@ -20,8 +20,64 @@ spec:
           env:
             - name: SPIN_VARIABLE_DAPR_URL
               value: "http://distributor-dapr"
-            - name: RUST_BACKTRACK
-              value: "1"
+          livenessProbe:
+            httpGet:
+              path: .well-known/spin/health
+              port: 80
+            initialDelaySeconds: 45
+            periodSeconds: 3
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: receiver-express
+spec:
+  replicas: 9
+  selector:
+    matchLabels:
+      app: receiver-express
+  template:
+    metadata:
+      labels:
+        app: receiver-express
+    spec:
+      runtimeClassName: wasmtime-spin-v2
+      containers:
+        - name: receiver-express
+          image: { will be replaced by deployment script }
+          command: ["/"]
+          env:
+            - name: SPIN_VARIABLE_DAPR_URL
+              value: "http://receiver-express-dapr"
+          livenessProbe:
+            httpGet:
+              path: .well-known/spin/health
+              port: 80
+            initialDelaySeconds: 45
+            periodSeconds: 3
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: receiver-standard
+spec:
+  replicas: 9
+  selector:
+    matchLabels:
+      app: receiver-standard
+  template:
+    metadata:
+      labels:
+        app: receiver-standard
+    spec:
+      runtimeClassName: wasmtime-spin-v2
+      containers:
+        - name: receiver-standard
+          image: { will be replaced by deployment script }
+          command: ["/"]
+          env:
+            - name: SPIN_VARIABLE_DAPR_URL
+              value: "http://receiver-standard-dapr"
           livenessProbe:
             httpGet:
               path: .well-known/spin/health
@@ -42,3 +98,31 @@ spec:
       targetPort: 80
   selector:
     app: distributor
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: receiver-express-svc
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+  selector:
+    app: receiver-express
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: receiver-standard-svc
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+  selector:
+    app: receiver-standard
