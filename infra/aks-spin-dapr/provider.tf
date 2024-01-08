@@ -9,6 +9,10 @@ terraform {
       source  = "hashicorp/helm"
       version = "~>2.12.1"
     }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "~>2.25.2"
+    }
   }
 }
 
@@ -35,4 +39,11 @@ provider "helm" {
     client_key             = base64decode(module.aks.KUBE_ADMIN_CONFIG.0.client_key)
     cluster_ca_certificate = base64decode(module.aks.KUBE_ADMIN_CONFIG.0.cluster_ca_certificate)
   }
+}
+
+provider "kubernetes" {
+  host                   = module.aks.KUBE_ADMIN_CONFIG.0.host
+  client_certificate     = base64decode(module.aks.KUBE_ADMIN_CONFIG.0.client_certificate)
+  client_key             = base64decode(module.aks.KUBE_ADMIN_CONFIG.0.client_key)
+  cluster_ca_certificate = base64decode(module.aks.KUBE_ADMIN_CONFIG.0.cluster_ca_certificate)
 }

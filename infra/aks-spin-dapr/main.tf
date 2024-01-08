@@ -86,3 +86,18 @@ module "dapr" {
     module.aks
   ]
 }
+
+module "kwasm" {
+  count              = var.kwasm_deploy ? 1 : 0
+  source             = "../modules/az/kwasm"
+  namespace          = var.kwasm_namespace
+  installer_image    = var.kwasm_installer_image
+  node_selector      = var.kwasm_node_selector
+  runtime_class_name = var.kwasm_runtime_class_name
+  providers = {
+    kubernetes = kubernetes
+  }
+  depends_on = [
+    module.aks
+  ]
+}
