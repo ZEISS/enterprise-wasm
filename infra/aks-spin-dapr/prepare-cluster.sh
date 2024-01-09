@@ -27,11 +27,11 @@ kubectl apply -f -
 kubectl apply -f ./runtimeclass.yaml
 kubectl apply -f ./namespaces.yaml
 
-# ---- make and build Dapr Ambient image
-pushd $REPO_ROOT/../dapr-ambient
+# ---- make and build Dapr shared image
+pushd $REPO_ROOT/../dapr-shared
 make release
 popd
 
 az acr build --registry $AZURE_CONTAINER_REGISTRY_NAME \
-  --image dapr-ambient:latest \
-  $REPO_ROOT/../dapr-ambient/
+  --image dapr-shared:latest \
+  $REPO_ROOT/../dapr-shared/

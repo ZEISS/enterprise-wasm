@@ -14,7 +14,7 @@ AZURE_CONTAINER_REGISTRY_ENDPOINT=`az acr show -n $AZURE_CONTAINER_REGISTRY_NAME
 TAG=`az acr repository show-tags -n $AZURE_CONTAINER_REGISTRY_NAME --repository $APP --top 1 --orderby time_desc -o tsv`
 IMAGE_NAME=$AZURE_CONTAINER_REGISTRY_ENDPOINT/$APP:$TAG
 
-PATTERN="${1:-ambient}"
+PATTERN="${1:-shared}"
 
 kubectl delete secret servicebus-secret --ignore-not-found
 kubectl create secret generic servicebus-secret --from-literal=connectionString=$SERVICEBUS_CONNECTION
@@ -24,7 +24,7 @@ kubectl create secret generic storage-secret --from-literal=accountName=$STORAGE
 
 kubectl apply -f ./dapr-components.yml
 
-cat ./workload-aks-$PATTERN.yml | \
+cat ./workload-aks-$PATTERN-x.yml | \
 yq eval ".spec|=select(.selector.matchLabels.app==\"distributor\")
     .template.spec.containers[0].image = \"$IMAGE_NAME\"" | \
 yq eval ".spec|=select(.selector.matchLabels.app==\"receiver-express\") 
@@ -33,7 +33,7 @@ yq eval ".spec|=select(.selector.matchLabels.app==\"receiver-standard\")
     .template.spec.containers[0].image = \"$IMAGE_NAME\"" | \
 kubectl apply -f -
 
-if [ $PATTERN = 'ambient' ]; then
+if [ $PATTERN = 'shared' ]; then
 
   apps=("distributor" "receiver-express" "receiver-standard")
 
@@ -41,17 +41,17 @@ if [ $PATTERN = 'ambient' ]; then
   do
     echo "$app"
 
-    helm upgrade --install $app-dapr $REPO_ROOT/../dapr-shared/chart/dapr-ambient/ \
+    helm upgrade --install $app-dapr $REPO_ROOT/../dapr-shared/chart/dapr-shared/ \
       --set fullnameOverride=$app-dapr \
-      --set ambient.strategy=deployment \
-      --set ambient.deployment.replicas=3 \
-      --set ambient.initContainer.image.registry=$AZURE_CONTAINER_REGISTRY_ENDPOINT \
-      --set ambient.daprd.image.tag=1.11.6 \
-      --set ambient.appId=$app \
-      --set ambient.remoteURL=$app-svc \
-      --set ambient.remotePort=80 \
-      --set ambient.serviceAccount.name=$app \
-      --set ambient.daprd.listenAddresses=0.0.0.0
+      --set shared.initContainer.image.registry=$AZURE_CONTAINER_REGISTRY_ENDPOINT \
+      --set shared.strategy=deployment \
+      --set shared.deployment.replicas=3 \
+      --set shared.daprd.image.tag=1.11.6 \
+      --set shared.appId=$app \
+      --set shared.remoteURL=$app-svc \
+      --set shared.remotePort=80 \
+      --set shared.serviceAccount.name=$app \
+      --set shared.daprd.listenAddresses=0.0.0.0
 
   done
 fi
