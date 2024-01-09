@@ -24,7 +24,7 @@ kubectl create secret generic storage-secret --from-literal=accountName=$STORAGE
 
 kubectl apply -f ./dapr-components.yml
 
-cat ./workload-aks-$PATTERN-x.yml | \
+cat ./workload-aks-$PATTERN.yml | \
 yq eval ".spec|=select(.selector.matchLabels.app==\"distributor\")
     .template.spec.containers[0].image = \"$IMAGE_NAME\"" | \
 yq eval ".spec|=select(.selector.matchLabels.app==\"receiver-express\") 
@@ -41,10 +41,12 @@ if [ $PATTERN = 'shared' ]; then
   do
     echo "$app"
 
+    # fork/branch: https://github.com/ZEISS/dapr-shared/tree/add-nodeselector
     helm upgrade --install $app-dapr $REPO_ROOT/../dapr-shared/chart/dapr-shared/ \
       --set fullnameOverride=$app-dapr \
       --set shared.initContainer.image.registry=$AZURE_CONTAINER_REGISTRY_ENDPOINT \
       --set shared.strategy=deployment \
+      --set shared.scheduling.nodeSelector.agentpool=backend \
       --set shared.deployment.replicas=3 \
       --set shared.daprd.image.tag=1.11.6 \
       --set shared.appId=$app \
