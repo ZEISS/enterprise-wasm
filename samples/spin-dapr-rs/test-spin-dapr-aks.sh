@@ -4,29 +4,46 @@ set -e
 
 LOCAL_SERVICE_PORT=8080
 LOCAL_DAPR_PORT=8081
-POD_PORT=80
+POD_SERVICE_PORT=80
+
+case "$2" in
+  ""|shared)
+    POD_DAPR_PORT=80
+    DAPR_SERVICE_SUFFIX=dapr
+    ;;
+  sidecar)
+    POD_DAPR_PORT=3500
+    DAPR_SERVICE_SUFFIX=svc
+    ;;
+  *)
+    echo "usage: test-spin-dapr-aks.sh (e|s|d) (shared|sidecar)"
+    exit 1
+esac
 
 case "$1" in
+  ""|d)
+    SERVICE=distributor-svc
+    DAPR=distributor-$DAPR_SERVICE_SUFFIX
+    ;;
   e)
     SERVICE=receiver-express-svc
-    DAPR=receiver-express-dapr
+    DAPR=receiver-express-$DAPR_SERVICE_SUFFIX
     ;;
   s)
     SERVICE=receiver-standard-svc
-    DAPR=receiver-standard-dapr
+    DAPR=receiver-standard-$DAPR_SERVICE_SUFFIX
     ;;
   *)
-    SERVICE=distributor-svc
-    DAPR=distributor-dapr
-    ;;
+    echo "usage: test-spin-dapr-aks.sh (e|s|d) (shared|sidecar)"
+    exit 1
 esac
 
 # clean up the background port forward process on exit
 trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
 
 echo "starting port forward to $SERVICE"
-kubectl port-forward "svc/$SERVICE" $LOCAL_SERVICE_PORT:$POD_PORT > /dev/null 2>&1 &
-kubectl port-forward "svc/$DAPR" $LOCAL_DAPR_PORT:$POD_PORT > /dev/null 2>&1 &
+kubectl port-forward "svc/$SERVICE" $LOCAL_SERVICE_PORT:$POD_SERVICE_PORT > /dev/null 2>&1 &
+kubectl port-forward "svc/$DAPR" $LOCAL_DAPR_PORT:$POD_DAPR_PORT > /dev/null 2>&1 &
 
 echo "waiting for port forward to be ready"
 timeout 5 sh -c 'until nc -z $0 $1; do sleep 1; done' '127.0.0.1' $LOCAL_SERVICE_PORT

@@ -1,5 +1,19 @@
 #!/bin/bash
 
+case "$1" in
+  ""|shared)
+    PATTERN=shared
+    ;;
+  sidecar)
+    PATTERN=sidecar
+    ;;
+  *)
+    echo "usage: deploy.sh (shared|sidecar)"
+    exit 1
+esac
+
+# ---- init
+
 REPO_ROOT=`git rev-parse --show-toplevel`
 TARGET_INFRA_FOLDER=../../infra/aks-spin-dapr
 RESOURCE_GROUP_NAME=`terraform output -state=$TARGET_INFRA_FOLDER/terraform.tfstate -json script_vars | jq -r .resource_group`
@@ -14,7 +28,7 @@ AZURE_CONTAINER_REGISTRY_ENDPOINT=`az acr show -n $AZURE_CONTAINER_REGISTRY_NAME
 TAG=`az acr repository show-tags -n $AZURE_CONTAINER_REGISTRY_NAME --repository $APP --top 1 --orderby time_desc -o tsv`
 IMAGE_NAME=$AZURE_CONTAINER_REGISTRY_ENDPOINT/$APP:$TAG
 
-PATTERN="${1:-shared}"
+# ---- set connection strings as secrets
 
 kubectl delete secret servicebus-secret --ignore-not-found
 kubectl create secret generic servicebus-secret --from-literal=connectionString=$SERVICEBUS_CONNECTION
