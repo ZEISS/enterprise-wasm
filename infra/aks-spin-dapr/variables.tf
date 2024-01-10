@@ -63,7 +63,7 @@ variable "user_nodepools" {
     labels = {
     }
     taints = []
-  }, {
+    }, {
     name       = "backend"
     size       = "Standard_B2ms"
     node_count = 3
@@ -110,4 +110,10 @@ variable "dapr_namespace" {
   type        = string
   default     = "dapr-system"
   description = "Kubernetes namespace to install Dapr in"
+}
+
+variable "dapr_agentpool" {
+  type        = string
+  default     = null
+  description = "Agent pool name to deploy Dapr to. Uses the default nodepool if null"
 }
