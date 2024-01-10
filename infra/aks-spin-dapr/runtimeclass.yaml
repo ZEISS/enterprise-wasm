@@ -3,3 +3,6 @@ kind: RuntimeClass
 metadata:
   name: wasmtime-spin-v2
 handler: spin
+scheduling:
+  nodeSelector:
+    agentpool: backend

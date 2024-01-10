@@ -39,7 +39,7 @@ variable "system_nodepool" {
     max  = number
   })
   default = {
-    name = "agentpool"
+    name = "system"
     size = "Standard_DS2_v2"
     min  = 2
     max  = 3
@@ -56,9 +56,17 @@ variable "user_nodepools" {
     taints     = list(string)
   }))
   default = [{
-    name       = "npspin"
+    name       = "default"
     size       = "Standard_DS2_v2"
-    node_count = 1
+    node_count = 3
+    max_pods   = 250
+    labels = {
+    }
+    taints = []
+  }, {
+    name       = "backend"
+    size       = "Standard_B2ms"
+    node_count = 3
     max_pods   = 250
     labels = {
     }

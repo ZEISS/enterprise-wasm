@@ -31,7 +31,7 @@ cluster_admins           = ["00000000-0000-0000-0000-000000000000"]
 
 3. review deployment plan with `terraform plan`
 1. deploy with `terraform apply`
-1. finalize cluster with `./preprare-cluster.sh`
+1. finalize cluster with `./prepare-cluster.sh`
 
 ## verify
 
