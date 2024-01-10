@@ -47,3 +47,13 @@ in 2nd terminal session
 ./deploy.sh
 ./test-spin-dapr-aks.sh
 ```
+
+### query in Application Insights
+
+```
+dependencies
+| where timestamp >= todatetime('2024-01-10T19:11:23.709Z')
+| where name startswith "bindings/q-order"
+| summarize count() by bin(timestamp,15s), cloud_RoleName
+| render columnchart
+```

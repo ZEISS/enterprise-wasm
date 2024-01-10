@@ -17,6 +17,14 @@ do
 done
 
 AZURE_CONTAINER_REGISTRY_ENDPOINT=`az acr show -n $AZURE_CONTAINER_REGISTRY_NAME --query loginServer -o tsv`
+APPINSIGHTS_ID=`az resource list -g $RESOURCE_GROUP_NAME --resource-type Microsoft.Insights/components --query '[0].id' -o tsv` 
+INSTRUMENTATION_KEY=`az monitor app-insights component show --ids $APPINSIGHTS_ID --query instrumentationKey -o tsv`
+
+# ---- install OpenTelemetry
+cat ./open-telemetry-collector-appinsights.yaml | \
+sed "s/<INSTRUMENTATION-KEY>/$INSTRUMENTATION_KEY/" | \
+kubectl apply -f -
+kubectl apply -f ./collector-config.yaml
 
 # ---- install Wasm Shims
 wget -q -O- https://raw.githubusercontent.com/KWasm/kwasm-node-installer/main/example/daemonset.yaml | \

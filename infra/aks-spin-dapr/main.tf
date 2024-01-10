@@ -38,6 +38,15 @@ module "aks" {
   acr_id              = module.acr.CONTAINER_REGISTRY_ID
 }
 
+module "app-insights" {
+  source              = "../modules/az/app-insights"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.rg.name
+  tags                = local.tags
+  resource_prefix     = local.base_name
+  loganalytics_id     = module.loganalytics.LOGANALYTICS_ID
+}
+
 module "container-insights" {
   source              = "../modules/az/container-insights"
   location            = var.location

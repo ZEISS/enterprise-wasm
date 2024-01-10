@@ -55,7 +55,7 @@ if [ $PATTERN = 'shared' ]; then
   do
     echo "$app"
 
-    # fork/branch: https://github.com/ZEISS/dapr-shared/tree/add-nodeselector
+    # fork/branch: https://github.com/ZEISS/dapr-shared/tree/recycle-configmap
     helm upgrade --install $app-dapr $REPO_ROOT/../dapr-shared/chart/dapr-shared/ \
       --set fullnameOverride=$app-dapr \
       --set shared.initContainer.image.registry=$AZURE_CONTAINER_REGISTRY_ENDPOINT \
@@ -63,6 +63,7 @@ if [ $PATTERN = 'shared' ]; then
       --set shared.scheduling.nodeSelector.agentpool=backend \
       --set shared.deployment.replicas=3 \
       --set shared.daprd.image.tag=1.11.6 \
+      --set shared.daprd.config=appconfig \
       --set shared.appId=$app \
       --set shared.remoteURL=$app-svc \
       --set shared.remotePort=80 \

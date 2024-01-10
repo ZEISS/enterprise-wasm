@@ -46,7 +46,7 @@ kubectl port-forward "svc/$SERVICE" $LOCAL_SERVICE_PORT:$POD_SERVICE_PORT > /dev
 kubectl port-forward "svc/$DAPR" $LOCAL_DAPR_PORT:$POD_DAPR_PORT > /dev/null 2>&1 &
 
 echo "waiting for port forward to be ready"
-timeout 5 sh -c 'until nc -z $0 $1; do sleep 1; done' '127.0.0.1' $LOCAL_SERVICE_PORT
+timeout 15 sh -c 'until nc -z $0 $1; do sleep 1; done' '127.0.0.1' $LOCAL_SERVICE_PORT
 
 echo "::: Spin health :::"
 curl -v http://127.0.0.1:$LOCAL_SERVICE_PORT/.well-known/spin/health
