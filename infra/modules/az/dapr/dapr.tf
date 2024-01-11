@@ -6,18 +6,17 @@ resource "helm_release" "dapr" {
   create_namespace = true
   timeout          = 1200
 
-  set {
-    name  = "global.nodeSelector.agentpool"
-    value = "default"
-  }
-
-  set {
-    name  = "global.ha.enabled"
-    value = "true"
-  }
-
-  set {
-    name  = "global.tag"
-    value = "${var.dapr_version}-mariner"
-  }
+  values = [
+    <<-EOF
+    global:
+      nodeSelector:
+        agentpool: ${var.dapr_agentpool}
+      tolerations:
+        - key: "CriticalAddonsOnly"
+          operator: "Exists"
+      ha:
+        enabled: true
+      tag: ${var.dapr_version}-mariner
+    EOF
+  ]
 }

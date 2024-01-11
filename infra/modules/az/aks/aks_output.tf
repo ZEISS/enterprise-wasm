@@ -17,3 +17,7 @@ output "KUBE_ADMIN_CONFIG" {
 output "KUBE_ADMIN_CONFIG_RAW" {
   value = azurerm_kubernetes_cluster.aks.kube_admin_config_raw
 }
+
+output "DEFAULT_NODEPOOL_NAME" {
+  value = azurerm_kubernetes_cluster.aks.default_node_pool[0].name
+}
