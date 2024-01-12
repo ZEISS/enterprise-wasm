@@ -117,3 +117,33 @@ variable "dapr_agentpool" {
   default     = null
   description = "Agent pool name to deploy Dapr to. Uses the default nodepool if null"
 }
+
+variable "kwasm_deploy" {
+  type        = bool
+  default     = false
+  description = "Indicate whether to deploy KWasm directly with cluster"
+}
+
+variable "kwasm_namespace" {
+  type        = string
+  default     = "kwasm-system"
+  description = "Kubernetes namespace to install KWasm in"
+}
+
+variable "kwasm_installer_image" {
+  type        = string
+  default     = "ghcr.io/kwasm/kwasm-node-installer:v0.3.1"
+  description = "KWasm installer image to use"
+}
+
+variable "kwasm_node_selector" {
+  type        = map(string)
+  default     = {}
+  description = "Node selector to use for KWasm daemonset"
+}
+
+variable "kwasm_runtime_class_name" {
+  type        = string
+  default     = "wasmtime-spin-v2"
+  description = "Runtime class name to use for Spin wasm containers"
+}
