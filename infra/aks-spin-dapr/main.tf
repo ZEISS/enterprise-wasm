@@ -79,6 +79,7 @@ module "dapr" {
   cluster_name        = module.aks.CLUSTER_NAME
   dapr_namespace      = var.dapr_namespace
   dapr_version        = var.dapr_version
+  dapr_agentpool      = coalesce(var.dapr_agentpool, module.aks.DEFAULT_NODEPOOL_NAME)
   providers = {
     helm = helm
   }

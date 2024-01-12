@@ -19,3 +19,9 @@ variable "dapr_namespace" {
   default     = "dapr-system"
   description = "Kubernetes namespace to install Dapr in"
 }
+
+variable "dapr_agentpool" {
+  type        = string
+  default     = "default"
+  description = "Agent pool name to deploy Dapr to"
+}
