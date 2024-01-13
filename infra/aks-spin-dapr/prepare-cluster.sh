@@ -3,6 +3,7 @@
 set -e
 
 terraform output -raw kube_config > ~/.kube/config
+RESOURCE_GROUP_NAME=`terraform output -json script_vars | jq -r .resource_group`
 
 AZURE_CONTAINER_REGISTRY_NAME=`az resource list -g $RESOURCE_GROUP_NAME --resource-type Microsoft.ContainerRegistry/registries --query '[0].name' -o tsv`
 
@@ -22,21 +23,3 @@ cat ./open-telemetry-collector-appinsights.yaml | \
 sed "s/<INSTRUMENTATION-KEY>/$INSTRUMENTATION_KEY/" | \
 kubectl apply -f -
 kubectl apply -f ./collector-config.yaml
-
-# ---- install Wasm Shims
-wget -q -O- https://raw.githubusercontent.com/KWasm/kwasm-node-installer/main/example/daemonset.yaml | \
-yq eval ".spec|=select(.selector.matchLabels.app==\"default-init\")
-    .template.spec.nodeSelector.agentpool = \"backend\"" | \
-kubectl apply -f -
-
-kubectl apply -f ./runtimeclass.yaml
-kubectl apply -f ./namespaces.yaml
-
-# ---- make and build Dapr shared image
-pushd $REPO_ROOT/../dapr-shared
-make release
-popd
-
-az acr build --registry $AZURE_CONTAINER_REGISTRY_NAME \
-  --image dapr-shared:latest \
-  $REPO_ROOT/../dapr-shared/

@@ -100,24 +100,24 @@ resource "kubernetes_daemonset" "kwasm_installer" {
   }
 }
 
-# resource "kubernetes_runtime_class_v1" "spin_v2" {
-#   metadata {
-#     name = var.runtime_class_name
-#   }
-#
-#   handler = "spin"
-# }
-
-resource "kubernetes_manifest" "spin_v2" {
-  manifest = {
-    apiVersion = "node.k8s.io/v1"
-    kind       = "RuntimeClass"
-    metadata = {
-      name = var.runtime_class_name
-    }
-    handler = "spin"
-    scheduling = {
-      nodeSelector = var.node_selector
-    }
+resource "kubernetes_runtime_class_v1" "spin_v2" {
+  metadata {
+    name = var.runtime_class_name
   }
+
+  handler = "spin"
 }
+# This resource requires API access during planning time
+# resource "kubernetes_manifest" "spin_v2" {
+#   manifest = {
+#     apiVersion = "node.k8s.io/v1"
+#     kind       = "RuntimeClass"
+#     metadata = {
+#       name = var.runtime_class_name
+#     }
+#     handler = "spin"
+#     scheduling = {
+#       nodeSelector = var.node_selector
+#     }
+#   }
+# }
