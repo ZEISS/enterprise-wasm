@@ -2,10 +2,7 @@
 
 set -e
 
-REPO_ROOT=`git rev-parse --show-toplevel`
-
 terraform output -raw kube_config > ~/.kube/config
-RESOURCE_GROUP_NAME=`terraform output -json script_vars | jq -r .resource_group`
 
 AZURE_CONTAINER_REGISTRY_NAME=`az resource list -g $RESOURCE_GROUP_NAME --resource-type Microsoft.ContainerRegistry/registries --query '[0].name' -o tsv`
 

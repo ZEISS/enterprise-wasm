@@ -83,13 +83,29 @@ module "storage" {
 
 module "dapr" {
   count               = var.dapr_deploy ? 1 : 0
-  source              = "../modules/az/dapr"
+  source              = "../modules/helm/dapr"
   resource_group_name = azurerm_resource_group.rg.name
   cluster_name        = module.aks.CLUSTER_NAME
   dapr_namespace      = var.dapr_namespace
   dapr_version        = var.dapr_version
+  dapr_agentpool      = coalesce(var.dapr_agentpool, module.aks.DEFAULT_NODEPOOL_NAME)
   providers = {
     helm = helm
+  }
+  depends_on = [
+    module.aks
+  ]
+}
+
+module "kwasm" {
+  count              = var.kwasm_deploy ? 1 : 0
+  source             = "../modules/helm/kwasm"
+  namespace          = var.kwasm_namespace
+  installer_image    = var.kwasm_installer_image
+  node_selector      = var.kwasm_node_selector
+  runtime_class_name = var.kwasm_runtime_class_name
+  providers = {
+    kubernetes = kubernetes
   }
   depends_on = [
     module.aks

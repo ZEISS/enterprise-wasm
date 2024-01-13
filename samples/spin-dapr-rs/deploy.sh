@@ -47,6 +47,8 @@ yq eval ".spec|=select(.selector.matchLabels.app==\"receiver-standard\")
     .template.spec.containers[0].image = \"$IMAGE_NAME\"" | \
 kubectl apply -f -
 
+DAPR_VERSION=$(helm get metadata dapr -n dapr-system -o yaml | yq -r .appVersion)
+
 if [ $PATTERN = 'shared' ]; then
 
   apps=("distributor" "receiver-express" "receiver-standard")
@@ -55,19 +57,15 @@ if [ $PATTERN = 'shared' ]; then
   do
     echo "$app"
 
-    # fork/branch: https://github.com/ZEISS/dapr-shared/tree/recycle-configmap
-    helm upgrade --install $app-dapr $REPO_ROOT/../dapr-shared/chart/dapr-shared/ \
+    helm upgrade --install $app-dapr oci://registry-1.docker.io/daprio/dapr-shared-chart \
       --set fullnameOverride=$app-dapr \
-      --set shared.initContainer.image.registry=$AZURE_CONTAINER_REGISTRY_ENDPOINT \
       --set shared.strategy=deployment \
       --set shared.scheduling.nodeSelector.agentpool=backend \
       --set shared.deployment.replicas=3 \
-      --set shared.daprd.image.tag=1.11.6 \
-      --set shared.daprd.config=appconfig \
+      --set shared.daprd.image.tag=$DAPR_VERSION \
       --set shared.appId=$app \
       --set shared.remoteURL=$app-svc \
       --set shared.remotePort=80 \
-      --set shared.serviceAccount.name=$app \
       --set shared.daprd.listenAddresses=0.0.0.0
 
   done
