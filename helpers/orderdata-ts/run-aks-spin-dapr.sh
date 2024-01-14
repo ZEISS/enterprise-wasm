@@ -11,6 +11,7 @@ SERVICEBUS_NAMESPACE=`az resource list -g $RESOURCE_GROUP_NAME --resource-type M
 SERVICEBUS_CONNECTION=`az servicebus namespace authorization-rule keys list -g $RESOURCE_GROUP_NAME --namespace-name $SERVICEBUS_NAMESPACE -n RootManageSharedAccessKey --query primaryConnectionString -o tsv`
 STORAGE_NAME=`az resource list -g $RESOURCE_GROUP_NAME --resource-type Microsoft.Storage/storageAccounts --query '[0].name' -o tsv`
 STORAGE_BLOB_CONNECTION=`az storage account show-connection-string -g $RESOURCE_GROUP_NAME -n $STORAGE_NAME  --query connectionString -o tsv`
+STORAGE_ACCOUNT_KEY=`az storage account keys list -g $RESOURCE_GROUP_NAME -n $STORAGE_NAME --query "[?permissions == 'FULL'] | [0].value" -o tsv `
 
 # clear outbox blob folders
 containers=(express-outbox standard-outbox)
@@ -28,11 +29,13 @@ DAPR_HTTP_PORT=3501
 
 JSON_STRING=$( jq -n \
                   --arg sbc "$SERVICEBUS_CONNECTION" \
-                  '{SERVICEBUS_CONNECTION: $sbc}' )
+                  --arg stn "$STORAGE_NAME" \
+                  --arg stk "$STORAGE_ACCOUNT_KEY" \
+                  '{SERVICEBUS_CONNECTION: $sbc, STORAGE_NAME: $stn, STORAGE_ACCOUNT_KEY: $stk}' )
 echo $JSON_STRING > ./.secrets.json
 
 [ -d .dapr ] && rm -rf .dapr
-dapr run -f ./run-aks-spin-dapr.yml &
+dapr run --dapr-http-max-request-size 16 -f ./run-aks-spin-dapr.yml &
 pid=$!
 
 trap "pgrep -P $pid | xargs kill && kill $pid" INT HUP ERR
@@ -53,11 +56,24 @@ generate_post_data()
 {
  jq -n \
       --arg tc "$TARGET_COUNT" \
-      --arg d "$DELAY" \
-      '{count: ($tc|tonumber), scheduleDelayMinutes: ($d|tonumber)}'
+      '{count: ($tc|tonumber)}'
 }
 
-PUSHRESPONSE=`curl -s -d "$(generate_post_data)" http://localhost:$APP_PORT/test-data \
+generate_schedule_data()
+{
+ jq -n \
+      --arg d "$DELAY" \
+      '{scheduleDelayMinutes: ($d|tonumber)}'
+}
+
+if [ $(curl -s http://localhost:$APP_PORT/test-data) = "{}" ]; then
+  echo "### generating test data ###"
+  curl -s -d "$(generate_post_data)" http://localhost:$APP_PORT/test-data \
+      -H 'Content-Type: application/json'
+fi
+
+echo "### initiating test ###"
+PUSHRESPONSE=`curl -s -d "$(generate_schedule_data)" http://localhost:$APP_PORT/schedule-test \
     -H 'Content-Type: application/json'`
 echo pr $PUSHRESPONSE
 SCHEDULE=`echo $PUSHRESPONSE | jq -r '.scheduledTimestamp'`

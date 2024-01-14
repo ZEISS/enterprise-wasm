@@ -1,0 +1,16 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: testdata
+spec:
+  type: bindings.azure.blobstorage
+  version: v1
+  metadata:
+    - name: accountName
+      value: "azurerite"
+    - name: accountKey
+      value: "bm9rZXkK"
+    - name: endpoint
+      value: "http://127.0.0.1:10000"
+    - name: containerName
+      value: testdata

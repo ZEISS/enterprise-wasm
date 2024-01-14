@@ -1,4 +1,4 @@
-import { generateOrders } from "./generator";
+import { generateOrders, OrderHeader } from "./generator";
 import {
   DaprClient,
   DaprServer,
@@ -6,11 +6,11 @@ import {
   DaprInvokerCallbackContent,
   HttpMethod,
 } from "@dapr/dapr";
-
-import { parse } from "querystring";
+import { compressToBase64, decompressFromBase64 } from "lz-string";
 
 const daprHost = process.env.DAPR_HTTP_HOST || "127.0.0.1";
 const daprPort = process.env.DAPR_HTTP_PORT || "3500";
+
 const serverHost = "127.0.0.1";
 const serverPort = process.env.PORT || "3000";
 
@@ -18,22 +18,52 @@ async function getHealth(_data: DaprInvokerCallbackContent) {
   return "Ok";
 }
 
-async function getTestdata(data: DaprInvokerCallbackContent) {
-  const query = parse(data.query.split("?")[1] || "");
-  const count = Number(query["count"]) || 5;
+async function getTestdata(_data: DaprInvokerCallbackContent) {
+  const client = new DaprClient({ daprHost, daprPort });
 
-  const orders = generateOrders(count);
-  return orders;
+  const metadata = { blobName: "testdata" };
+  let response = {};
+  try {
+    const compressedOrders = (
+      await client.binding.send("testdata", "get", null, metadata)
+    ).toString();
+    response = JSON.parse(
+      decompressFromBase64(compressedOrders),
+    ) as OrderHeader[];
+  } catch (error: any) {}
+
+  return response;
 }
 
 async function postTestdata(data: DaprInvokerCallbackContent) {
   const body = JSON.parse(data.body);
   const count = Number(body["count"]) || 5;
-  const scheduleDelayMinutes = Number(body["scheduleDelayMinutes"]) || 0;
 
   const client = new DaprClient({ daprHost, daprPort });
 
   const orders = generateOrders(count);
+
+  const metadata = { blobName: "testdata" };
+  const responseBody = { count: orders.length };
+
+  const compressedOrders = compressToBase64(JSON.stringify(orders));
+  await client.binding.send("testdata", "create", compressedOrders, metadata);
+
+  return responseBody;
+}
+
+async function scheduleTest(data: DaprInvokerCallbackContent) {
+  const body = JSON.parse(data.body);
+  const scheduleDelayMinutes = Number(body["scheduleDelayMinutes"]) || 0;
+
+  const client = new DaprClient({ daprHost, daprPort });
+
+  const payload = (
+    await client.binding.send("testdata", "get", null, {
+      blobName: "testdata",
+    })
+  ).toString();
+  const orders = JSON.parse(decompressFromBase64(payload)) as OrderHeader[];
 
   const metadata = {};
   let responseBody = {};
@@ -67,6 +97,10 @@ async function start() {
   await server.invoker.listen("test-data", getTestdata);
 
   await server.invoker.listen("test-data", postTestdata, {
+    method: HttpMethod.POST,
+  });
+
+  await server.invoker.listen("schedule-test", scheduleTest, {
     method: HttpMethod.POST,
   });
 

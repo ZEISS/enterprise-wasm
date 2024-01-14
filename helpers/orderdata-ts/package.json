@@ -21,6 +21,7 @@
   "dependencies": {
     "@billjs/query-string": "^1.0.2",
     "@dapr/dapr": "^3.2.0",
-    "@faker-js/faker": "^8.3.1"
+    "@faker-js/faker": "^8.3.1",
+    "lz-string": "^1.5.0"
   }
 }
