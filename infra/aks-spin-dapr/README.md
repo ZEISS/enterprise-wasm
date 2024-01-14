@@ -1,12 +1,5 @@
 # Resources for Spin and Dapr samples
 
-The current version assumes, that following GitHub repositories are cloned locally to folders with the same parent folder as this repository:
-
-| repository                                                  | branch | folder                         |
-| ----------------------------------------------------------- | ------ | ------------------------------ |
-| <https://github.com/fermyon/spin-containerd-shim-installer> | main   | spin-containerd-shim-installer |
-| <https://github.com/dapr-sandbox/dapr-ambient>              | main   | dapr-ambient                   |
-
 ## deploy
 
 > review and install Azure, Terraform and Helm prerequisites

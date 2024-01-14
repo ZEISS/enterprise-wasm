@@ -1,6 +1,12 @@
 # Spin with Dapr in Rust
 
-## build
+The current version assumes, that following GitHub repositories are cloned locally to folders with the same parent folder as this repository:
+
+| repository                                    | branch | folder      |
+| --------------------------------------------- | ------ | ----------- |
+| <https://github.com/dapr-sandbox/dapr-shared> | main   | dapr-shared |
+
+## build (locally)
 
 ```
 spin build
@@ -48,7 +54,9 @@ in 2nd terminal session
 ./test-spin-dapr-aks.sh
 ```
 
-### query in Application Insights
+### queries in Application Insights
+
+#### evaluate one run
 
 ```
 dependencies
@@ -56,4 +64,24 @@ dependencies
 | where name startswith "bindings/q-order"
 | summarize count() by bin(timestamp,15s), cloud_RoleName
 | render columnchart
+```
+
+#### compare 2 runs
+
+```
+let sidecar=dependencies
+| where timestamp between ( todatetime('2024-01-14T09:07:57.872Z') .. todatetime('2024-01-14T09:40:50+00:00') )
+| where name startswith "bindings/q"
+| summarize count() by performanceBucket, name
+| project performanceBucket, name, sidecar=count_
+;
+let shared=dependencies
+| where timestamp >= todatetime('2024-01-14T09:47:13.035Z')
+| where name startswith "bindings/q"
+| summarize count() by performanceBucket, name
+| project performanceBucket, name, shared=count_
+;
+sidecar | union shared
+| summarize sum(sidecar), sum(shared) by name, performanceBucket
+| order by name, performanceBucket
 ```

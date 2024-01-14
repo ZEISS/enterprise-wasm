@@ -15,6 +15,7 @@ spec:
         dapr.io/enabled: "true"
         dapr.io/app-id: "distributor"
         dapr.io/app-port: "80"
+        dapr.io/config: "appconfig"
         dapr.io/enable-api-logging: "true"
         dapr.io/enable-app-health-check: "true"
         dapr.io/log-level: "info"
@@ -23,6 +24,8 @@ spec:
         dapr.io/sidecar-listen-addresses: "0.0.0.0,[::]"
     spec:
       runtimeClassName: wasmtime-spin-v2
+      nodeSelector:
+        agentpool: backend
       containers:
         - name: distributor
           image: { will be replaced by deployment script }
@@ -54,6 +57,7 @@ spec:
         dapr.io/enabled: "true"
         dapr.io/app-id: "receiver-express"
         dapr.io/app-port: "80"
+        dapr.io/config: "appconfig"
         dapr.io/enable-api-logging: "true"
         dapr.io/enable-app-health-check: "true"
         dapr.io/log-level: "info"
@@ -62,6 +66,8 @@ spec:
         dapr.io/sidecar-listen-addresses: "0.0.0.0,[::]"
     spec:
       runtimeClassName: wasmtime-spin-v2
+      nodeSelector:
+        agentpool: backend
       containers:
         - name: receiver-express
           image: { will be replaced by deployment script }
@@ -93,6 +99,7 @@ spec:
         dapr.io/enabled: "true"
         dapr.io/app-id: "receiver-standard"
         dapr.io/app-port: "80"
+        dapr.io/config: "appconfig"
         dapr.io/enable-api-logging: "true"
         dapr.io/enable-app-health-check: "true"
         dapr.io/log-level: "info"
@@ -101,6 +108,8 @@ spec:
         dapr.io/sidecar-listen-addresses: "0.0.0.0,[::]"
     spec:
       runtimeClassName: wasmtime-spin-v2
+      nodeSelector:
+        agentpool: backend
       containers:
         - name: receiver-standard
           image: { will be replaced by deployment script }
