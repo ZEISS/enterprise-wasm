@@ -1,0 +1,13 @@
+C:\Users\zofllutz\repos\99_playground\enterprise-wasm\samples\spin-dapr-dotnet\bin\Release\net7.0\SpinDontetDapr.deps.json
+C:\Users\zofllutz\repos\99_playground\enterprise-wasm\samples\spin-dapr-dotnet\bin\Release\net7.0\SpinDontetDapr.dll
+C:\Users\zofllutz\repos\99_playground\enterprise-wasm\samples\spin-dapr-dotnet\bin\Release\net7.0\SpinDontetDapr.pdb
+C:\Users\zofllutz\repos\99_playground\enterprise-wasm\samples\spin-dapr-dotnet\obj\Release\net7.0\Project.csproj.AssemblyReference.cache
+C:\Users\zofllutz\repos\99_playground\enterprise-wasm\samples\spin-dapr-dotnet\obj\Release\net7.0\Project.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\zofllutz\repos\99_playground\enterprise-wasm\samples\spin-dapr-dotnet\obj\Release\net7.0\Project.AssemblyInfoInputs.cache
+C:\Users\zofllutz\repos\99_playground\enterprise-wasm\samples\spin-dapr-dotnet\obj\Release\net7.0\Project.AssemblyInfo.cs
+C:\Users\zofllutz\repos\99_playground\enterprise-wasm\samples\spin-dapr-dotnet\obj\Release\net7.0\Project.csproj.CoreCompileInputs.cache
+C:\Users\zofllutz\repos\99_playground\enterprise-wasm\samples\spin-dapr-dotnet\obj\Release\net7.0\Project.sourcelink.json
+C:\Users\zofllutz\repos\99_playground\enterprise-wasm\samples\spin-dapr-dotnet\obj\Release\net7.0\SpinDontetDapr.dll
+C:\Users\zofllutz\repos\99_playground\enterprise-wasm\samples\spin-dapr-dotnet\obj\Release\net7.0\refint\SpinDontetDapr.dll
+C:\Users\zofllutz\repos\99_playground\enterprise-wasm\samples\spin-dapr-dotnet\obj\Release\net7.0\SpinDontetDapr.pdb
+C:\Users\zofllutz\repos\99_playground\enterprise-wasm\samples\spin-dapr-dotnet\obj\Release\net7.0\ref\SpinDontetDapr.dll

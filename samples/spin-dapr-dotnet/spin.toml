@@ -1,0 +1,24 @@
+spin_manifest_version = 2
+[application]
+authors = ["ZOFLLUTZ"]
+description = "Creating a Spin Project using dotnet and dapr for Requests."
+name = "spin-dotnet-dapr"
+version = "1.0.0"
+
+# here the potential variables are to be defined
+[variables]
+dapr_url = { default = "http://localhost:3500" }
+
+[[trigger.http]]
+route = "/..."
+component = "spin-dotnet-dapr"
+
+[component.spin-dotnet-dapr]
+source = "bin/Release/net7.0/SpinDontetDapr.wasm"
+allowed_outbound_hosts = ["http://distributor-dapr", "http://localhost:3500"]
+
+[component.spin-dotnet-dapr.variables]
+dapr_url = "{{dapr_url}}"
+
+[component.spin-dotnet-dapr.build]
+command = "dotnet build -c Release"
