@@ -8,7 +8,7 @@ POD_SERVICE_PORT=80
 
 case "$2" in
   ""|shared)
-    POD_DAPR_PORT=80
+    POD_DAPR_PORT=3500
     DAPR_SERVICE_SUFFIX=dapr
     ;;
   sidecar)
