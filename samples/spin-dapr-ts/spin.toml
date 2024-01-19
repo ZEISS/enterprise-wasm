@@ -16,7 +16,7 @@ component = "spin-dapr-ts"
 
 [component.spin-dapr-ts]
 source = "target/spin-dapr-ts.wasm"
-allowed_outbound_hosts = [ "http://distributor-dapr" ]
+allowed_outbound_hosts = [ "https://*:*", "http://*:*"]
 exclude_files = ["**/node_modules"]
 
 # here variables are defined, that are passed on to component

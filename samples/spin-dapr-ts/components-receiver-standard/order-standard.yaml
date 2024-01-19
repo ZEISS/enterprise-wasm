@@ -3,16 +3,16 @@ kind: Component
 metadata:
   name: q-order-standard-in
 spec:
-  type: bindings.azure.servicebusqueues
+  type: bindings.azure.storagequeues
   version: v1
   metadata:
-    - name: connectionString
-      secretKeyRef:
-        name: SERVICEBUS_CONNECTION
-        key: SERVICEBUS_CONNECTION
+    - name: accountName
+      value: "azurerite"
+    - name: accountKey
+      value: "bm9rZXkK"
+    - name: endpoint
+      value: "http://127.0.0.1:10001"
     - name: queueName
       value: q-order-standard-spin
     - name: direction
       value: input
-auth:
-  secretStore: secretfile

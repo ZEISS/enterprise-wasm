@@ -7,14 +7,10 @@ spec:
   version: v1
   metadata:
     - name: accountName
-      secretKeyRef:
-        name: STORAGE_NAME
-        key: STORAGE_NAME
+      value: "azurerite"
     - name: accountKey
-      secretKeyRef:
-        name: STORAGE_ACCOUNT_KEY
-        key: STORAGE_ACCOUNT_KEY
+      value: "bm9rZXkK"
+    - name: endpoint
+      value: "http://127.0.0.1:10000"
     - name: containerName
       value: express-outbox
-auth:
-  secretStore: secretfile

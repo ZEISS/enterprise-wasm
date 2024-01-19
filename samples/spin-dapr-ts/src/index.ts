@@ -48,7 +48,7 @@ async function distributor(body: ArrayBuffer): Promise<HttpResponse> {
     const order = JSON.parse(decoder.decode(body));
     console.log(order);
     const dapr_url = Config.get("dapr_url");
-    const url = `${dapr_url}/v1.0/bindings/q-order-${order.Delivery.toLowerCase()}-out`;
+    const url = `${dapr_url}/v1.0/bindings/q-order-${order.delivery.toLowerCase()}-out`;
 
     await fetch(url, {
       method: "POST",
@@ -85,19 +85,20 @@ async function receiver(body: ArrayBuffer): Promise<HttpResponse> {
     console.log(order);
 
     const dapr_url = Config.get("dapr_url");
-    const url = `${dapr_url}/v1.0/bindings/${order.Delivery.toLowerCase()}-outbox`;
+    const url = `${dapr_url}/v1.0/bindings/${order.delivery.toLowerCase()}-outbox`;
 
     const operation = JSON.stringify(
       {
         operation: "create",
         data: order,
         metadata: {
-          blobName: order.OrderId.toString(),
+          blobName: order.orderId.toString(),
         },
       },
       null,
       2,
     );
+    console.log(operation);
 
     await fetch(url, {
       method: "POST",

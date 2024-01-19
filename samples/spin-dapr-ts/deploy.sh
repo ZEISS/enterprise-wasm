@@ -1,5 +1,19 @@
 #!/bin/bash
 
+case "$1" in
+  ""|shared)
+    PATTERN=shared
+    ;;
+  sidecar)
+    PATTERN=sidecar
+    ;;
+  *)
+    echo "usage: deploy.sh (shared|sidecar)"
+    exit 1
+esac
+
+# ---- init
+
 REPO_ROOT=`git rev-parse --show-toplevel`
 TARGET_INFRA_FOLDER=../../infra/aks-spin-dapr
 RESOURCE_GROUP_NAME=`terraform output -state=$TARGET_INFRA_FOLDER/terraform.tfstate -json script_vars | jq -r .resource_group`
@@ -14,7 +28,7 @@ AZURE_CONTAINER_REGISTRY_ENDPOINT=`az acr show -n $AZURE_CONTAINER_REGISTRY_NAME
 TAG=`az acr repository show-tags -n $AZURE_CONTAINER_REGISTRY_NAME --repository $APP --top 1 --orderby time_desc -o tsv`
 IMAGE_NAME=$AZURE_CONTAINER_REGISTRY_ENDPOINT/$APP:$TAG
 
-PATTERN="${1:-ambient}"
+# ---- set connection strings as secrets
 
 kubectl delete secret servicebus-secret --ignore-not-found
 kubectl create secret generic servicebus-secret --from-literal=connectionString=$SERVICEBUS_CONNECTION
@@ -33,7 +47,9 @@ yq eval ".spec|=select(.selector.matchLabels.app==\"receiver-standard\")
     .template.spec.containers[0].image = \"$IMAGE_NAME\"" | \
 kubectl apply -f -
 
-if [ $PATTERN = 'ambient' ]; then
+DAPR_VERSION=$(helm get metadata dapr -n dapr-system -o yaml | yq -r .appVersion)
+
+if [ $PATTERN = 'shared' ]; then
 
   apps=("distributor" "receiver-express" "receiver-standard")
 
@@ -41,15 +57,18 @@ if [ $PATTERN = 'ambient' ]; then
   do
     echo "$app"
 
-    helm upgrade --install $app-dapr $REPO_ROOT/../dapr-ambient/chart/dapr-ambient/ \
+    helm upgrade --install $app-dapr oci://registry-1.docker.io/daprio/dapr-shared-chart \
       --set fullnameOverride=$app-dapr \
-      --set ambient.initContainer.image.registry=$AZURE_CONTAINER_REGISTRY_ENDPOINT \
-      --set ambient.daprd.image.tag=1.11.6 \
-      --set ambient.appId=$app \
-      --set ambient.remoteURL=$app-svc \
-      --set ambient.remotePort=80 \
-      --set ambient.serviceAccount.name=$app \
-      --set ambient.daprd.listenAddresses=0.0.0.0
+      --set shared.strategy=deployment \
+      --set shared.scheduling.nodeSelector.agentpool=backend \
+      --set shared.deployment.replicas=3 \
+      --set shared.daprd.image.tag=$DAPR_VERSION \
+      --set shared.appId=$app \
+      --set shared.daprd.config=appconfig \
+      --set shared.remoteURL=$app-svc \
+      --set shared.remotePort=80 \
+      --set shared.daprd.listenAddresses=0.0.0.0
 
   done
 fi
+

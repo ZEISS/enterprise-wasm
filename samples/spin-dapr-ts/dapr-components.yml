@@ -21,12 +21,10 @@ spec:
         key: connectionString
     - name: queueName
       value: q-order-ingress-spin
-    - name: maxBulkSubCount
-      value: 100
     - name: maxActiveMessages
-      value: 1000
+      value: 900
     - name: maxConcurrentHandlers
-      value: 8
+      value: 9
 auth:
   secretStore: secretstore
 scopes:
@@ -90,12 +88,10 @@ spec:
       value: q-order-express-spin
     - name: direction
       value: input
-    - name: maxBulkSubCount
-      value: 100
     - name: maxActiveMessages
-      value: 1000
+      value: 900
     - name: maxConcurrentHandlers
-      value: 8
+      value: 9
 auth:
   secretStore: secretstore
 scopes:
@@ -117,12 +113,10 @@ spec:
       value: q-order-standard-spin
     - name: direction
       value: input
-    - name: maxBulkSubCount
-      value: 100
     - name: maxActiveMessages
-      value: 1000
+      value: 900
     - name: maxConcurrentHandlers
-      value: 8
+      value: 9
 auth:
   secretStore: secretstore
 scopes:
