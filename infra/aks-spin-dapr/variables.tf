@@ -96,7 +96,7 @@ variable "topics" {
 
 variable "dapr_deploy" {
   type        = bool
-  default     = false
+  default     = true
   description = "Indicate whether to deploy Dapr directly with cluster"
 }
 
@@ -120,7 +120,7 @@ variable "dapr_agentpool" {
 
 variable "kwasm_deploy" {
   type        = bool
-  default     = false
+  default     = true
   description = "Indicate whether to deploy KWasm directly with cluster"
 }
 
@@ -138,7 +138,7 @@ variable "kwasm_installer_image" {
 
 variable "kwasm_node_selector" {
   type        = map(string)
-  default     = {}
+  default     = { agentpool = "backend" } 
   description = "Node selector to use for KWasm daemonset"
 }
 
