@@ -4,7 +4,8 @@ set -e
 
 npx tsc
 
-TARGET_INFRA_FOLDER=../../infra/aks-spin-dapr
+REPO_ROOT=`git rev-parse --show-toplevel`
+TARGET_INFRA_FOLDER=$REPO_ROOT/infra/aks-spin-dapr
 RESOURCE_GROUP_NAME=`terraform output -state=$TARGET_INFRA_FOLDER/terraform.tfstate -json script_vars | jq -r .resource_group`
 
 SERVICEBUS_NAMESPACE=`az resource list -g $RESOURCE_GROUP_NAME --resource-type Microsoft.ServiceBus/namespaces --query '[0].name' -o tsv`
@@ -122,5 +123,7 @@ last_write_epoch=$(date -d $LAST_WRITE +%s)
 runtime_seconds=$(( $last_write_epoch - $schedule_epoch ))
 
 echo "$SCHEDULE | $TARGET_COUNT | $runtime_seconds"
+echo "$SCHEDULE | $TARGET_COUNT | $runtime_seconds | $1" >> $REPO_ROOT/LOG.md
+
 
 pgrep -P $pid | xargs kill && kill $pid
