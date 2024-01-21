@@ -13,6 +13,18 @@ variable "resource_prefix" {
   type        = string
 }
 
+variable "sku" {
+  description = "SKU Standard/Premium."
+  default     = "Standard"
+  type        = string
+}
+
+variable "capacity" {
+  description = "Capacity"
+  default     = 1
+  type        = number
+}
+
 variable "tags" {
   description = "A list of tags used for deployed services."
   type        = map(string)

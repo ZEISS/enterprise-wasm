@@ -1,5 +1,7 @@
 # analyzing >250ms processing time outliers
 
+## telemetry collection
+
 comparing spread of total single request processing time buckets (how long does it take to process one `q-order-ingress` request)
 
 ```
@@ -29,3 +31,9 @@ one can see that the spread of bad performance buckets for total ingress
 matches the spread of outbound binding latency
 
 ![q-order out latency](./screenshot_2024-01-21T16:13:48.png)
+
+## conclusion
+
+Telemetry suggested, that the load generated caused latency issues with Azure Service Bus / **Standard** SKU.
+This observation and to be comparable to the [reference performance tests](https://github.com/KaiWalter/message-distribution) suggested upgrading Service Bus from **Standard** to **Premium** SKU (which is a recommendation for sustainable throughput in high volume scenatios anyway).
+After switching to **Premium**, performance immediately showed results comparable to the reference case (~ 48 seconds to process 10.000 orders).

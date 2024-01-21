@@ -4,7 +4,8 @@ resource "azurerm_servicebus_namespace" "sb" {
   location            = var.location
   tags                = var.tags
 
-  sku = "Standard"
+  sku      = var.sku
+  capacity = var.capacity
 }
 
 resource "azurerm_servicebus_namespace_authorization_rule" "workload_rule" {

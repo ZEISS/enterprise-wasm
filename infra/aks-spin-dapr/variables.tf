@@ -138,7 +138,7 @@ variable "kwasm_installer_image" {
 
 variable "kwasm_node_selector" {
   type        = map(string)
-  default     = { agentpool = "backend" } 
+  default     = { agentpool = "backend" }
   description = "Node selector to use for KWasm daemonset"
 }
 

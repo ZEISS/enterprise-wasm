@@ -4,6 +4,6 @@ resource "azurerm_application_insights" "appins" {
   location            = var.location
   tags                = var.tags
 
-  workspace_id        =var.loganalytics_id 
-  application_type    = "web"
+  workspace_id     = var.loganalytics_id
+  application_type = "web"
 }

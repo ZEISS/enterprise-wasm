@@ -5,3 +5,8 @@
 | 2024-01-21T11:22:23.934Z |   10000 |  68 | baseline commit 6a9b6ca Rust 3:9 Dapr shared/Spin |
 | 2024-01-21T11:28:24.763Z |   10000 |  67 | baseline commit 6a9b6ca Rust 3:9 Dapr shared/Spin |
 | 2024-01-21T11:34:06.341Z |   10000 |  75 | baseline commit 6a9b6ca Rust 3:9 Dapr shared/Spin |
+| 2024-01-21T16:27:23.528Z |   10000 |  48 | sb-premium                                        |
+| 2024-01-21T16:43:26.206Z |   10000 |  46 | sb-premium                                        |
+| 2024-01-21T16:48:54.083Z |   10000 |  44 | sb-premium                                        |
+| 2024-01-21T16:53:51.441Z |   10000 |  45 | sb-premium                                        |
+| 2024-01-21T16:59:04.548Z |   10000 |  46 | sb-premium                                        |
