@@ -57,7 +57,7 @@ optional:
 
 ## Sample Workloads
 
-| sample                                    | infrastructure                                   | workload                                         |
-| ----------------------------------------- | ------------------------------------------------ | ------------------------------------------------ |
-| Spin with Dapr on AKS, Node.js/TypeScript | [aks-spin-dapr](./infra/aks-spin-dapr/README.md) | [spin-dapr-ts](./samples/spin-dapr-ts/README.md) |
-| Spin with Dapr on AKS, Rust               | [aks-spin-dapr](./infra/aks-spin-dapr/README.md) | [spin-dapr-rs](./samples/spin-dapr-rs/README.md) |
+| sample                                    | infrastructure                                   | workload                                         | deploy sample                  | destroy sample                  |
+| ----------------------------------------- | ------------------------------------------------ | ------------------------------------------------ | ------------------------------ | ------------------------------- |
+| Spin with Dapr on AKS, Rust               | [aks-spin-dapr](./infra/aks-spin-dapr/README.md) | [spin-dapr-rs](./samples/spin-dapr-rs/README.md) | `make deploy-aks-spin-dapr-rs` | `make destroy-aks-spin-dapr-rs` |
+| Spin with Dapr on AKS, Node.js/TypeScript | [aks-spin-dapr](./infra/aks-spin-dapr/README.md) | [spin-dapr-ts](./samples/spin-dapr-ts/README.md) | `make deploy-aks-spin-dapr-ts` | `make destroy-aks-spin-dapr-ts` |

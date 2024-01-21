@@ -21,5 +21,6 @@ INSTRUMENTATION_KEY=`az monitor app-insights component show --ids $APPINSIGHTS_I
 # ---- install OpenTelemetry
 cat ./open-telemetry-collector-appinsights.yaml | \
 sed "s/<INSTRUMENTATION-KEY>/$INSTRUMENTATION_KEY/" | \
+yq eval '. | select(.kind=="Deployment").spec.template.spec.nodeSelector={"agentpool":"default"}' | \
 kubectl apply -f -
 kubectl apply -f ./collector-config.yaml
