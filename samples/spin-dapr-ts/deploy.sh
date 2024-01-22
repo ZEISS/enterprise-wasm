@@ -16,7 +16,7 @@ esac
 
 REPO_ROOT=`git rev-parse --show-toplevel`
 TARGET_INFRA_FOLDER=../../infra/aks-spin-dapr
-RESOURCE_GROUP_NAME=`terraform output -state=$TARGET_INFRA_FOLDER/terraform.tfstate -json script_vars | jq -r .resource_group`
+RESOURCE_GROUP_NAME=`terraform -chdir=$TARGET_INFRA_FOLDER output -json script_vars | jq -r .resource_group`
 
 APP=spin-dapr-ts
 SERVICEBUS_NAMESPACE=`az resource list -g $RESOURCE_GROUP_NAME --resource-type Microsoft.ServiceBus/namespaces --query '[0].name' -o tsv`
