@@ -25,6 +25,8 @@ spec:
       value: 900
     - name: maxConcurrentHandlers
       value: 9
+    - name: handlerTimeoutInSec
+      value: 10
 auth:
   secretStore: secretstore
 scopes:
@@ -92,6 +94,8 @@ spec:
       value: 900
     - name: maxConcurrentHandlers
       value: 9
+    - name: handlerTimeoutInSec
+      value: 10
 auth:
   secretStore: secretstore
 scopes:
@@ -117,6 +121,8 @@ spec:
       value: 900
     - name: maxConcurrentHandlers
       value: 9
+    - name: handlerTimeoutInSec
+      value: 10
 auth:
   secretStore: secretstore
 scopes:
