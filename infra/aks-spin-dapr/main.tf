@@ -112,3 +112,15 @@ module "kwasm" {
     module.aks
   ]
 }
+
+module "keda" {
+  count              = var.keda_deploy ? 1 : 0
+  source             = "../modules/helm/keda"
+  namespace          = var.keda_namespace
+  providers = {
+    kubernetes = kubernetes
+  }
+  depends_on = [
+    module.aks
+  ]
+}

@@ -147,3 +147,15 @@ variable "kwasm_runtime_class_name" {
   default     = "wasmtime-spin-v2"
   description = "Runtime class name to use for Spin wasm containers"
 }
+
+variable "keda_deploy" {
+  type        = bool
+  default     = true
+  description = "Indicate whether to deploy KEDA directly with cluster"
+}
+
+variable "keda_namespace" {
+  type        = string
+  default     = "keda-system"
+  description = "Kubernetes namespace to install KEDA in"
+}
