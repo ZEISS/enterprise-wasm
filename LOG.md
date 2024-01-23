@@ -15,8 +15,8 @@
 | 2024-01-22T08:12:49.803Z |   10000 |  44 | commit fe4aa83 Rust 9:9 Dapr sidecar/Spin                    |
 | 2024-01-22T08:17:58.016Z |   10000 | 958 | commit fe4aa83 Rust 9:9 Dapr sidecar/Spin                    |
 | 2024-01-22T08:38:40.129Z |   10000 |  56 | commit fe4aa83 Rust 9:9 Dapr sidecar/Spin                    |
-| 2024-01-22T09:38:27.424Z |   10000 |  38 | reduce-app-timeout commit ba40426 Rust 9:9 Dapr sidecar/Spin |
-| 2024-01-22T09:43:37.504Z |   10000 | 246 | reduce-app-timeout commit ba40426 Rust 9:9 Dapr sidecar/Spin |
-| 2024-01-22T09:52:08.898Z |   10000 |  40 | reduce-app-timeout commit ba40426 Rust 9:9 Dapr sidecar/Spin |
-| 2024-01-22T09:57:26.015Z |   10000 |  39 | reduce-app-timeout commit ba40426 Rust 9:9 Dapr sidecar/Spin |
-| 2024-01-22T10:02:53.916Z |   10000 |  40 | reduce-app-timeout commit ba40426 Rust 9:9 Dapr sidecar/Spin |
+| 2024-01-22T09:38:27.424Z |   10000 |  38 | reduce-app-timeout commit dfd1364 Rust 9:9 Dapr sidecar/Spin |
+| 2024-01-22T09:43:37.504Z |   10000 | 246 | reduce-app-timeout commit dfd1364 Rust 9:9 Dapr sidecar/Spin |
+| 2024-01-22T09:52:08.898Z |   10000 |  40 | reduce-app-timeout commit dfd1364 Rust 9:9 Dapr sidecar/Spin |
+| 2024-01-22T09:57:26.015Z |   10000 |  39 | reduce-app-timeout commit dfd1364 Rust 9:9 Dapr sidecar/Spin |
+| 2024-01-22T10:02:53.916Z |   10000 |  40 | reduce-app-timeout commit dfd1364 Rust 9:9 Dapr sidecar/Spin |
