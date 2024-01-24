@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: distributor
 spec:
-  replicas: 20
+  replicas: 9
   selector:
     matchLabels:
       app: distributor
@@ -34,7 +34,7 @@ kind: Deployment
 metadata:
   name: receiver-express
 spec:
-  replicas: 20
+  replicas: 9
   selector:
     matchLabels:
       app: receiver-express
@@ -65,7 +65,7 @@ kind: Deployment
 metadata:
   name: receiver-standard
 spec:
-  replicas: 20
+  replicas: 9
   selector:
     matchLabels:
       app: receiver-standard

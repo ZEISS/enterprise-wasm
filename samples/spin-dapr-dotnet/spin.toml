@@ -14,7 +14,7 @@ route = "/..."
 component = "spin-dotnet-dapr"
 
 [component.spin-dotnet-dapr]
-source = "bin/Debug/net7.0/SpinDotnetDapr.wasm"
+source = "bin/Release/net7.0/SpinDotnetDapr.wasm"
 allowed_outbound_hosts = [ "https://*:*", "http://*:*"]
 
 [component.spin-dotnet-dapr.variables]
