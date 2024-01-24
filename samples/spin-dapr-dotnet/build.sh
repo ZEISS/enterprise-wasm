@@ -2,7 +2,7 @@
 
 set -e
 
-TARGET_INFRA_FOLDER=../../infra/aks-dotnet-dapr
+TARGET_INFRA_FOLDER=../../infra/aks-spin-dapr
 RESOURCE_GROUP_NAME=`terraform output -state=$TARGET_INFRA_FOLDER/terraform.tfstate -json script_vars | jq -r .resource_group`
 AZURE_CONTAINER_REGISTRY_NAME=`az resource list -g $RESOURCE_GROUP_NAME --resource-type Microsoft.ContainerRegistry/registries --query '[0].name' -o tsv`
 AZURE_CONTAINER_REGISTRY_ENDPOINT=`az acr show -n $AZURE_CONTAINER_REGISTRY_NAME --query loginServer -o tsv`

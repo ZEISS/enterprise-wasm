@@ -15,7 +15,7 @@ esac
 # ---- init
 
 REPO_ROOT=`git rev-parse --show-toplevel`
-TARGET_INFRA_FOLDER=../../infra/aks-dotnet-dapr
+TARGET_INFRA_FOLDER=../../infra/aks-spin-dapr
 RESOURCE_GROUP_NAME=`terraform output -state=$TARGET_INFRA_FOLDER/terraform.tfstate -json script_vars | jq -r .resource_group`
 
 APP=spin-dapr-dotnet
