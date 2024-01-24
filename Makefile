@@ -1,13 +1,18 @@
-.PHONY: deploy-aks-spin-dapr-dotnet
+.PHONY: deploy-aks-spin-dapr-shared-dotnet
 deploy-aks-spin-dapr-dotnet:
 	$(MAKE) -C ./infra/aks-spin-dapr/ deploy
 	$(MAKE) -C ./samples/spin-dapr-dotnet/ deploy-shared
 
+.PHONY: deploy-aks-spin-dapr-sidecar-dotnet
+deploy-aks-spin-dapr-dotnet:
+	$(MAKE) -C ./infra/aks-spin-dapr/ deploy
+	$(MAKE) -C ./samples/spin-dapr-dotnet/ deploy-sidecar
+
 .PHONY: destroy-aks-spin-dapr-dotnet
 destroy-aks-spin-dapr-dotnet: destroy-aks-spin-dapr
 
-.PHONY: deploy-aks-spin-dapr-rs
-deploy-aks-spin-dapr-rs:
+.PHONY: deploy-aks-spin-dapr-shared-rs
+deploy-aks-spin-dapr-shared-rs:
 	$(MAKE) -C ./infra/aks-spin-dapr/ deploy
 	$(MAKE) -C ./samples/spin-dapr-rs/ deploy-shared
 
@@ -15,6 +20,9 @@ deploy-aks-spin-dapr-rs:
 deploy-aks-spin-dapr-sidecar-rs:
 	$(MAKE) -C ./infra/aks-spin-dapr/ deploy
 	$(MAKE) -C ./samples/spin-dapr-rs/ deploy-sidecar
+
+.PHONY: destroy-aks-spin-dapr-rs
+destroy-aks-spin-dapr-rs: destroy-aks-spin-dapr
 
 .PHONY: deploy-aks-spin-dapr-shared-ts
 deploy-aks-spin-dapr-shared-ts:
@@ -25,9 +33,6 @@ deploy-aks-spin-dapr-shared-ts:
 deploy-aks-spin-dapr-sidecar-ts:
 	$(MAKE) -C ./infra/aks-spin-dapr/ deploy
 	$(MAKE) -C ./samples/spin-dapr-ts/ deploy-sidecar
-
-.PHONY: destroy-aks-spin-dapr-rs
-destroy-aks-spin-dapr-rs: destroy-aks-spin-dapr
 
 .PHONY: destroy-aks-spin-dapr-ts
 destroy-aks-spin-dapr-ts: destroy-aks-spin-dapr
