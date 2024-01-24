@@ -16,7 +16,7 @@ esac
 
 REPO_ROOT=`git rev-parse --show-toplevel`
 TARGET_INFRA_FOLDER=../../infra/aks-spin-dapr
-RESOURCE_GROUP_NAME=`terraform output -state=$TARGET_INFRA_FOLDER/terraform.tfstate -json script_vars | jq -r .resource_group`
+RESOURCE_GROUP_NAME=`terraform -chdir=$TARGET_INFRA_FOLDER output -json script_vars | jq -r .resource_group`
 
 APP=spin-dapr-dotnet
 SERVICEBUS_NAMESPACE=`az resource list -g $RESOURCE_GROUP_NAME --resource-type Microsoft.ServiceBus/namespaces --query '[0].name' -o tsv`
@@ -57,12 +57,11 @@ if [ $PATTERN = 'shared' ]; then
   do
     echo "$app"
 
-    # helm upgrade --install $app-dapr oci://registry-1.docker.io/daprio/dapr-shared-chart \
     helm upgrade --install $app-dapr oci://registry-1.docker.io/daprio/dapr-shared-chart \
       --set fullnameOverride=$app-dapr \
       --set shared.strategy=deployment \
       --set shared.scheduling.nodeSelector.agentpool=backend \
-      --set shared.deployment.replicas=3 \
+      --set shared.deployment.replicas=1 \
       --set shared.daprd.image.tag=$DAPR_VERSION \
       --set shared.appId=$app \
       --set shared.daprd.config=appconfig \

@@ -1,3 +1,11 @@
+.PHONY: deploy-aks-spin-dapr-dotnet
+deploy-aks-spin-dapr-dotnet:
+	$(MAKE) -C ./infra/aks-spin-dapr/ deploy
+	$(MAKE) -C ./samples/spin-dapr-dotnet/ deploy-shared
+
+.PHONY: destroy-aks-spin-dapr-dotnet
+destroy-aks-spin-dapr-dotnet: destroy-aks-spin-dapr
+
 .PHONY: deploy-aks-spin-dapr-rs
 deploy-aks-spin-dapr-rs:
 	$(MAKE) -C ./infra/aks-spin-dapr/ deploy
