@@ -10,9 +10,13 @@
 | 2024-01-21T16:48:54.083Z |   10000 |  44 | sb-premium commit fe4aa83 --as above--            |
 | 2024-01-21T16:53:51.441Z |   10000 |  45 | sb-premium commit fe4aa83 --as above--            |
 | 2024-01-21T16:59:04.548Z |   10000 |  46 | sb-premium commit fe4aa83 --as above--            |
-2024-01-23T15:21:14.798Z | 10000 | 88 | 
-2024-01-23T15:30:46.758Z | 10000 | 87 | 
-2024-01-23T15:45:29.162Z | 10000 | 139 | 
-2024-01-23T15:55:39.224Z | 10000 | 60 | 
-2024-01-23T16:15:13.359Z | 10000 | 57 | 
-2024-01-23T16:25:56.251Z | 10000 | 38 | 
+| 2024-01-24T06:41:04.381Z |   10000 |  65 | commit da943c7 keda-shared-rs                     |
+| 2024-01-24T06:47:16.276Z |   10000 |  64 | commit da943c7 keda-shared-rs                     |
+| 2024-01-24T06:53:06.020Z |   10000 | 369 | commit da943c7 keda-shared-rs                     |
+| 2024-01-24T07:03:59.910Z |   10000 |  51 | commit da943c7 keda-shared-rs                     |
+| 2024-01-24T07:09:25.640Z |   10000 |  68 | commit da943c7 keda-shared-rs                     |
+| 2024-01-24T07:27:10.238Z |   10000 |  48 | commit da943c7 keda-sidecar-rs                    |
+| 2024-01-24T07:33:03.827Z |   10000 |  45 | commit da943c7 keda-sidecar-rs                    |
+| 2024-01-24T07:38:35.060Z |   10000 |  63 | commit da943c7 keda-sidecar-rs                    |
+| 2024-01-24T07:44:41.509Z |   10000 |  53 | commit da943c7 keda-sidecar-rs                    |
+| 2024-01-24T07:50:26.398Z |   10000 |  54 | commit da943c7 keda-sidecar-rs                    |
