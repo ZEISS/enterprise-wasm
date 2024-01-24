@@ -1,0 +1,4 @@
+FROM scratch
+COPY ./bin/Release/net7.0/SpinDotnetDapr.wasm ./bin/Release/net7.0/SpinDotnetDapr.wasm
+COPY ./spin.toml /spin.toml
+ENTRYPOINT ["/spin.toml"]
