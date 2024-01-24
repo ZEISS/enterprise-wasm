@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using Fermyon.Spin.Sdk;
-using System.Diagnostics;
 
 namespace SpinDotnetDapr;
 
@@ -13,67 +12,41 @@ public class Handler
         var method = request.Method;
         var body = request.Body;
 
-        // Health Check
-        if (endpoint == "/healthz")
-        {
-            return new HttpResponse
-            {
-                StatusCode = HttpStatusCode.OK
-            };
-        }
-
-        // Dapr Metadata
-        if (endpoint == "/dapr-metadata")
-        {
-            return DaprMetaData();
-        }
-
-        //Order Ingress
-        if (endpoint == "/q-order-ingress" && method == Fermyon.Spin.Sdk.HttpMethod.Post)
-        {
-            return Distributor(body);
-        }
-        if (endpoint == "/q-order-ingress" && method == Fermyon.Spin.Sdk.HttpMethod.Options)
-        {
-            return new HttpResponse
-            {
-                StatusCode = HttpStatusCode.OK
-            };
-        }
-
-        //Order Express in
-        if (endpoint == "/q-order-express-in" && method == Fermyon.Spin.Sdk.HttpMethod.Post)
-        {
-            return Receiver(body);
-        }
-        if (endpoint == "/q-order-express-in" && method == Fermyon.Spin.Sdk.HttpMethod.Options)
-        {
-            return new HttpResponse
-            {
-                StatusCode = HttpStatusCode.OK
-            };
-        }
-
-        //Order Standard in
-        if (endpoint == "/q-order-standard-in" && method == Fermyon.Spin.Sdk.HttpMethod.Post)
-        {
-            return Receiver(body);
-        }
-        if (endpoint == "/q-order-standard-in" && method == Fermyon.Spin.Sdk.HttpMethod.Options)
-        {
-            return new HttpResponse
-            {
-                StatusCode = HttpStatusCode.OK
-            };
-        }
-
-        else
-        {
-            return new HttpResponse
-            {
-                StatusCode = System.Net.HttpStatusCode.NotFound,
-                BodyAsString = $"the specified Endpoint: {endpoint} was not found"
-            };
+        switch ((endpoint, method))
+        {      
+            // Health Check
+            case ("/healthz", _):
+                return new HttpResponse { StatusCode = HttpStatusCode.OK };
+        
+            // Dapr Metadata
+            case ("/dapr-metadata", _):
+                return DaprMetaData();
+        
+            // Order Ingress
+            case ("/q-order-ingress", Fermyon.Spin.Sdk.HttpMethod.Post):
+                return Distributor(body);
+            case ("/q-order-ingress", Fermyon.Spin.Sdk.HttpMethod.Options):
+                return new HttpResponse { StatusCode = HttpStatusCode.OK };
+        
+            // Order Express in
+            case ("/q-order-express-in", Fermyon.Spin.Sdk.HttpMethod.Post):
+                return Receiver(body);
+            case ("/q-order-express-in", Fermyon.Spin.Sdk.HttpMethod.Options):
+                return new HttpResponse { StatusCode = HttpStatusCode.OK };
+        
+            // Order Standard in
+            case ("/q-order-standard-in", Fermyon.Spin.Sdk.HttpMethod.Post):
+                return Receiver(body);
+            case ("/q-order-standard-in", Fermyon.Spin.Sdk.HttpMethod.Options):
+                return new HttpResponse { StatusCode = HttpStatusCode.OK };
+        
+            // Default case
+            default:
+                return new HttpResponse
+                {
+                    StatusCode = System.Net.HttpStatusCode.NotFound,
+                    BodyAsString = $"the specified Endpoint: {endpoint} was not found"
+                };
         }
     }
 
@@ -110,7 +83,11 @@ public class Handler
         Console.WriteLine(bodyString);
 
         string delivery = GetValueFromJson(bodyString, "delivery");
+        System.Console.WriteLine(delivery);
+        System.Console.WriteLine("delivery is: " + delivery);
+
         string deliveryLower = ConvertToLowercase(delivery);
+        Console.WriteLine("sending to " + deliveryLower);
 
         var request = new HttpRequest
         {
@@ -125,6 +102,7 @@ public class Handler
 
         try
         {
+            System.Console.WriteLine("try sending out request");
             var response = HttpOutbound.Send(request);
             return new HttpResponse
             {
@@ -149,8 +127,10 @@ public class Handler
 
         string bodyString = body.AsString();
         Console.WriteLine(bodyString);
+        GetValueFromJson(bodyString, "delivery");
 
-        string delivery = GetValueFromJson(bodyString, "delivery");
+        var delivery = GetValueFromJson(bodyString, "delivery");
+        System.Console.WriteLine("delivery is: " + delivery);
         string deliveryLower = ConvertToLowercase(delivery);
         Console.WriteLine("sending to " + deliveryLower);
 
@@ -171,6 +151,7 @@ public class Handler
         };
         try
         {
+            System.Console.WriteLine("try sending out request");
             var response = HttpOutbound.Send(request);
             Console.WriteLine(response.BodyAsString);
             return new HttpResponse
@@ -197,7 +178,6 @@ public class Handler
     public string GetValueFromJson(string jsonString, string key)
     {
         int keyIndex = GetSubstringIndex(jsonString, "\"" + key + "\":");
-
         if (keyIndex == -1)
         {
             return "";

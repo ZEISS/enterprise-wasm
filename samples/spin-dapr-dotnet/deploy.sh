@@ -58,11 +58,11 @@ if [ $PATTERN = 'shared' ]; then
     echo "$app"
 
     # helm upgrade --install $app-dapr oci://registry-1.docker.io/daprio/dapr-shared-chart \
-    helm upgrade --install $app-dapr ~/src/dapr-shared/chart/dapr-shared \
+    helm upgrade --install $app-dapr oci://registry-1.docker.io/daprio/dapr-shared-chart \
       --set fullnameOverride=$app-dapr \
       --set shared.strategy=deployment \
       --set shared.scheduling.nodeSelector.agentpool=backend \
-      --set shared.deployment.replicas=3 \
+      --set shared.deployment.replicas=5 \
       --set shared.daprd.image.tag=$DAPR_VERSION \
       --set shared.appId=$app \
       --set shared.daprd.config=appconfig \

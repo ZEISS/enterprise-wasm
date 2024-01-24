@@ -17,6 +17,7 @@ fi
 
 IMAGE_NAME=$AZURE_CONTAINER_REGISTRY_ENDPOINT/spin-dapr-dotnet:$REVISION
 
+spin build
 docker buildx use wasm-builder
 docker buildx build --platform=wasi/wasm --provenance=false --push -t $IMAGE_NAME .
 docker buildx use default

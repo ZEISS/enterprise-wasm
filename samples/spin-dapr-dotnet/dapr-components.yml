@@ -24,7 +24,7 @@ spec:
     - name: maxActiveMessages
       value: 900
     - name: maxConcurrentHandlers
-      value: 9
+      value: 20
 auth:
   secretStore: secretstore
 scopes:
@@ -91,7 +91,7 @@ spec:
     - name: maxActiveMessages
       value: 900
     - name: maxConcurrentHandlers
-      value: 9
+      value: 20
 auth:
   secretStore: secretstore
 scopes:
@@ -116,7 +116,7 @@ spec:
     - name: maxActiveMessages
       value: 900
     - name: maxConcurrentHandlers
-      value: 9
+      value: 20
 auth:
   secretStore: secretstore
 scopes:

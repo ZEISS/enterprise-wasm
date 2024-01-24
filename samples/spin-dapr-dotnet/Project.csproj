@@ -8,12 +8,9 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <AssemblyName>SpinDontetDapr</AssemblyName>
+    <AssemblyName>SpinDotnetDapr</AssemblyName>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-  </PropertyGroup>
-  <PropertyGroup>
-      <UseWizer>true</UseWizer>
   </PropertyGroup>
 
 </Project>

@@ -2,13 +2,13 @@ namespace SpinDotnetDapr;
 
 public class OrderItem
 {
-    public int orderId { get; set; }
+    public int orderItemId { get; set; }
     public string sku { get; set; }
     public int quantity { get; set; }
 
-    public OrderItem(int orderIdInput, string skuInput, int quantityInput)
+    public OrderItem(int orderItemIdInput, string skuInput, int quantityInput)
     {
-        orderId = orderIdInput;
+        orderItemId = orderItemIdInput;
         sku = skuInput;
         quantity = quantityInput;
     }

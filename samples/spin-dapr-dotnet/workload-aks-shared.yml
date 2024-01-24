@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: distributor
 spec:
-  replicas: 9
+  replicas: 20
   selector:
     matchLabels:
       app: distributor
@@ -21,7 +21,7 @@ spec:
           command: ["/"]
           env:
             - name: SPIN_VARIABLE_DAPR_URL
-              value: "http://distributor-dapr"
+              value: "http://distributor-dapr:3500"
           livenessProbe:
             httpGet:
               path: .well-known/spin/health
@@ -34,7 +34,7 @@ kind: Deployment
 metadata:
   name: receiver-express
 spec:
-  replicas: 9
+  replicas: 20
   selector:
     matchLabels:
       app: receiver-express
@@ -52,7 +52,7 @@ spec:
           command: ["/"]
           env:
             - name: SPIN_VARIABLE_DAPR_URL
-              value: "http://receiver-express-dapr"
+              value: "http://receiver-express-dapr:3500"
           livenessProbe:
             httpGet:
               path: .well-known/spin/health
@@ -65,7 +65,7 @@ kind: Deployment
 metadata:
   name: receiver-standard
 spec:
-  replicas: 9
+  replicas: 20
   selector:
     matchLabels:
       app: receiver-standard
@@ -83,7 +83,7 @@ spec:
           command: ["/"]
           env:
             - name: SPIN_VARIABLE_DAPR_URL
-              value: "http://receiver-standard-dapr"
+              value: "http://receiver-standard-dapr:3500"
           livenessProbe:
             httpGet:
               path: .well-known/spin/health
