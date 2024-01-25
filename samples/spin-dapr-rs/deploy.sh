@@ -67,6 +67,7 @@ if [ $PATTERN = 'shared' ]; then
       --set shared.daprd.config=appconfig \
       --set shared.remoteURL=$app-svc \
       --set shared.remotePort=80 \
+      --set shared.controlPlane.placementServerAddress="''" \
       --set shared.daprd.listenAddresses=0.0.0.0
 
   done
