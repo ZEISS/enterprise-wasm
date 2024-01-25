@@ -93,7 +93,7 @@ spec:
         dapr.io/enable-app-health-check: "true"
         dapr.io/log-level: "info"
         dapr.io/app-protocol: "http"
-        dapr.io/placement-host-address: ""
+        dapr.io/placement-host-address: "''"
         dapr.io/sidecar-listen-addresses: "0.0.0.0,[::]"
     spec:
       runtimeClassName: wasmtime-spin-v2
@@ -135,7 +135,7 @@ spec:
         dapr.io/enable-app-health-check: "true"
         dapr.io/log-level: "info"
         dapr.io/app-protocol: "http"
-        dapr.io/placement-host-address: ""
+        dapr.io/placement-host-address: "''"
         dapr.io/sidecar-listen-addresses: "0.0.0.0,[::]"
     spec:
       runtimeClassName: wasmtime-spin-v2
@@ -177,7 +177,7 @@ spec:
         dapr.io/enable-app-health-check: "true"
         dapr.io/log-level: "info"
         dapr.io/app-protocol: "http"
-        dapr.io/placement-host-address: ""
+        dapr.io/placement-host-address: "''"
         dapr.io/sidecar-listen-addresses: "0.0.0.0,[::]"
     spec:
       runtimeClassName: wasmtime-spin-v2
