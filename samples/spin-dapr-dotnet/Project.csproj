@@ -12,5 +12,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  <PropertyGroup>
+      <UseWizer>true</UseWizer>
+  </PropertyGroup>
 
 </Project>
