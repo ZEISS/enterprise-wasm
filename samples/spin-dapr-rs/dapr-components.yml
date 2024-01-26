@@ -22,9 +22,9 @@ spec:
     - name: queueName
       value: q-order-ingress-spin
     - name: maxActiveMessages
-      value: 900
+      value: 100
     - name: maxConcurrentHandlers
-      value: 9
+      value: 0
     - name: handlerTimeoutInSec
       value: 10
 auth:
@@ -91,9 +91,9 @@ spec:
     - name: direction
       value: input
     - name: maxActiveMessages
-      value: 900
+      value: 100
     - name: maxConcurrentHandlers
-      value: 9
+      value: 0
     - name: handlerTimeoutInSec
       value: 10
 auth:
@@ -118,9 +118,9 @@ spec:
     - name: direction
       value: input
     - name: maxActiveMessages
-      value: 900
+      value: 100
     - name: maxConcurrentHandlers
-      value: 9
+      value: 0
     - name: handlerTimeoutInSec
       value: 10
 auth:
