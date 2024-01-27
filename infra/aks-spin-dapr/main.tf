@@ -47,7 +47,20 @@ module "app-insights" {
   loganalytics_id     = module.loganalytics.LOGANALYTICS_ID
 }
 
+module "grafana" {
+  count               = var.monitoring == "grafana" ? 1 : 0
+  source              = "../modules/az/grafana"
+  location            = var.location
+  resource_group_name = azurerm_resource_group.rg.name
+  tags                = local.tags
+  resource_prefix     = local.base_name
+  loganalytics_id     = module.loganalytics.LOGANALYTICS_ID
+  cluster_id          = module.aks.CLUSTER_ID
+  cluster_name        = module.aks.CLUSTER_NAME
+}
+
 module "container-insights" {
+  count               = var.monitoring == "container-insights" ? 1 : 0
   source              = "../modules/az/container-insights"
   location            = var.location
   resource_group_name = azurerm_resource_group.rg.name
@@ -114,9 +127,9 @@ module "kwasm" {
 }
 
 module "keda" {
-  count              = var.keda_deploy ? 1 : 0
-  source             = "../modules/helm/keda"
-  namespace          = var.keda_namespace
+  count     = var.keda_deploy ? 1 : 0
+  source    = "../modules/helm/keda"
+  namespace = var.keda_namespace
   providers = {
     kubernetes = kubernetes
   }
