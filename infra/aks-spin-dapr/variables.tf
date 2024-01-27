@@ -19,6 +19,17 @@ variable "tags" {
   }
 }
 
+variable "monitoring" {
+  type        = string
+  description = "Sets cluster monitoring environment to use: container-insights, grafana"
+  default     = "container-insights"
+
+  validation {
+    condition     = contains(["container-insights", "grafana"], var.monitoring)
+    error_message = "Valid values for var: monitoring are (container-insights, grafana)."
+  }
+}
+
 variable "cluster_admins" {
   type        = list(string)
   default     = []

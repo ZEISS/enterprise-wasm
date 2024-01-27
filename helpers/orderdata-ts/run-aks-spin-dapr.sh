@@ -15,6 +15,7 @@ STORAGE_BLOB_CONNECTION=`az storage account show-connection-string -g $RESOURCE_
 STORAGE_ACCOUNT_KEY=`az storage account keys list -g $RESOURCE_GROUP_NAME -n $STORAGE_NAME --query "[?permissions == 'FULL'] | [0].value" -o tsv `
 
 # clear outbox blob folders
+echo "clear outbox blob folders"
 containers=(express-outbox standard-outbox)
 for c in "${containers[@]}"
 do
@@ -76,9 +77,7 @@ fi
 echo "### initiating test ###"
 PUSHRESPONSE=`curl -s -d "$(generate_schedule_data)" http://localhost:$APP_PORT/schedule-test \
     -H 'Content-Type: application/json'`
-echo pr $PUSHRESPONSE
 SCHEDULE=`echo $PUSHRESPONSE | jq -r '.scheduledTimestamp'`
-echo s $SCHEDULE
 echo wait ${DELAY}m for scheduled time
 sleep $(( $DELAY * 60 ))
 
