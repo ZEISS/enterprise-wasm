@@ -24,3 +24,7 @@ sed "s/<INSTRUMENTATION-KEY>/$INSTRUMENTATION_KEY/" | \
 yq eval '. | select(.kind=="Deployment").spec.template.spec.nodeSelector={"agentpool":"default"}' | \
 kubectl apply -f -
 kubectl apply -f ./collector-config.yaml
+
+CLUSTER_NAME=`az resource list -g $RESOURCE_GROUP_NAME --resource-type Microsoft.ContainerService/managedClusters --query '[0].name' -o tsv`
+
+az aks update -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME --kube-proxy-config kube-proxy.json

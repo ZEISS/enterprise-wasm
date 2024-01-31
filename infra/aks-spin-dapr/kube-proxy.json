@@ -1,0 +1,10 @@
+{
+  "enabled": true,
+  "mode": "IPVS",
+  "ipvsConfig": {
+    "scheduler": "RoundRobin",
+    "TCPTimeoutSeconds": 900,
+    "TCPFINTimeoutSeconds": 120,
+    "UDPTimeoutSeconds": 300
+  }
+}
