@@ -1,7 +1,7 @@
 // source: https://blog.logrocket.com/building-rest-api-rust-warp/
 
 use parking_lot::RwLock;
-use reqwest::Error;
+use reqwest::{Error, StatusCode};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Arc;
@@ -76,23 +76,33 @@ impl<'a> OutboxCreate<'a> {
 }
 
 async fn health() -> Result<impl warp::Reply, warp::Rejection> {
-    Ok(warp::reply::with_status("Healthy", http::StatusCode::OK))
+    Ok(warp::reply::with_status("Healthy", StatusCode::OK))
 }
 
-async fn make_request() -> Result<String, Error> {
-    let url = "http://localhost:3500/v1.0/metadata";
-    let response = reqwest::get(url).await?;
-    let body = response.json().await?;
-    Ok(body)
+#[derive(Debug)]
+struct FetchError;
+impl warp::reject::Reject for FetchError {}
+
+async fn fetch_url(url: reqwest::Url) -> Result<String, reqwest::Error> {
+    reqwest::get(url).await?.text().await
 }
 
 async fn dapr_metadata() -> Result<impl warp::Reply, warp::Rejection> {
-    let response = make_request().await.map_err(|_| warp::reject())?;
-    Ok(json(&response))
+    let url = url::Url::parse("http://localhost:3500/v1.0/metadata").expect("Dapr URL");
+    match fetch_url(url).await {
+        Ok(response) => Ok(warp::reply::with_status(response, StatusCode::OK)),
+        Err(_) => Err(warp::reject::custom(FetchError)),
+    }
 }
 
 #[tokio::main]
 async fn main() {
+    let subscriber = tracing_subscriber::FmtSubscriber::builder()
+        .with_max_level(tracing::Level::INFO)
+        .finish();
+
+    tracing::subscriber::set_global_default(subscriber).expect("setting default subscriber failed");
+
     let get_health = warp::get()
         .and(warp::path("healthz"))
         .and(warp::path::end())
