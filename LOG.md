@@ -20,3 +20,5 @@
 | 2024-01-24T07:38:35.060Z |   10000 |  63 | commit da943c7 keda-sidecar-rs                    |
 | 2024-01-24T07:44:41.509Z |   10000 |  53 | commit da943c7 keda-sidecar-rs                    |
 | 2024-01-24T07:50:26.398Z |   10000 |  54 | commit da943c7 keda-sidecar-rs                    |
+| 2024-02-01T17:45:57.290Z |   10000 |  76 | classic-shared                                    |
+| 2024-02-01T17:52:02.580Z |   10000 |  60 | classic-shared                                    |

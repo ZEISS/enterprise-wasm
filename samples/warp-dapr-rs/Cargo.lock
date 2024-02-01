@@ -1371,7 +1371,6 @@ dependencies = [
 name = "warp-dapr-rs"
 version = "0.1.0"
 dependencies = [
- "parking_lot",
  "reqwest",
  "serde",
  "serde_json",
