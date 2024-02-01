@@ -1,12 +1,9 @@
 // source: https://blog.logrocket.com/building-rest-api-rust-warp/
 
-use parking_lot::RwLock;
-use reqwest::{Error, StatusCode};
-use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
-use std::sync::Arc;
-use warp::reply::json;
-use warp::{http, Filter, Rejection, Reply};
+use std::u16;
+
+use reqwest::StatusCode;
+use warp::Filter;
 
 #[derive(serde::Serialize, serde::Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
@@ -80,19 +77,90 @@ async fn health() -> Result<impl warp::Reply, warp::Rejection> {
 }
 
 #[derive(Debug)]
-struct FetchError;
-impl warp::reject::Reject for FetchError {}
+struct RequestError;
+impl warp::reject::Reject for RequestError {}
 
-async fn fetch_url(url: reqwest::Url) -> Result<String, reqwest::Error> {
-    reqwest::get(url).await?.text().await
+fn dapr_url() -> String {
+    match std::env::var("DAPR_URL") {
+        Ok(url) => url,
+        Err(_) => "http://localhost:3500".to_string(),
+    }
+}
+
+fn app_port() -> u16 {
+    match std::env::var("APP_PORT") {
+        Ok(port) => match port.parse() {
+            Ok(port) => port,
+            Err(_) => 8080,
+        },
+        Err(_) => 8080,
+    }
 }
 
 async fn dapr_metadata() -> Result<impl warp::Reply, warp::Rejection> {
-    let url = url::Url::parse("http://localhost:3500/v1.0/metadata").expect("Dapr URL");
-    match fetch_url(url).await {
+    let dapr_url = dapr_url();
+    let mut url = url::Url::parse(&dapr_url).expect("Dapr URL");
+    url.set_path("v1.0/metadata");
+
+    match reqwest::get(url).await.expect("get").text().await {
         Ok(response) => Ok(warp::reply::with_status(response, StatusCode::OK)),
-        Err(_) => Err(warp::reject::custom(FetchError)),
+        Err(_) => Err(warp::reject::custom(RequestError)),
     }
+}
+
+async fn distributor(order: Order) -> Result<impl warp::Reply, warp::Rejection> {
+    let dapr_url = dapr_url();
+    let path = format!(
+        "v1.0/bindings/q-order-{}-out",
+        &order.delivery.to_lowercase()
+    );
+    let mut url = url::Url::parse(&dapr_url).expect("Dapr URL");
+    url.set_path(&path);
+
+    let outbound_message = OutboundMessage::new(&order);
+    let body = serde_json::to_string(&outbound_message).expect("serialize outbound message");
+    println!("Distributor body {}", body);
+
+    match reqwest::Client::new()
+        .post(url)
+        .json(&outbound_message)
+        .send()
+        .await
+    {
+        Ok(response) => Ok(warp::reply::with_status(
+            response.text().await.expect("response"),
+            StatusCode::OK,
+        )),
+        Err(_) => Err(warp::reject::custom(RequestError)),
+    }
+}
+
+async fn receiver(order: Order) -> Result<impl warp::Reply, warp::Rejection> {
+    let dapr_url = dapr_url();
+    let path = format!("v1.0/bindings/{}-outbox", &order.delivery.to_lowercase());
+    let mut url = url::Url::parse(&dapr_url).expect("Dapr URL");
+    url.set_path(&path);
+
+    let outbox_create = OutboxCreate::new(&order);
+    let body = serde_json::to_string(&outbox_create).expect("serialize outbound message");
+    println!("Receiver body {}", body);
+
+    match reqwest::Client::new()
+        .post(url)
+        .json(&outbox_create)
+        .send()
+        .await
+    {
+        Ok(response) => Ok(warp::reply::with_status(
+            response.text().await.expect("response"),
+            StatusCode::OK,
+        )),
+        Err(_) => Err(warp::reject::custom(RequestError)),
+    }
+}
+
+fn json_body() -> impl Filter<Extract = (Order,), Error = warp::Rejection> + Clone {
+    warp::body::content_length_limit(1024 * 16).and(warp::body::json())
 }
 
 #[tokio::main]
@@ -113,7 +181,29 @@ async fn main() {
         .and(warp::path::end())
         .and_then(dapr_metadata);
 
-    let routes = get_health.or(get_dapr_metadata);
+    let post_distributor = warp::post()
+        .and(warp::path("q-order-ingress"))
+        .and(warp::path::end())
+        .and(json_body())
+        .and_then(distributor);
 
-    warp::serve(routes).run(([0, 0, 0, 0], 8080)).await;
+    let post_receiver_express = warp::post()
+        .and(warp::path("q-order-express-in"))
+        .and(warp::path::end())
+        .and(json_body())
+        .and_then(receiver);
+
+    let post_receiver_standard = warp::post()
+        .and(warp::path("q-order-standard-in"))
+        .and(warp::path::end())
+        .and(json_body())
+        .and_then(receiver);
+
+    let routes = get_health
+        .or(get_dapr_metadata)
+        .or(post_distributor)
+        .or(post_receiver_express)
+        .or(post_receiver_standard);
+
+    warp::serve(routes).run(([0, 0, 0, 0], app_port())).await;
 }
