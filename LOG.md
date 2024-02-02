@@ -20,5 +20,11 @@
 | 2024-01-24T07:38:35.060Z |   10000 |  63 | commit da943c7 keda-sidecar-rs                    |
 | 2024-01-24T07:44:41.509Z |   10000 |  53 | commit da943c7 keda-sidecar-rs                    |
 | 2024-01-24T07:50:26.398Z |   10000 |  54 | commit da943c7 keda-sidecar-rs                    |
-| 2024-02-01T17:45:57.290Z |   10000 |  76 | classic-shared                                    |
-| 2024-02-01T17:52:02.580Z |   10000 |  60 | classic-shared                                    |
+| 2024-02-01T17:45:57.290Z |   10000 |  76 | commit a8a7198 classic-shared                     |
+| 2024-02-01T17:52:02.580Z |   10000 |  60 | commit a8a7198 classic-shared                     |
+| 2024-02-01T18:32:45.582Z |   10000 |  67 | commit a8a7198 classic-shared                     |
+| 2024-02-01T18:56:00.542Z |   10000 |  71 | commit a8a7198 classic-shared                     |
+| 2024-02-01T20:05:40.905Z |   10000 |  75 | commit a8a7198 classic-shared                     |
+| 2024-02-02T07:37:50.076Z |   10000 | 134 | commit a8a7198 classic-sidecar                    |
+| 2024-02-02T07:54:58.877Z |   10000 | 145 | commit a8a7198 classic-sidecar                    |
+| 2024-02-02T08:02:36.472Z |   10000 | 139 | commit a8a7198 classic-sidecar                    |

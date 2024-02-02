@@ -101,12 +101,11 @@ spec:
       containers:
         - name: distributor
           image: { will be replaced by deployment script }
-          command: ["/"]
           env:
             - name: DAPR_URL
               value: "http://localhost:3500"
             - name: APP_PORT
-              value: 80
+              value: "80"
           livenessProbe:
             httpGet:
               path: healthz
@@ -151,12 +150,11 @@ spec:
       containers:
         - name: receiver-express
           image: { will be replaced by deployment script }
-          command: ["/"]
           env:
             - name: DAPR_URL
               value: "http://localhost:3500"
             - name: APP_PORT
-              value: 80
+              value: "80"
           livenessProbe:
             httpGet:
               path: healthz
@@ -201,12 +199,11 @@ spec:
       containers:
         - name: receiver-standard
           image: { will be replaced by deployment script }
-          command: ["/"]
           env:
             - name: DAPR_URL
               value: "http://localhost:3500"
             - name: APP_PORT
-              value: 80
+              value: "80"
           livenessProbe:
             httpGet:
               path: healthz
