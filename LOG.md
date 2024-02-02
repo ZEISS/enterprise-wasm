@@ -28,3 +28,8 @@
 | 2024-02-02T07:37:50.076Z |   10000 | 134 | commit a8a7198 classic-sidecar                    |
 | 2024-02-02T07:54:58.877Z |   10000 | 145 | commit a8a7198 classic-sidecar                    |
 | 2024-02-02T08:02:36.472Z |   10000 | 139 | commit a8a7198 classic-sidecar                    |
+2024-02-02T12:17:28.747Z | 10000 | 140 | classic-sidecar-1000ms
+2024-02-02T12:27:56.165Z | 10000 | 146 | classic-sidecar-1000ms
+2024-02-02T12:35:12.925Z | 10000 | 146 | classic-sidecar-1000ms
+2024-02-02T12:42:36.840Z | 10000 | 139 | classic-sidecar-1000ms
+2024-02-02T12:49:59.898Z | 10000 | 147 | classic-sidecar-1000ms
