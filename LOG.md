@@ -28,8 +28,23 @@
 | 2024-02-02T07:37:50.076Z |   10000 | 134 | commit a8a7198 classic-sidecar                    |
 | 2024-02-02T07:54:58.877Z |   10000 | 145 | commit a8a7198 classic-sidecar                    |
 | 2024-02-02T08:02:36.472Z |   10000 | 139 | commit a8a7198 classic-sidecar                    |
-2024-02-02T12:17:28.747Z | 10000 | 140 | classic-sidecar-1000ms
-2024-02-02T12:27:56.165Z | 10000 | 146 | classic-sidecar-1000ms
-2024-02-02T12:35:12.925Z | 10000 | 146 | classic-sidecar-1000ms
-2024-02-02T12:42:36.840Z | 10000 | 139 | classic-sidecar-1000ms
-2024-02-02T12:49:59.898Z | 10000 | 147 | classic-sidecar-1000ms
+| 2024-02-02T12:17:28.747Z |   10000 | 140 | commit 0dff82c classic-sidecar-1000ms             |
+| 2024-02-02T12:27:56.165Z |   10000 | 146 | commit 0dff82c classic-sidecar-1000ms             |
+| 2024-02-02T12:35:12.925Z |   10000 | 146 | commit 0dff82c classic-sidecar-1000ms             |
+| 2024-02-02T12:42:36.840Z |   10000 | 139 | commit 0dff82c classic-sidecar-1000ms             |
+| 2024-02-02T12:49:59.898Z |   10000 | 147 | commit 0dff82c classic-sidecar-1000ms             |
+| 2024-02-02T14:12:21.638Z |   10000 |  20 | classic-sidecar-slim                              |
+| 2024-02-02T14:20:42.638Z |   10000 |  24 | classic-sidecar-slim                              |
+| 2024-02-02T15:50:59.187Z |   10000 |  17 | classic-sidecar-slim                              |
+| 2024-02-02T15:56:32.999Z |   10000 |  24 | classic-sidecar-slim                              |
+| 2024-02-02T16:02:25.705Z |   10000 |  21 | classic-sidecar-slim                              |
+| 2024-02-02T16:08:59.398Z |   10000 |  21 | classic-sidecar-slim                              |
+| 2024-02-02T16:32:48.113Z |   10000 |  22 | classic-sidecar-small-nodepool                    |
+| 2024-02-02T16:38:19.579Z |   10000 |  25 | classic-sidecar-small-nodepool                    |
+| 2024-02-02T16:43:43.487Z |   10000 |  26 | classic-sidecar-small-nodepool                    |
+| 2024-02-02T16:49:34.549Z |   10000 |  27 | classic-sidecar-small-nodepool                    |
+| 2024-02-02T17:21:50.617Z |   10000 |  23 | classic-sidecar-small-nodepool-static             |
+| 2024-02-02T17:27:00.928Z |   10000 |  70 | classic-sidecar-small-nodepool-static             |
+| 2024-02-02T17:33:10.708Z |   10000 |  21 | classic-sidecar-small-nodepool-static             |
+| 2024-02-02T17:38:10.359Z |   10000 |  16 | classic-sidecar-small-nodepool-static             |
+| 2024-02-02T17:43:05.684Z |   10000 |  19 | classic-sidecar-small-nodepool-static             |

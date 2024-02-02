@@ -84,7 +84,7 @@ variable "user_nodepools" {
     taints = []
   }, {
     name       = "classic"
-    size       = "Standard_DS4_v2"
+    size       = "Standard_DS2_v2"
     node_count = 3
     max_pods   = 250
     labels = {

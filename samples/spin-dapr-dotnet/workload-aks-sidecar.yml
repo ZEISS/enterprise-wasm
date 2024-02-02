@@ -98,7 +98,7 @@ spec:
     spec:
       runtimeClassName: wasmtime-spin-v2
       nodeSelector:
-        agentpool: backend
+        agentpool: wasm
       containers:
         - name: distributor
           image: { will be replaced by deployment script }
@@ -140,7 +140,7 @@ spec:
     spec:
       runtimeClassName: wasmtime-spin-v2
       nodeSelector:
-        agentpool: backend
+        agentpool: wasm
       containers:
         - name: receiver-express
           image: { will be replaced by deployment script }
@@ -182,7 +182,7 @@ spec:
     spec:
       runtimeClassName: wasmtime-spin-v2
       nodeSelector:
-        agentpool: backend
+        agentpool: wasm
       containers:
         - name: receiver-standard
           image: { will be replaced by deployment script }

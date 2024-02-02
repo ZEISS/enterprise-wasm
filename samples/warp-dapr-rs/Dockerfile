@@ -1,4 +1,4 @@
-FROM rust as builder
+FROM rust:bookworm as builder
 
 WORKDIR /app
 
@@ -10,13 +10,13 @@ COPY src src
 RUN touch src/main.rs
 RUN cargo build --release
 
-RUN strip target/release/warp-dapr-rs
+# RUN strip target/release/warp-dapr-rs
 
 # --- 
-FROM rust as runtime
+FROM debian:bookworm-slim
 
-WORKDIR /app
+RUN apt-get update && apt install -y openssl
 
-COPY --from=builder /app/target/release/warp-dapr-rs /usr/local/bin
+COPY --from=builder /app/target/release/warp-dapr-rs /
 
-ENTRYPOINT ["/usr/local/bin/warp-dapr-rs"]
+ENTRYPOINT ["./warp-dapr-rs"]
