@@ -1,15 +1,15 @@
 [package]
 name = "warp-dapr-rs"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 
 [dependencies]
-openssl = { version = "0.10.63", features = ["vendored"] }
-reqwest = { version = "0.11.24", features = ["json"] }
-serde = { version = "1.0.196", features = ["derive"] }
-serde_json = "1.0.113"
-tokio = { version = "1.35.1", features = ["full"] }
-tracing = "0.1.40"
-tracing-subscriber = "0.3.18"
-url = "2.5.0"
-warp = "0.3.6"
+openssl = { version = "0.10", features = ["vendored"] }
+reqwest = { version = "0.11", features = ["json"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+tokio = { version = "1.36", features = ["full"] }
+tracing = "0.1"
+tracing-subscriber = "0.3"
+url = "2.5"
+warp = "0.3"
