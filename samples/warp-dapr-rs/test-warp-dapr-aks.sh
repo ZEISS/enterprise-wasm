@@ -16,7 +16,7 @@ case "$2" in
     DAPR_SERVICE_SUFFIX=svc
     ;;
   *)
-    echo "usage: test-spin-dapr-aks.sh (e|s|d) (shared|sidecar)"
+    echo "usage: test-warp-dapr-aks.sh (e|s|d) (shared|sidecar)"
     exit 1
 esac
 
@@ -34,7 +34,7 @@ case "$1" in
     DAPR=receiver-standard-$DAPR_SERVICE_SUFFIX
     ;;
   *)
-    echo "usage: test-spin-dapr-aks.sh (e|s|d) (shared|sidecar)"
+    echo "usage: test-warp-dapr-aks.sh (e|s|d) (shared|sidecar)"
     exit 1
 esac
 
@@ -48,8 +48,8 @@ kubectl port-forward "svc/$DAPR" $LOCAL_DAPR_PORT:$POD_DAPR_PORT > /dev/null 2>&
 echo "waiting for port forward to be ready"
 timeout 15 sh -c 'until nc -z $0 $1; do sleep 1; done' '127.0.0.1' $LOCAL_SERVICE_PORT
 
-echo "::: Spin health :::"
-curl -v http://127.0.0.1:$LOCAL_SERVICE_PORT/.well-known/spin/health
+echo "::: Dapr health :::"
+curl -v http://127.0.0.1:$LOCAL_SERVICE_PORT/healthz
 echo -e "\r::: Dapr metadata direct :::"
 curl -v http://127.0.0.1:$LOCAL_DAPR_PORT/v1.0/metadata
 echo -e "\r::: Dapr metadata indirect from Spin service :::"

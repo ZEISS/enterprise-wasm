@@ -48,3 +48,9 @@
 | 2024-02-02T17:33:10.708Z |   10000 |  21 | classic-sidecar-small-nodepool-static             |
 | 2024-02-02T17:38:10.359Z |   10000 |  16 | classic-sidecar-small-nodepool-static             |
 | 2024-02-02T17:43:05.684Z |   10000 |  19 | classic-sidecar-small-nodepool-static             |
+2024-02-03T07:19:58.359Z | 10000 | 23 | classic-sidecar-small-nodepool-static
+2024-02-03T07:24:48.648Z | 10000 | 19 | classic-sidecar-small-nodepool-static
+2024-02-03T07:29:38.120Z | 10000 | 16 | classic-sidecar-small-nodepool-static
+2024-02-03T07:34:41.842Z | 10000 | 27 | classic-sidecar-small-nodepool-static
+2024-02-03T07:39:47.613Z | 10000 | 70 | classic-sidecar-small-nodepool-static
+2024-02-03T07:48:36.161Z | 10000 | 37 | classic-shared-small-nodepool-static
