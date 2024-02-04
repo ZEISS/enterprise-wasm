@@ -57,7 +57,8 @@ if [ $PATTERN = 'shared' ]; then
   do
     echo "$app"
 
-    helm upgrade --install $app-dapr oci://registry-1.docker.io/daprio/dapr-shared-chart \
+    # helm upgrade --install $app-dapr oci://registry-1.docker.io/daprio/dapr-shared-chart \
+    helm upgrade --install $app-dapr ../../../dapr-shared/chart/dapr-shared/ \
       --set fullnameOverride=$app-dapr \
       --set shared.strategy=deployment \
       --set shared.scheduling.nodeSelector.agentpool=default \
@@ -68,7 +69,9 @@ if [ $PATTERN = 'shared' ]; then
       --set shared.remoteURL=$app-svc \
       --set shared.remotePort=80 \
       --set shared.controlPlane.placementServerAddress="''" \
-      --set shared.daprd.listenAddresses=0.0.0.0
+      --set shared.daprd.listenAddresses=0.0.0.0 \
+      --set shared.daprd.appHealth.enabled=true \
+      --set shared.daprd.appHealth.probeTimeout=1000
 
   done
 fi
