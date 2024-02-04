@@ -4,6 +4,7 @@ version = "0.2.0"
 edition = "2021"
 
 [dependencies]
+http-api-problem = { version = "0.58.0", features = ["warp"] }
 openssl = { version = "0.10", features = ["vendored"] }
 reqwest = { version = "0.11", features = ["json"] }
 serde = { version = "1.0", features = ["derive"] }

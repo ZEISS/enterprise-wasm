@@ -1,4 +1,3 @@
-use crate::errors::ServiceError;
 use crate::models::*;
 use reqwest::StatusCode;
 use warp::Filter;
@@ -7,10 +6,45 @@ fn json_body() -> impl Filter<Extract = (Order,), Error = warp::Rejection> + Clo
     warp::body::content_length_limit(1024 * 16).and(warp::body::json())
 }
 
+#[derive(Debug)]
+enum ServiceError {
+    ParseError(url::ParseError),
+    ReqwestError(reqwest::Error),
+}
+impl warp::reject::Reject for ServiceError {}
+
 fn dapr_url() -> String {
     match std::env::var("DAPR_URL") {
         Ok(url) => url,
         Err(_) => "http://localhost:3500".to_string(),
+    }
+}
+
+pub async fn handle_rejection(
+    err: warp::Rejection,
+) -> Result<impl warp::Reply, std::convert::Infallible> {
+    if err.is_not_found() {
+        Ok(warp::reply::with_status("NOT_FOUND", StatusCode::NOT_FOUND))
+    // } else if let Some(e) = err.find::<url::ParseError>() {
+    //     Ok(warp::reply::with_status(
+    //         &e.source()
+    //             .map(|cause| cause.to_string())
+    //             .unwrap_or_else(|| "BAD_REQUEST".to_string()),
+    //         StatusCode::SERVICE_UNAVAILABLE,
+    //     ))
+    } else if let Some(e) = err.find::<ServiceError>() {
+        Ok(warp::reply::with_status(
+            match e {
+                ServiceError::ParseError(e) => e.to_string().as_str().clone(),
+                ServiceError::ReqwestError(e) => e.to_string().as_str().clone(),
+            },
+            StatusCode::SERVICE_UNAVAILABLE,
+        ))
+    } else {
+        Ok(warp::reply::with_status(
+            "INTERNAL_SERVER_ERROR",
+            StatusCode::INTERNAL_SERVER_ERROR,
+        ))
     }
 }
 
