@@ -47,18 +47,17 @@ pub fn dapr_endpoints() -> impl Filter<Extract = impl warp::Reply, Error = warp:
 
 async fn dapr_metadata() -> Result<impl warp::Reply, warp::Rejection> {
     let dapr_url = dapr_url();
-    let mut url = url::Url::parse(&dapr_url)
-        .map_err(|e| warp::reject::custom(ServiceError::ParseError(e)))?;
+    let mut url = url::Url::parse(&dapr_url).map_err(|e| ServiceError::ParseError(e))?;
     url.set_path("v1.0/metadata");
 
     let response = reqwest::Client::new()
         .get(url)
         .send()
         .await
-        .map_err(|e| warp::reject::custom(ServiceError::ReqwestError(e)))?
+        .map_err(|e| ServiceError::ReqwestError(e))?
         .text()
         .await
-        .map_err(|e| warp::reject::custom(ServiceError::ReqwestError(e)))?;
+        .map_err(|e| ServiceError::ReqwestError(e))?;
 
     Ok(warp::reply::with_status(response, StatusCode::OK))
 }
@@ -69,8 +68,7 @@ async fn distributor(order: Order) -> Result<impl warp::Reply, warp::Rejection> 
         "v1.0/bindings/q-order-{}-out",
         &order.delivery.to_lowercase()
     );
-    let mut url = url::Url::parse(&dapr_url)
-        .map_err(|e| warp::reject::custom(ServiceError::ParseError(e)))?;
+    let mut url = url::Url::parse(&dapr_url).map_err(|e| ServiceError::ParseError(e))?;
     url.set_path(&path);
 
     let outbound_message = OutboundMessage::new(&order);
@@ -82,10 +80,10 @@ async fn distributor(order: Order) -> Result<impl warp::Reply, warp::Rejection> 
         .json(&outbound_message)
         .send()
         .await
-        .map_err(|e| warp::reject::custom(ServiceError::ReqwestError(e)))?
+        .map_err(|e| ServiceError::ReqwestError(e))?
         .text()
         .await
-        .map_err(|e| warp::reject::custom(ServiceError::ReqwestError(e)))?;
+        .map_err(|e| ServiceError::ReqwestError(e))?;
 
     Ok(warp::reply::with_status(response, StatusCode::OK))
 }
@@ -93,7 +91,7 @@ async fn distributor(order: Order) -> Result<impl warp::Reply, warp::Rejection> 
 async fn receiver(order: Order) -> Result<impl warp::Reply, warp::Rejection> {
     let dapr_url = dapr_url();
     let path = format!("v1.0/bindings/{}-outbox", &order.delivery.to_lowercase());
-    let mut url = url::Url::parse(&dapr_url).expect("Dapr URL");
+    let mut url = url::Url::parse(&dapr_url).map_err(|e| ServiceError::ParseError(e))?;
     url.set_path(&path);
 
     let outbox_create = OutboxCreate::new(&order);
@@ -105,10 +103,10 @@ async fn receiver(order: Order) -> Result<impl warp::Reply, warp::Rejection> {
         .json(&outbox_create)
         .send()
         .await
-        .map_err(|e| warp::reject::custom(ServiceError::ReqwestError(e)))?
+        .map_err(|e| ServiceError::ReqwestError(e))?
         .text()
         .await
-        .map_err(|e| warp::reject::custom(ServiceError::ReqwestError(e)))?;
+        .map_err(|e| ServiceError::ReqwestError(e))?;
 
     Ok(warp::reply::with_status(response, StatusCode::OK))
 }
