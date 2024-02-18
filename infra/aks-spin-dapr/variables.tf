@@ -75,8 +75,16 @@ variable "user_nodepools" {
     }
     taints = []
     }, {
-    name       = "backend"
+    name       = "wasm"
     size       = "Standard_D2pds_v5"
+    node_count = 3
+    max_pods   = 250
+    labels = {
+    }
+    taints = []
+  }, {
+    name       = "classic"
+    size       = "Standard_DS2_v2"
     node_count = 3
     max_pods   = 250
     labels = {
@@ -149,7 +157,7 @@ variable "kwasm_installer_image" {
 
 variable "kwasm_node_selector" {
   type        = map(string)
-  default     = { agentpool = "backend" }
+  default     = { agentpool = "wasm" }
   description = "Node selector to use for KWasm daemonset"
 }
 

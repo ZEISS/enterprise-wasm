@@ -91,27 +91,35 @@ spec:
         dapr.io/config: "appconfig"
         dapr.io/enable-api-logging: "true"
         dapr.io/enable-app-health-check: "true"
+        dapr.io/app-health-probe-timeout: "1000"
         dapr.io/log-level: "info"
         dapr.io/app-protocol: "http"
-        dapr.io/placement-host-address: ""
+        dapr.io/placement-host-address: "''"
         dapr.io/sidecar-listen-addresses: "0.0.0.0,[::]"
     spec:
-      runtimeClassName: wasmtime-spin-v2
       nodeSelector:
-        agentpool: wasm
+        agentpool: classic
       containers:
         - name: distributor
           image: { will be replaced by deployment script }
-          command: ["/"]
           env:
-            - name: SPIN_VARIABLE_DAPR_URL
+            - name: DAPR_URL
               value: "http://localhost:3500"
+            - name: APP_PORT
+              value: "80"
           livenessProbe:
             httpGet:
-              path: .well-known/spin/health
+              path: healthz
               port: 80
             initialDelaySeconds: 45
             periodSeconds: 3
+          resources:
+            limits:
+              cpu: 400m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -133,27 +141,35 @@ spec:
         dapr.io/config: "appconfig"
         dapr.io/enable-api-logging: "true"
         dapr.io/enable-app-health-check: "true"
+        dapr.io/app-health-probe-timeout: "1000"
         dapr.io/log-level: "info"
         dapr.io/app-protocol: "http"
-        dapr.io/placement-host-address: ""
+        dapr.io/placement-host-address: "''"
         dapr.io/sidecar-listen-addresses: "0.0.0.0,[::]"
     spec:
-      runtimeClassName: wasmtime-spin-v2
       nodeSelector:
-        agentpool: wasm
+        agentpool: classic
       containers:
         - name: receiver-express
           image: { will be replaced by deployment script }
-          command: ["/"]
           env:
-            - name: SPIN_VARIABLE_DAPR_URL
+            - name: DAPR_URL
               value: "http://localhost:3500"
+            - name: APP_PORT
+              value: "80"
           livenessProbe:
             httpGet:
-              path: .well-known/spin/health
+              path: healthz
               port: 80
             initialDelaySeconds: 45
             periodSeconds: 3
+          resources:
+            limits:
+              cpu: 400m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -175,27 +191,35 @@ spec:
         dapr.io/config: "appconfig"
         dapr.io/enable-api-logging: "true"
         dapr.io/enable-app-health-check: "true"
+        dapr.io/app-health-probe-timeout: "1000"
         dapr.io/log-level: "info"
         dapr.io/app-protocol: "http"
-        dapr.io/placement-host-address: ""
+        dapr.io/placement-host-address: "''"
         dapr.io/sidecar-listen-addresses: "0.0.0.0,[::]"
     spec:
-      runtimeClassName: wasmtime-spin-v2
       nodeSelector:
-        agentpool: wasm
+        agentpool: classic
       containers:
         - name: receiver-standard
           image: { will be replaced by deployment script }
-          command: ["/"]
           env:
-            - name: SPIN_VARIABLE_DAPR_URL
+            - name: DAPR_URL
               value: "http://localhost:3500"
+            - name: APP_PORT
+              value: "80"
           livenessProbe:
             httpGet:
-              path: .well-known/spin/health
+              path: healthz
               port: 80
             initialDelaySeconds: 45
             periodSeconds: 3
+          resources:
+            limits:
+              cpu: 400m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
 ---
 apiVersion: v1
 kind: Service

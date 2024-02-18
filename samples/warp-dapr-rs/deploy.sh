@@ -18,7 +18,7 @@ REPO_ROOT=`git rev-parse --show-toplevel`
 TARGET_INFRA_FOLDER=../../infra/aks-spin-dapr
 RESOURCE_GROUP_NAME=`terraform -chdir=$TARGET_INFRA_FOLDER output -json script_vars | jq -r .resource_group`
 
-APP=spin-dapr-rs
+APP=warp-dapr-rs
 SERVICEBUS_NAMESPACE=`az resource list -g $RESOURCE_GROUP_NAME --resource-type Microsoft.ServiceBus/namespaces --query '[0].name' -o tsv`
 SERVICEBUS_CONNECTION=`az servicebus namespace authorization-rule keys list -g $RESOURCE_GROUP_NAME --namespace-name $SERVICEBUS_NAMESPACE -n RootManageSharedAccessKey --query primaryConnectionString -o tsv`
 STORAGE_NAME=`az resource list -g $RESOURCE_GROUP_NAME --resource-type Microsoft.Storage/storageAccounts --query '[0].name' -o tsv`
@@ -68,7 +68,9 @@ if [ $PATTERN = 'shared' ]; then
       --set shared.remoteURL=$app-svc \
       --set shared.remotePort=80 \
       --set shared.controlPlane.placementServerAddress="''" \
-      --set shared.daprd.listenAddresses=0.0.0.0
+      --set shared.daprd.listenAddresses=0.0.0.0 \
+      --set shared.daprd.appHealth.enabled=true \
+      --set shared.daprd.appHealth.probeTimeout=1000
 
   done
 fi
