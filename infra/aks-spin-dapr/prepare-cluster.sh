@@ -55,36 +55,10 @@ make install
 
 # actually deploy the spin-operator
 # see: https://github.com/spinkube/spin-operator/blob/main/documentation/content/quickstart.md#deploy-the-spin-operator
+OPERATOR_IMG=rg.fr-par.scw.cloud/dlancashire-public/spin-operator-dev
 make deploy IMG=$OPERATOR_IMG
 
 popd
 
 # install the SpinAppExecutor
 kubectl apply -f spin-executor-shim.yaml
-
-
-#
-# pushd ../../../spin-operator/
-# OPERATOR_REP=$AZURE_CONTAINER_REGISTRY_ENDPOINT/spin-operator
-# OPERATOR_IMG=$OPERATOR_REP:latest
-# # make docker-build docker-push IMG=$OPERATOR_IMG
-# make install
-#
-# kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.2/cert-manager.yaml
-#
-# # kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.13.3/cert-manager.yaml
-# # make deploy IMG=$OPERATOR_IMG
-#
-# kubectl apply -f spin-runtime-class.yaml
-# helm upgrade --install spin-operator \
-#   --namespace spin-operator \
-#   --create-namespace \
-#   --devel \
-#   --wait \
-#   --set controllerManager.manager.image.repository=$OPERATOR_REP \
-#   --set certmanager.enabled=false \
-#   --set certmanager.installCRDs=false \
-#   ./charts/spin-operator
-#   # oci://ghcr.io/spinkube/spin-operator
-#
-# popd

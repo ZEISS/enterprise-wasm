@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 case "$1" in
   ""|shared)
     PATTERN=shared
@@ -9,6 +11,18 @@ case "$1" in
     ;;
   *)
     echo "usage: deploy.sh (shared|sidecar)"
+    exit 1
+esac
+
+case "$2" in
+  ""|spinapps)
+    EXECUTOR=spinapps
+    ;;
+  deploy)
+    EXECUTOR=deploy
+    ;;
+  *)
+    echo "usage: deploy.sh (shared|sidecar) (deploy|spinapps)"
     exit 1
 esac
 
@@ -38,14 +52,25 @@ kubectl create secret generic storage-secret --from-literal=accountName=$STORAGE
 
 kubectl apply -f ./dapr-components.yml
 
-cat ./workload-aks-$PATTERN.yml | \
-yq eval ".spec|=select(.selector.matchLabels.app==\"distributor\")
-    .template.spec.containers[0].image = \"$IMAGE_NAME\"" | \
-yq eval ".spec|=select(.selector.matchLabels.app==\"receiver-express\") 
-    .template.spec.containers[0].image = \"$IMAGE_NAME\"" | \
-yq eval ".spec|=select(.selector.matchLabels.app==\"receiver-standard\")
-    .template.spec.containers[0].image = \"$IMAGE_NAME\"" | \
-kubectl apply -f -
+if [ $EXECUTOR = 'spinapps' ]; then
+  cat ./workload-aks-$PATTERN-spinapps.yml | \
+  yq eval ".|=select(.metadata.name==\"distributor\")
+      .spec.image = \"$IMAGE_NAME\"" | \
+  yq eval ".|=select(.metadata.name==\"receiver-express\") 
+      .spec.image = \"$IMAGE_NAME\"" | \
+  yq eval ".|=select(.metadata.name==\"receiver-standard\")
+      .spec.image = \"$IMAGE_NAME\"" | \
+  kubectl apply -f -
+else
+  cat ./workload-aks-$PATTERN-deploy.yml | \
+  yq eval ".spec|=select(.selector.matchLabels.app==\"distributor\")
+      .template.spec.containers[0].image = \"$IMAGE_NAME\"" | \
+  yq eval ".spec|=select(.selector.matchLabels.app==\"receiver-express\") 
+      .template.spec.containers[0].image = \"$IMAGE_NAME\"" | \
+  yq eval ".spec|=select(.selector.matchLabels.app==\"receiver-standard\")
+      .template.spec.containers[0].image = \"$IMAGE_NAME\"" | \
+  kubectl apply -f -
+fi
 
 DAPR_VERSION=$(helm get metadata dapr -n dapr-system -o yaml | yq -r .appVersion)
 
@@ -57,6 +82,13 @@ if [ $PATTERN = 'shared' ]; then
   do
     echo "$app"
 
+    # by default the spin operator deploys a service without the '-svc' suffix
+    if [ $EXECUTOR = 'spinapps' ]; then
+      remoteUrl="$app"
+    else
+      remoteUrl="$app-svc"
+    fi
+
     helm upgrade --install $app-dapr oci://registry-1.docker.io/daprio/dapr-shared-chart \
       --set fullnameOverride=$app-dapr \
       --set shared.strategy=deployment \
@@ -65,7 +97,7 @@ if [ $PATTERN = 'shared' ]; then
       --set shared.daprd.image.tag=$DAPR_VERSION \
       --set shared.appId=$app \
       --set shared.daprd.config=appconfig \
-      --set shared.remoteURL=$app-svc \
+      --set shared.remoteURL=$remoteUrl \
       --set shared.remotePort=80 \
       --set shared.controlPlane.placementServerAddress="''" \
       --set shared.daprd.listenAddresses=0.0.0.0

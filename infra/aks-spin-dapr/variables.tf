@@ -82,7 +82,7 @@ variable "user_nodepools" {
     labels = {
     }
     taints = []
-  }, {
+    }, {
     name       = "classic"
     size       = "Standard_DS2_v2"
     node_count = 3
