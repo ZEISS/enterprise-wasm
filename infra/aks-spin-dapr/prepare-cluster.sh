@@ -55,7 +55,7 @@ make install
 
 # actually deploy the spin-operator
 # see: https://github.com/spinkube/spin-operator/blob/main/documentation/content/quickstart.md#deploy-the-spin-operator
-OPERATOR_IMG=rg.fr-par.scw.cloud/dlancashire-public/spin-operator-dev
+# OPERATOR_IMG=rg.fr-par.scw.cloud/dlancashire-public/spin-operator-dev
 make deploy IMG=$OPERATOR_IMG
 
 popd
