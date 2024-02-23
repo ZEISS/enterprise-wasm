@@ -1,15 +1,15 @@
 .PHONY: deploy-aks-spin-dapr-shared-dotnet
-deploy-aks-spin-dapr-dotnet:
+deploy-aks-spin-dapr-shared-dotnet:
 	$(MAKE) -C ./infra/aks-spin-dapr/ deploy
 	$(MAKE) -C ./samples/spin-dapr-dotnet/ deploy-shared
 
 .PHONY: deploy-aks-spin-dapr-sidecar-dotnet
-deploy-aks-spin-dapr-dotnet:
+deploy-aks-spin-dapr-sidecar-dotnet:
 	$(MAKE) -C ./infra/aks-spin-dapr/ deploy
 	$(MAKE) -C ./samples/spin-dapr-dotnet/ deploy-sidecar
 
 .PHONY: deploy-aks-spin-dapr-shared-rs
-deploy-aks-spin-dapr-shared-rs:
+deploy-aks-spin-dapr-shared-shared-rs:
 	$(MAKE) -C ./infra/aks-spin-dapr/ deploy
 	$(MAKE) -C ./samples/spin-dapr-rs/ deploy-shared
 

@@ -2,35 +2,28 @@
 
 set -e
 
+# ---- init
+
+REPO_ROOT=`git rev-parse --show-toplevel`
+TARGET_INFRA_FOLDER=../../infra/aks-spin-dapr
+RESOURCE_GROUP_NAME=`terraform -chdir=$TARGET_INFRA_FOLDER output -json script_vars | jq -r .resource_group`
+SPIN_DEPLOY=`terraform -chdir=$TARGET_INFRA_FOLDER output -json script_vars | jq -r .spin_deploy`
+
 case "$1" in
   ""|shared)
     PATTERN=shared
     ;;
   sidecar)
+    if [ $SPIN_DEPLOY = 'operator' ]; then
+      echo "sidecar deployment not allowed with Spin operator deployment"
+      exit 1
+    fi
     PATTERN=sidecar
     ;;
   *)
     echo "usage: deploy.sh (shared|sidecar)"
     exit 1
 esac
-
-case "$2" in
-  ""|spinapps)
-    EXECUTOR=spinapps
-    ;;
-  deploy)
-    EXECUTOR=deploy
-    ;;
-  *)
-    echo "usage: deploy.sh (shared|sidecar) (deploy|spinapps)"
-    exit 1
-esac
-
-# ---- init
-
-REPO_ROOT=`git rev-parse --show-toplevel`
-TARGET_INFRA_FOLDER=../../infra/aks-spin-dapr
-RESOURCE_GROUP_NAME=`terraform -chdir=$TARGET_INFRA_FOLDER output -json script_vars | jq -r .resource_group`
 
 APP=spin-dapr-rs
 SERVICEBUS_NAMESPACE=`az resource list -g $RESOURCE_GROUP_NAME --resource-type Microsoft.ServiceBus/namespaces --query '[0].name' -o tsv`
@@ -52,8 +45,8 @@ kubectl create secret generic storage-secret --from-literal=accountName=$STORAGE
 
 kubectl apply -f ./dapr-components.yml
 
-if [ $EXECUTOR = 'spinapps' ]; then
-  cat ./workload-aks-$PATTERN-spinapps.yml | \
+if [ $SPIN_DEPLOY = 'operator' ]; then
+  cat ./workload-aks-shared-spinapps.yml | \
   yq eval ".|=select(.metadata.name==\"distributor\")
       .spec.image = \"$IMAGE_NAME\"" | \
   yq eval ".|=select(.metadata.name==\"receiver-express\") 
@@ -83,7 +76,7 @@ if [ $PATTERN = 'shared' ]; then
     echo "$app"
 
     # by default the spin operator deploys a service without the '-svc' suffix
-    if [ $EXECUTOR = 'spinapps' ]; then
+    if [ $SPIN_DEPLOY = 'operator' ]; then
       remoteUrl="$app"
     else
       remoteUrl="$app-svc"

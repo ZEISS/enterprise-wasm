@@ -68,3 +68,6 @@
 | 2024-02-21T17:32:53.933Z |   10000 |  24 | spin-operator-shared                                 |
 | 2024-02-21T17:38:13.673Z |   10000 |  28 | spin-operator-shared                                 |
 | 2024-02-22T08:00:30.472Z |   10000 |  29 | spin-operator-shared-dev-danielle                    |
+| 2024-02-23T15:40:30.506Z |   10000 |  28 | deploy-from-docs                                     |
+| 2024-02-23T15:59:26.543Z |   10000 |  29 | deploy-from-docs                                     |
+| 2024-02-23T16:10:59.049Z |   10000 |  30 | deploy-from-docs                                     |
