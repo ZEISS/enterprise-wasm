@@ -80,6 +80,7 @@ variable "user_nodepools" {
     node_count = 3
     max_pods   = 250
     labels = {
+      # "kwasm.sh/kwasm-node" = "true"
     }
     taints = []
     }, {
@@ -181,11 +182,11 @@ variable "keda_namespace" {
 
 variable "spin_deploy" {
   type        = string
-  description = "Defines how Spin is deployed into the cluster"
+  description = "Defines whether and how Spin is deployed into the cluster"
   default     = "operator"
 
   validation {
-    condition     = contains(["operator", "deploy"], var.spin_deploy)
-    error_message = "Valid values for var: spin_deploy are (operator, deploy)."
+    condition     = contains(["skip", "operator", "deploy"], var.spin_deploy)
+    error_message = "Valid values for var: spin_deploy are (skip, operator, deploy)."
   }
 }

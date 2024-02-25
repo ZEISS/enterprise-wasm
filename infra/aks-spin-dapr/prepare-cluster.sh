@@ -45,6 +45,14 @@ if [ $SPIN_DEPLOY = 'operator' ]; then
     --set installCRDs=true \
     --wait
 
+  # configure the directory where spin-operator is cloned
+  SPIN_OPERATOR_HOME="${SPIN_OPERATOR_HOME:-$HOME/src/spin-operator}"
+
+  # install the spin-operator's CRDs
+  pushd "$SPIN_OPERATOR_HOME"
+  make install
+  popd
+
   helm upgrade --install spin-operator \
     --namespace spin-operator \
     --create-namespace \
@@ -52,48 +60,5 @@ if [ $SPIN_DEPLOY = 'operator' ]; then
     --wait \
     oci://ghcr.io/spinkube/spin-operator
 
-  # az acr login -n $AZURE_CONTAINER_REGISTRY_NAME
-  #
-  # # configure the directory where spin-operator is cloned
-  # SPIN_OPERATOR_HOME="${SPIN_OPERATOR_HOME:-$HOME/src/spin-operator}"
-  #
-  # # configure the image name for the operator
-  # OPERATOR_REP="${AZURE_CONTAINER_REGISTRY_ENDPOINT}/spin-operator"
-  # OPERATOR_IMG="${OPERATOR_REP}:latest"
-  #
-  # # deploy cert-manager as a dependency for the spin-operator if validating webhook is enabled
-  # kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.2/cert-manager.yaml
-  #
-  # pushd "$SPIN_OPERATOR_HOME"
-  # build and publish the operator's image to ACR
-  # see: https://github.com/spinkube/spin-operator/blob/main/documentation/content/quickstart.md#set-up-your-kubernetes-cluster
-  # NOTE: this target uses docker buildx for multi-platform images
-  # make docker-build-and-publish-all IMG=$OPERATOR_IMG
-  # docker push $OPERATOR_IMG
-  #
-  # # install the spin-operator's CRDs
-  # make install
-
-  # # actually deploy the spin-operator
-  # # see: https://github.com/spinkube/spin-operator/blob/main/documentation/content/quickstart.md#deploy-the-spin-operator
-  # # OPERATOR_IMG=rg.fr-par.scw.cloud/dlancashire-public/spin-operator-dev
-  # make deploy IMG=$OPERATOR_IMG
-  #
-  # popd
-  #
-  # helm upgrade --install spin-operator \
-  # --namespace spin-operator \
-  # --create-namespace \
-  # --set controllerManager.manager.image.repository=$OPERATOR_REP \
-  # --devel \
-  # --wait \
-  # ../../../spin-operator/charts/spin-operator/
-  # # oci://ghcr.io/spinkube/spin-operator
-  # #
-  # kubectl apply -f https://github.com/spinkube/spin-operator/releases/download/v0.1.0/spin-operator.crds.yaml
-  # kubectl apply -f https://github.com/spinkube/spin-operator/releases/download/v0.1.0/spin-operator.runtime-class.yaml
-  #
-  # # install the SpinAppExecutor
-  # kubectl rollout status deployment spin-operator-controller-manager -n spin-operator --timeout 90s
-  # kubectl apply -f spin-executor-shim.yaml
+  kubectl annotate node -l=agentpool=wasm kwasm.sh/kwasm-node=true
 fi
