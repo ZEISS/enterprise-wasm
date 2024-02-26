@@ -100,13 +100,15 @@ resource "kubernetes_daemonset" "kwasm_installer" {
   }
 }
 
-resource "kubernetes_runtime_class_v1" "spin_v2" {
-  metadata {
-    name = var.runtime_class_name
-  }
+# This resource cannot provide nodeSelector
+# resource "kubernetes_runtime_class_v1" "spin_v2" {
+#   metadata {
+#     name = var.runtime_class_name
+#   }
+#
+#   handler = "spin"
+# }
 
-  handler = "spin"
-}
 # This resource requires API access during planning time
 # resource "kubernetes_manifest" "spin_v2" {
 #   manifest = {

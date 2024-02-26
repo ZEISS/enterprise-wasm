@@ -7,6 +7,8 @@ output "script_vars" {
   value = {
     "resource_group" = azurerm_resource_group.rg.name
     "base_name"      = local.base_name
+    "spin_deploy"    = var.spin_deploy
+    "monitoring"     = var.monitoring
   }
 }
 

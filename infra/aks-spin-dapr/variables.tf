@@ -80,9 +80,10 @@ variable "user_nodepools" {
     node_count = 3
     max_pods   = 250
     labels = {
+      # "kwasm.sh/kwasm-node" = "true"
     }
     taints = []
-  }, {
+    }, {
     name       = "classic"
     size       = "Standard_DS2_v2"
     node_count = 3
@@ -177,4 +178,15 @@ variable "keda_namespace" {
   type        = string
   default     = "keda-system"
   description = "Kubernetes namespace to install KEDA in"
+}
+
+variable "spin_deploy" {
+  type        = string
+  description = "Defines whether and how Spin is deployed into the cluster"
+  default     = "operator"
+
+  validation {
+    condition     = contains(["skip", "operator", "deploy"], var.spin_deploy)
+    error_message = "Valid values for var: spin_deploy are (skip, operator, deploy)."
+  }
 }
