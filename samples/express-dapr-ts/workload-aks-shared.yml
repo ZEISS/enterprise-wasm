@@ -1,0 +1,270 @@
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: azure-servicebus-auth
+spec:
+  secretTargetRef:
+    - key: connectionString
+      name: servicebus-secret
+      parameter: connection
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: order-ingress-scaledobject
+  namespace: default
+spec:
+  scaleTargetRef:
+    kind: Deployment
+    name: distributor
+  pollingInterval: 10
+  cooldownPeriod: 60
+  minReplicaCount: 1
+  maxReplicaCount: 20
+  triggers:
+    - type: azure-servicebus
+      metadata:
+        queueName: q-order-ingress-spin
+        messageCount: "100"
+      authenticationRef:
+        name: azure-servicebus-auth
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: order-ingress-dapr-scaledobject
+  namespace: default
+spec:
+  scaleTargetRef:
+    kind: Deployment
+    name: distributor-dapr
+  pollingInterval: 10
+  cooldownPeriod: 60
+  minReplicaCount: 1
+  maxReplicaCount: 20
+  triggers:
+    - type: azure-servicebus
+      metadata:
+        queueName: q-order-ingress-spin
+        messageCount: "1000"
+      authenticationRef:
+        name: azure-servicebus-auth
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: order-express-scaledobject
+  namespace: default
+spec:
+  scaleTargetRef:
+    kind: Deployment
+    name: receiver-express
+  pollingInterval: 10
+  cooldownPeriod: 60
+  minReplicaCount: 1
+  maxReplicaCount: 20
+  triggers:
+    - type: azure-servicebus
+      metadata:
+        queueName: q-order-express-spin
+        messageCount: "100"
+      authenticationRef:
+        name: azure-servicebus-auth
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: order-express-dapr-scaledobject
+  namespace: default
+spec:
+  scaleTargetRef:
+    kind: Deployment
+    name: receiver-express-dapr
+  pollingInterval: 10
+  cooldownPeriod: 60
+  minReplicaCount: 1
+  maxReplicaCount: 20
+  triggers:
+    - type: azure-servicebus
+      metadata:
+        queueName: q-order-express-spin
+        messageCount: "1000"
+      authenticationRef:
+        name: azure-servicebus-auth
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: order-standard-scaledobject
+  namespace: default
+spec:
+  scaleTargetRef:
+    kind: Deployment
+    name: receiver-standard
+  pollingInterval: 10
+  cooldownPeriod: 60
+  minReplicaCount: 1
+  maxReplicaCount: 20
+  triggers:
+    - type: azure-servicebus
+      metadata:
+        queueName: q-order-standard-spin
+        messageCount: "100"
+      authenticationRef:
+        name: azure-servicebus-auth
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: order-standard-dapr-scaledobject
+  namespace: default
+spec:
+  scaleTargetRef:
+    kind: Deployment
+    name: receiver-standard-dapr
+  pollingInterval: 10
+  cooldownPeriod: 60
+  minReplicaCount: 1
+  maxReplicaCount: 20
+  triggers:
+    - type: azure-servicebus
+      metadata:
+        queueName: q-order-standard-spin
+        messageCount: "1000"
+      authenticationRef:
+        name: azure-servicebus-auth
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: distributor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: distributor
+  template:
+    metadata:
+      labels:
+        app: distributor
+    spec:
+      nodeSelector:
+        agentpool: classic
+      containers:
+        - name: distributor
+          image: { will be replaced by deployment script }
+          env:
+            - name: DAPR_HTTP_HOST
+              value: "distributor-dapr"
+            - name: PORT
+              value: "80"
+          livenessProbe:
+            httpGet:
+              path: healthz
+              port: 80
+            initialDelaySeconds: 45
+            periodSeconds: 3
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: receiver-express
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: receiver-express
+  template:
+    metadata:
+      labels:
+        app: receiver-express
+    spec:
+      nodeSelector:
+        agentpool: classic
+      containers:
+        - name: receiver-express
+          image: { will be replaced by deployment script }
+          env:
+            - name: DAPR_HTTP_HOST
+              value: "receiver-express-dapr"
+            - name: PORT
+              value: "80"
+          livenessProbe:
+            httpGet:
+              path: healthz
+              port: 80
+            initialDelaySeconds: 45
+            periodSeconds: 3
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: receiver-standard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: receiver-standard
+  template:
+    metadata:
+      labels:
+        app: receiver-standard
+    spec:
+      nodeSelector:
+        agentpool: classic
+      containers:
+        - name: receiver-standard
+          image: { will be replaced by deployment script }
+          env:
+            - name: DAPR_HTTP_HOST
+              value: "receiver-standard-dapr"
+            - name: PORT
+              value: "80"
+          livenessProbe:
+            httpGet:
+              path: healthz
+              port: 80
+            initialDelaySeconds: 45
+            periodSeconds: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: distributor-svc
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+  selector:
+    app: distributor
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: receiver-express-svc
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+  selector:
+    app: receiver-express
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: receiver-standard-svc
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+  selector:
+    app: receiver-standard

@@ -60,6 +60,9 @@ async function start() {
   await server.start();
 }
 
+console.log(`Server at ${serverHost}:${serverPort}`);
+console.log(`Dapr at ${daprHost}:${daprPort}`);
+
 start().catch((e) => {
   console.error(e);
   process.exit(1);
