@@ -1,0 +1,24 @@
+{
+  "name": "express-dapr-ts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "build": "npx tsc",
+    "start": "npx tsc && dapr run --app-id=distributor --dapr-http-port=3500 --app-port=3000 --resources-path ./local-components/ -- node dist/app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@billjs/query-string": "^1.0.2",
+    "@dapr/dapr": "^3.2.0"
+  }
+}
