@@ -10,33 +10,33 @@ apps:
     command: ["node", "dist/app.js"]
     env:
       PORT: 3001
-  # - appID: receiver-express
-  #   appDirPath: .
-  #   resourcesPath: ./components-receiver-express
-  #   configFilePath: ./components-receiver-express/config.yaml
-  #   appProtocol: http
-  #   appPort: 3002
-  #   daprHTTPPort: 3502
-  #   command: ["spin", "up", "--listen", "localhost:3002"]
-  #   env:
-  #     SPIN_VARIABLE_DAPR_URL: http://localhost:3502
-  # - appID: receiver-standard
-  #   appDirPath: .
-  #   resourcesPath: ./components-receiver-standard
-  #   configFilePath: ./components-receiver-standard/config.yaml
-  #   appProtocol: http
-  #   appPort: 3003
-  #   daprHTTPPort: 3503
-  #   command: ["spin", "up", "--listen", "localhost:3003"]
-  #   env:
-  #     SPIN_VARIABLE_DAPR_URL: http://localhost:3503
-  # - appID: test-data
-  #   appDirPath: ../../helpers/orderdata-ts/
-  #   resourcesPath: ./local-components
-  #   configFilePath: ./local-components/config.yaml
-  #   appProtocol: http
-  #   appPort: 3004
-  #   daprHTTPPort: 3504
-  #   command: ["node", "dist/app.js"]
-  #   env:
-  #     PORT: 3004
+  - appID: receiver-express
+    appDirPath: .
+    resourcesPath: ./components-receiver-express
+    configFilePath: ./components-receiver-express/config.yaml
+    appProtocol: http
+    appPort: 3002
+    daprHTTPPort: 3502
+    command: ["node", "dist/app.js"]
+    env:
+      PORT: 3002
+  - appID: receiver-standard
+    appDirPath: .
+    resourcesPath: ./components-receiver-standard
+    configFilePath: ./components-receiver-standard/config.yaml
+    appProtocol: http
+    appPort: 3003
+    daprHTTPPort: 3503
+    command: ["node", "dist/app.js"]
+    env:
+      PORT: 3003
+  - appID: test-data
+    appDirPath: ../../helpers/orderdata-ts/
+    resourcesPath: ./local-components
+    configFilePath: ./local-components/config.yaml
+    appProtocol: http
+    appPort: 3004
+    daprHTTPPort: 3504
+    command: ["node", "dist/app.js"]
+    env:
+      PORT: 3004
