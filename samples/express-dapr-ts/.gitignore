@@ -1,0 +1,4 @@
+dist/
+.spin/
+.secrets.json
+.dapr
