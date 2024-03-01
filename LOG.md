@@ -71,4 +71,12 @@
 | 2024-02-23T15:40:30.506Z |   10000 |  28 | deploy-from-docs                                     |
 | 2024-02-23T15:59:26.543Z |   10000 |  29 | deploy-from-docs                                     |
 | 2024-02-23T16:10:59.049Z |   10000 |  30 | deploy-from-docs                                     |
-2024-02-29T17:34:16.783Z | 10000 | 29 | native-ts
+| 2024-03-01T09:45:11.893Z |   10000 |  55 | express-dapr-ts-maxRepl-10-limits                    |
+| 2024-03-01T09:48:58.047Z |   10000 |  41 | express-dapr-ts-maxRepl-10-limits                    |
+| 2024-03-01T09:52:26.501Z |   10000 |  37 | express-dapr-ts-maxRepl-10-limits                    |
+| 2024-03-01T09:55:56.932Z |   10000 |  43 | express-dapr-ts-maxRepl-10-limits                    |
+| 2024-03-01T09:59:26.861Z |   10000 |  40 | express-dapr-ts-maxRepl-10-limits                    |
+| 2024-03-01T10:02:57.230Z |   10000 |  45 | express-dapr-ts-maxRepl-10-limits                    |
+| 2024-03-01T10:06:42.159Z |   10000 |  39 | express-dapr-ts-maxRepl-10-limits                    |
+| 2024-03-01T10:10:20.458Z |   10000 |  38 | express-dapr-ts-maxRepl-10-limits                    |
+| 2024-03-01T10:13:49.213Z |   10000 |  36 | express-dapr-ts-maxRepl-10-limits                    |
