@@ -75,7 +75,7 @@ if [ $PATTERN = 'shared' ]; then
   do
     echo "$app"
 
-    # by default the spin operator deploys a service without the '-svc' suffix
+    # by default the Spin operator deploys a service without the '-svc' suffix
     if [ $SPIN_DEPLOY = 'operator' ]; then
       remoteUrl="$app"
     else

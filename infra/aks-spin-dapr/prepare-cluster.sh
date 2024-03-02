@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -eoux pipefail
 
 terraform output -raw kube_config > ~/.kube/config
 RESOURCE_GROUP_NAME=`terraform output -json script_vars | jq -r .resource_group`
@@ -30,7 +30,6 @@ kubectl apply -f ./collector-config.yaml
 
 # az aks update -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME --kube-proxy-config kube-proxy.json
 
-# ensure the runtimeclass is applied
 kubectl apply -f runtimeclass.yaml
 
 # deploy all components for spin-operator
@@ -53,12 +52,15 @@ if [ $SPIN_DEPLOY = 'operator' ]; then
   make install
   popd
 
-  helm upgrade --install spin-operator \
-    --namespace spin-operator \
-    --create-namespace \
-    --devel \
-    --wait \
-    oci://ghcr.io/spinkube/spin-operator
+  SPIN_OPERATOR_VERSION="20240227-204645-g6ea5fae"
 
-  kubectl annotate node -l=agentpool=wasm kwasm.sh/kwasm-node=true
+  helm upgrade --install \
+    -n spin-operator \
+    --create-namespace \
+    --version "0.0.0-${SPIN_OPERATOR_VERSION}" \
+    --set controllerManager.manager.image.repository=ghcr.io/spinkube/spin-operator \
+    --set controllerManager.manager.image.tag="${SPIN_OPERATOR_VERSION}" \
+    --set kwasm-operator.enabled=false \
+    --wait \
+    spin-operator oci://ghcr.io/spinkube/spin-operator
 fi

@@ -78,6 +78,9 @@ echo "### initiating test ###"
 PUSHRESPONSE=`curl -s -d "$(generate_schedule_data)" http://localhost:$APP_PORT/schedule-test \
     -H 'Content-Type: application/json'`
 SCHEDULE=`echo $PUSHRESPONSE | jq -r '.scheduledTimestamp'`
+
+kubectl get deployments -o name | grep -E '(distributor|receiver)' | xargs -i kubectl scale {} --replicas 1
+
 echo wait ${DELAY}m for scheduled time
 sleep $(( $DELAY * 60 ))
 

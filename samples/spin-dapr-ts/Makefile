@@ -7,9 +7,14 @@ build:
 deploy-shared: build
 	./deploy.sh shared
 
-.PHONY: destroy-shared
-destroy-shared:
-	kubectl delete -f ./workload-aks-shared.yml
+.PHONY: destroy-shared-deploy
+destroy-shared-deploy:
+	kubectl delete -f ./workload-aks-shared-deploy.yml
+	helm uninstall receiver-standard-dapr receiver-express-dapr distributor-dapr
+
+.PHONY: destroy-shared-operator
+destroy-shared-operator:
+	kubectl delete -f ./workload-aks-shared-spinapps.yml
 	helm uninstall receiver-standard-dapr receiver-express-dapr distributor-dapr
 
 .PHONY: deploy-sidecar

@@ -2,9 +2,18 @@
 
 set -e
 
+TARGET_INFRA_FOLDER=../../infra/aks-spin-dapr
+SPIN_DEPLOY=`terraform -chdir=$TARGET_INFRA_FOLDER output -json script_vars | jq -r .spin_deploy`
+
 LOCAL_SERVICE_PORT=8080
 LOCAL_DAPR_PORT=8081
 POD_SERVICE_PORT=80
+
+if [ $SPIN_DEPLOY = 'operator' ]; then
+  SERVICE_SUFFIX=
+else
+  SERVICE_SUFFIX=-svc
+fi
 
 case "$2" in
   ""|shared)
@@ -22,15 +31,15 @@ esac
 
 case "$1" in
   ""|d)
-    SERVICE=distributor-svc
+    SERVICE=distributor$SERVICE_SUFFIX
     DAPR=distributor-$DAPR_SERVICE_SUFFIX
     ;;
   e)
-    SERVICE=receiver-express-svc
+    SERVICE=receiver-express$SERVICE_SUFFIX
     DAPR=receiver-express-$DAPR_SERVICE_SUFFIX
     ;;
   s)
-    SERVICE=receiver-standard-svc
+    SERVICE=receiver-standard$SERVICE_SUFFIX
     DAPR=receiver-standard-$DAPR_SERVICE_SUFFIX
     ;;
   *)

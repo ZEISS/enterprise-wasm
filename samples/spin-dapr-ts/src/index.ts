@@ -46,7 +46,7 @@ async function dapr_meta(): Promise<HttpResponse> {
 async function distributor(body: ArrayBuffer): Promise<HttpResponse> {
   try {
     const order = JSON.parse(decoder.decode(body));
-    console.log(order);
+
     const dapr_url = Config.get("dapr_url");
     const url = `${dapr_url}/v1.0/bindings/q-order-${order.delivery.toLowerCase()}-out`;
 
@@ -82,7 +82,6 @@ async function distributor(body: ArrayBuffer): Promise<HttpResponse> {
 async function receiver(body: ArrayBuffer): Promise<HttpResponse> {
   try {
     const order = JSON.parse(decoder.decode(body));
-    console.log(order);
 
     const dapr_url = Config.get("dapr_url");
     const url = `${dapr_url}/v1.0/bindings/${order.delivery.toLowerCase()}-outbox`;
