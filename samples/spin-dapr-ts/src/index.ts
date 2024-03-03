@@ -73,7 +73,7 @@ async function distributor(body: ArrayBuffer): Promise<HttpResponse> {
     };
   } catch (e) {
     return {
-      status: 424,
+      status: 500,
       body: encoder.encode(JSON.stringify(e, null, 2)),
     };
   }
@@ -112,7 +112,7 @@ async function receiver(body: ArrayBuffer): Promise<HttpResponse> {
     };
   } catch (e) {
     return {
-      status: 424,
+      status: 500,
       body: encoder.encode(JSON.stringify(e, null, 2)),
     };
   }
