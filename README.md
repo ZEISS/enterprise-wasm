@@ -73,3 +73,15 @@ In the Setup, dapr is used to fetch and place messages in a service bus queue. A
 For the spin / express apps we search for the most performant scale setting with the given 10 dapr instances. Which led to 1 to 7 for the spin application and 1 to 10 for the nodejs one.
 
 The spin app consistently processes the 10000 messages in 20 seconds, whereas express is more inconsistent. The processing time for the express app is between 25 and 32 seconds. 
+## comparison baseline
+
+| VM SKU   | tech specs                         | relative pricing |
+| -------- | ---------------------------------- | ---------------- |
+| DS3 v2   | 4 vCPUs, 14 GB RAM, 28 GB temp HDD | 1.00             |
+| D2pds v5 | 2 vCPUs, 8 GB RAM, 75 GB temp HDD  | 0.40             |
+
+## comparison history
+
+| LOG entry Spin          | LOG entry classic    | approach                      |
+| ----------------------- | -------------------- | ----------------------------- |
+| express-dapr-ts-scale-0 | spin-dapr-ts-scale-0 | minReplicas 0, maxReplicas 20 |
