@@ -14,7 +14,7 @@ destroy-shared-deploy:
 
 .PHONY: destroy-shared-operator
 destroy-shared-operator:
-	kubectl delete -f ./workload-aks-shared-spinapps.yml
+	kubectl delete -f ./workload-aks-shared-operator.yml
 	helm uninstall receiver-standard-dapr receiver-express-dapr distributor-dapr
 
 .PHONY: deploy-sidecar

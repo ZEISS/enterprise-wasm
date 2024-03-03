@@ -61,3 +61,16 @@ optional:
 | ----------------------------------------- | ------------------------------------------------ | ------------------------------------------------ | ------------------------------ | ------------------------------- |
 | Spin with Dapr on AKS, Rust               | [aks-spin-dapr](./infra/aks-spin-dapr/README.md) | [spin-dapr-rs](./samples/spin-dapr-rs/README.md) | `make deploy-aks-spin-dapr-rs` | `make destroy-aks-spin-dapr-rs` |
 | Spin with Dapr on AKS, Node.js/TypeScript | [aks-spin-dapr](./infra/aks-spin-dapr/README.md) | [spin-dapr-ts](./samples/spin-dapr-ts/README.md) | `make deploy-aks-spin-dapr-ts` | `make destroy-aks-spin-dapr-ts` |
+
+## comparison baseline
+
+| VM SKU   | tech specs                         | relative pricing |
+| -------- | ---------------------------------- | ---------------- |
+| DS3 v2   | 4 vCPUs, 14 GB RAM, 28 GB temp HDD | 1.00             |
+| D2pds v5 | 2 vCPUs, 8 GB RAM, 75 GB temp HDD  | 0.40             |
+
+## comparison history
+
+| LOG entry Spin          | LOG entry classic    | approach                      |
+| ----------------------- | -------------------- | ----------------------------- |
+| express-dapr-ts-scale-0 | spin-dapr-ts-scale-0 | minReplicas 0, maxReplicas 20 |
