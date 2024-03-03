@@ -86,12 +86,6 @@ do
 done
 
 # ---- send test data
-<<<<<<< HEAD
-=======
-TARGET_COUNT=10000
-DELAY=2
-
->>>>>>> a4b7d4a (bump up Spin Operator)
 generate_post_data()
 {
  jq -n \
