@@ -79,9 +79,23 @@ The spin app consistently processes the 10000 messages in 20 seconds, whereas ex
 | -------- | ---------------------------------- | ---------------- |
 | DS3 v2   | 4 vCPUs, 14 GB RAM, 28 GB temp HDD | 1.00             |
 | D2pds v5 | 2 vCPUs, 8 GB RAM, 75 GB temp HDD  | 0.40             |
+| D4pds v5 | 4 vCPU, 16 GB RAM, 150 GB temp HDD | 0.80             |
 
 ## comparison history
 
-| LOG entry Spin          | LOG entry classic    | approach                      |
-| ----------------------- | -------------------- | ----------------------------- |
-| express-dapr-ts-scale-0 | spin-dapr-ts-scale-0 | minReplicas 0, maxReplicas 20 |
+| config Spin | config classic | LOG entry Spin          | LOG entry classic    | settings                      |
+| ----------- | -------------- | ----------------------- | -------------------- | ----------------------------- |
+| D2pds       | DS3            | express-dapr-ts-scale-0 | spin-dapr-ts-scale-0 | minReplicas 0, maxReplicas 20 |
+
+## debugging
+
+### checking errors Spin from/to Dapr
+
+```kusto
+ContainerLogV2
+| where TimeGenerated >= todatetime('2024-03-03T09:44:30.509Z')
+| where ContainerName == "daprd"
+| where LogMessage.msg startswith "App handler returned an error"
+| project TimeGenerated, LogMessage
+| order by TimeGenerated asc
+```

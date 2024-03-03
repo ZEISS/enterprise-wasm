@@ -38,7 +38,7 @@ async function dapr_meta(): Promise<HttpResponse> {
   } catch (e) {
     return {
       status: 500,
-      body: encoder.encode(`internal error ${e} when accessing ${url}`),
+      body: encoder.encode(JSON.stringify(e, null, 2)),
     };
   }
 }
@@ -73,8 +73,8 @@ async function distributor(body: ArrayBuffer): Promise<HttpResponse> {
     };
   } catch (e) {
     return {
-      status: 500,
-      body: encoder.encode("internal error"),
+      status: 424,
+      body: encoder.encode(JSON.stringify(e, null, 2)),
     };
   }
 }
@@ -97,7 +97,6 @@ async function receiver(body: ArrayBuffer): Promise<HttpResponse> {
       null,
       2,
     );
-    console.log(operation);
 
     await fetch(url, {
       method: "POST",
@@ -113,8 +112,8 @@ async function receiver(body: ArrayBuffer): Promise<HttpResponse> {
     };
   } catch (e) {
     return {
-      status: 500,
-      body: encoder.encode("internal error"),
+      status: 424,
+      body: encoder.encode(JSON.stringify(e, null, 2)),
     };
   }
 }
