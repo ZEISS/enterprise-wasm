@@ -99,3 +99,9 @@ ContainerLogV2
 | project TimeGenerated, LogMessage
 | order by TimeGenerated asc
 ```
+
+## comparison history
+
+| LOG entry Spin          | LOG entry classic    | approach                      |
+| ----------------------- | -------------------- | ----------------------------- |
+| express-dapr-ts-scale-0 | spin-dapr-ts-scale-0 | minReplicas 0, maxReplicas 20 |
