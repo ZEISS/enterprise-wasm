@@ -68,7 +68,7 @@ variable "user_nodepools" {
   }))
   default = [{
     name       = "default"
-    size       = "Standard_DS2_v2"
+    size       = "Standard_DS3_v2"
     node_count = 3
     max_pods   = 250
     labels = {

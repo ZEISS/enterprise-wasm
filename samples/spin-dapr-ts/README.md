@@ -3,8 +3,6 @@
 ## build & deploy
 
 ```
-npm i
-spin build
 ./build.sh
 ./deploy.sh
 ```
@@ -13,10 +11,4 @@ spin build
 
 ```
 ./test-spin-dapr-aks.sh
-```
-
-desired output
-
-```
-
 ```
