@@ -102,6 +102,19 @@ ContainerLogV2
 
 ## comparison history
 
-| LOG entry Spin          | LOG entry classic    | approach                      |
-| ----------------------- | -------------------- | ----------------------------- |
-| express-dapr-ts-scale-0 | spin-dapr-ts-scale-0 | minReplicas 0, maxReplicas 20 |
+| config Spin | config classic | LOG entry Spin          | LOG entry classic    | settings                      |
+| ----------- | -------------- | ----------------------- | -------------------- | ----------------------------- |
+| D2pds       | DS3            | express-dapr-ts-scale-0 | spin-dapr-ts-scale-0 | minReplicas 0, maxReplicas 20 |
+
+## debugging
+
+### checking errors Spin from/to Dapr
+
+```kusto
+ContainerLogV2
+| where TimeGenerated >= todatetime('2024-03-03T09:44:30.509Z')
+| where ContainerName == "daprd"
+| where LogMessage.msg startswith "App handler returned an error"
+| project TimeGenerated, LogMessage
+| order by TimeGenerated asc
+```
