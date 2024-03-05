@@ -10,7 +10,7 @@ AZURE_CONTAINER_REGISTRY_PASSWORD=`az acr credential show -n $AZURE_CONTAINER_RE
 
 REVISION=`date +"%s"`
 
-if [ $1 == "docker"]; then
+if [ "$1" == "docker" ]; then
 
   az acr login -n $AZURE_CONTAINER_REGISTRY_NAME
 

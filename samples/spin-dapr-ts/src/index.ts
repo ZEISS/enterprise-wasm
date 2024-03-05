@@ -10,6 +10,10 @@ const encoder = new TextEncoder();
 const decoder = new TextDecoder();
 const router = Router();
 
+const DEFAULT_HEADERS = {
+  "Content-Type": "application/json",
+};
+
 router.get("/healthz", () => ({ status: 200 }));
 router.get("/dapr-metadata", () => dapr_meta());
 router.options("/q-order-ingress", () => ({ status: 200 }));
@@ -35,10 +39,13 @@ async function dapr_meta(): Promise<HttpResponse> {
       status: 200,
       body: encoder.encode(JSON.stringify(body, null, 2)),
     };
-  } catch (e) {
+  } catch (e: any) {
     return {
       status: 500,
-      body: encoder.encode(JSON.stringify(e, null, 2)),
+      headers: DEFAULT_HEADERS,
+      body: JSON.stringify({
+        message: e.toString(),
+      }),
     };
   }
 }
@@ -71,10 +78,13 @@ async function distributor(body: ArrayBuffer): Promise<HttpResponse> {
       status: 200,
       body: encoder.encode(JSON.stringify(order, null, 2)),
     };
-  } catch (e) {
+  } catch (e: any) {
     return {
       status: 500,
-      body: encoder.encode(JSON.stringify(e, null, 2)),
+      headers: DEFAULT_HEADERS,
+      body: JSON.stringify({
+        message: e.toString(),
+      }),
     };
   }
 }
@@ -110,10 +120,13 @@ async function receiver(body: ArrayBuffer): Promise<HttpResponse> {
       status: 200,
       body: encoder.encode(JSON.stringify(order, null, 2)),
     };
-  } catch (e) {
+  } catch (e: any) {
     return {
       status: 500,
-      body: encoder.encode(JSON.stringify(e, null, 2)),
+      headers: DEFAULT_HEADERS,
+      body: JSON.stringify({
+        message: e.toString(),
+      }),
     };
   }
 }
