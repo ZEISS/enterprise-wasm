@@ -20,7 +20,7 @@ spec:
   pollingInterval: 10
   cooldownPeriod: 60
   minReplicaCount: 1
-  maxReplicaCount: 20
+  maxReplicaCount: 30
   triggers:
     - type: azure-servicebus
       metadata:
@@ -41,7 +41,7 @@ spec:
   pollingInterval: 10
   cooldownPeriod: 60
   minReplicaCount: 1
-  maxReplicaCount: 20
+  maxReplicaCount: 30
   triggers:
     - type: azure-servicebus
       metadata:
@@ -62,7 +62,7 @@ spec:
   pollingInterval: 10
   cooldownPeriod: 60
   minReplicaCount: 1
-  maxReplicaCount: 20
+  maxReplicaCount: 30
   triggers:
     - type: azure-servicebus
       metadata:
@@ -83,7 +83,7 @@ spec:
   pollingInterval: 10
   cooldownPeriod: 60
   minReplicaCount: 1
-  maxReplicaCount: 20
+  maxReplicaCount: 30
   triggers:
     - type: azure-servicebus
       metadata:
@@ -104,7 +104,7 @@ spec:
   pollingInterval: 10
   cooldownPeriod: 60
   minReplicaCount: 1
-  maxReplicaCount: 20
+  maxReplicaCount: 30
   triggers:
     - type: azure-servicebus
       metadata:
@@ -125,7 +125,7 @@ spec:
   pollingInterval: 10
   cooldownPeriod: 60
   minReplicaCount: 1
-  maxReplicaCount: 20
+  maxReplicaCount: 30
   triggers:
     - type: azure-servicebus
       metadata:
