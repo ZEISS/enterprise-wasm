@@ -126,7 +126,7 @@ last_write_epoch=$(date -d $LAST_WRITE +%s)
 runtime_seconds=$(( $last_write_epoch - $schedule_epoch ))
 
 echo "$SCHEDULE | $TARGET_COUNT | $runtime_seconds"
-echo "$SCHEDULE | $TARGET_COUNT | $runtime_seconds | $1" >> $REPO_ROOT/LOG.md
+echo "$SCHEDULE | $runtime_seconds | $1" >> $REPO_ROOT/LOG.md
 
 
 pgrep -P $pid | xargs kill && kill $pid
