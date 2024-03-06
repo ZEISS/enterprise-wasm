@@ -76,11 +76,11 @@ variable "user_nodepools" {
     taints = []
     }, {
     name       = "wasm"
-    size       = "Standard_D2pds_v5"
+    # size       = "Standard_D2pds_v5"
+    size       = "Standard_DS2_v2"
     node_count = 3
     max_pods   = 250
     labels = {
-      # "kwasm.sh/kwasm-node" = "true"
     }
     taints = []
     }, {
@@ -152,7 +152,7 @@ variable "kwasm_namespace" {
 
 variable "kwasm_installer_image" {
   type        = string
-  default     = "ghcr.io/kwasm/kwasm-node-installer:v0.3.1"
+  default     = "vdice/kwasm-node-installer:precompilation"
   description = "KWasm installer image to use"
 }
 
