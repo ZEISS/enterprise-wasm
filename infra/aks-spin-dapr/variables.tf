@@ -76,8 +76,7 @@ variable "user_nodepools" {
     taints = []
     }, {
     name       = "wasm"
-    # size       = "Standard_D2pds_v5"
-    size       = "Standard_DS2_v2"
+    size       = "Standard_D2pds_v5"
     node_count = 3
     max_pods   = 250
     labels = {
