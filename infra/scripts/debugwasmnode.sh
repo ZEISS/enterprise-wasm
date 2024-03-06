@@ -1,9 +1,10 @@
 #!/bin/bash
+NODE=${1:-1}p
+NODENAME=`kubectl get node -l=agentpool=wasm -o name | sed -n $NODE`
 
-# force debug pod on backend pool
-wget -q -O- https://raw.githubusercontent.com/KWasm/kwasm-node-installer/main/example/debug.yaml | \
-yq eval ".spec|=select(.selector.matchLabels.app==\"default\")
-    .template.spec.nodeSelector.agentpool = \"wasm\"" | \
-kubectl apply -f -
+echo will now debug into $NODENAME
+echo "chroot /host"
+echo "ctr --namespace k8s.io image ls | grep runwasi"
 
-kubectl exec -it $(kubectl get pod -l=name=kwasm-debug -o name | awk 'FNR==1{print $1}') -- /bin/bash
+kubectl debug $NODENAME -it --image=mcr.microsoft.com/cbl-mariner/busybox:2.0
+
