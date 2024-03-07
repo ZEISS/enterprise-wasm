@@ -44,23 +44,24 @@ if [ $SPIN_DEPLOY = 'operator' ]; then
     --set installCRDs=true \
     --wait
 
-  # configure the directory where spin-operator is cloned
-  SPIN_OPERATOR_HOME="${SPIN_OPERATOR_HOME:-$HOME/src/spin-operator}"
+  SPIN_OPERATOR_VERSION="20240306-180611-g6e59d6d"
 
-  # install the spin-operator's CRDs
-  pushd "$SPIN_OPERATOR_HOME"
-  make install
-  popd
+  # get the full commit sha from the chart's version
+  SPIN_OPERATOR_COMMIT=$(git ls-remote --refs ssh://git@github.com/spinkube/spin-operator.git | grep "${SPIN_OPERATOR_VERSION:(-7)}" | awk '{ print $1 }')
 
-  SPIN_OPERATOR_VERSION="20240227-204645-g6ea5fae"
+  echo "Applying spin-operator CRDs from ${SPIN_OPERATOR_COMMIT}"
+  kubectl kustomize "ssh://git@github.com/spinkube/spin-operator//config/crd?ref=${SPIN_OPERATOR_COMMIT}" | kubectl apply -f -
 
   helm upgrade --install \
     -n spin-operator \
     --create-namespace \
     --version "0.0.0-${SPIN_OPERATOR_VERSION}" \
+    --skip-crds \
     --set controllerManager.manager.image.repository=ghcr.io/spinkube/spin-operator \
     --set controllerManager.manager.image.tag="${SPIN_OPERATOR_VERSION}" \
     --set kwasm-operator.enabled=false \
     --wait \
     spin-operator oci://ghcr.io/spinkube/spin-operator
+  
+  kubectl apply -f spin-executor-shim.yaml
 fi

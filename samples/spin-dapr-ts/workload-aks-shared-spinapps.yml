@@ -140,6 +140,7 @@ metadata:
   name: distributor
 spec:
   image: { will be replaced by deployment script }
+  executor: containerd-shim-spin
   enableAutoscaling: true
   deploymentAnnotations:
     scheduler.alpha.kubernetes.io/node-selector: agentpool=wasm
@@ -153,6 +154,7 @@ metadata:
   name: receiver-express
 spec:
   image: { will be replaced by deployment script }
+  executor: containerd-shim-spin
   enableAutoscaling: true
   deploymentAnnotations:
     scheduler.alpha.kubernetes.io/node-selector: agentpool=wasm
@@ -166,6 +168,7 @@ metadata:
   name: receiver-standard
 spec:
   image: { will be replaced by deployment script }
+  executor: containerd-shim-spin
   enableAutoscaling: true
   deploymentAnnotations:
     scheduler.alpha.kubernetes.io/node-selector: agentpool=wasm

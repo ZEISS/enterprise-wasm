@@ -2,6 +2,36 @@
 
 set -e
 
+usage="  USAGE: ./$(basename $0) [-h] [-d DELAY] [-c COUNT]
+
+  Execute the orderdata-ts helper dapr app locally with processing done in AKS using Azure ServiceBus
+
+  OPTIONS:
+    -h            show this help text
+    -d <DELAY>    minutes to delay delivery by (default: 1)  
+    -c <COUNT>    number of messages to deliver (default: 10000)
+    
+  EXAMPLE: push 20000 events to Azure ServiceBus with a scheduled delivery 5 minutes from now
+    ./$(basename $0) -d 5 -c 20000"
+
+TARGET_COUNT=10000
+DELAY=1
+
+while getopts ":hd:c:" option; do
+   case $option in
+      h)
+        echo "${usage}"
+        exit
+        ;;
+      d)
+        DELAY=$OPTARG
+        ;;
+      c)
+        TARGET_COUNT=$OPTARG
+        ;;
+   esac
+done
+
 npx tsc
 
 REPO_ROOT=`git rev-parse --show-toplevel`
@@ -51,9 +81,6 @@ do
 done
 
 # ---- send test data
-TARGET_COUNT=10000
-DELAY=1
-
 generate_post_data()
 {
  jq -n \
@@ -79,7 +106,8 @@ PUSHRESPONSE=`curl -s -d "$(generate_schedule_data)" http://localhost:$APP_PORT/
     -H 'Content-Type: application/json'`
 SCHEDULE=`echo $PUSHRESPONSE | jq -r '.scheduledTimestamp'`
 
-kubectl get deployments -o name | grep -E '(distributor|receiver)' | xargs -i kubectl scale {} --replicas 1
+# kubectl scale needs a timeout arg otherwise it won't wait
+kubectl get deployments -o name | grep -E '(distributor|receiver)' | xargs -- kubectl scale --timeout=2m --replicas=1
 
 echo wait ${DELAY}m for scheduled time
 sleep $(( $DELAY * 60 ))
@@ -120,8 +148,8 @@ done
 
 # ---- calculate timespan from schedule to blob last written
 echo $SCHEDULE $LAST_WRITE
-schedule_epoch=$(date -d $SCHEDULE +%s)
-last_write_epoch=$(date -d $LAST_WRITE +%s)
+schedule_epoch=$(date -u -d $SCHEDULE +%s)
+last_write_epoch=$(date -u -d $LAST_WRITE +%s)
 runtime_seconds=$(( $last_write_epoch - $schedule_epoch ))
 
 echo "$SCHEDULE | $TARGET_COUNT | $runtime_seconds"
