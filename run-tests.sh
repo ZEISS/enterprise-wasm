@@ -2,6 +2,8 @@
 
 set -e
 
+CYCLES=${1:-10}
+
 apps=($(for d in ./samples/*dapr-ts ; do echo ${d##*/}; done))
 
 for app in "${apps[@]}"
@@ -22,7 +24,7 @@ do
   popd
 
   pushd ./helpers/orderdata-ts
-  for i in $(seq 1 10);
+  for i in $(seq 1 $CYCLES);
   do
     ./run-aks-spin-dapr.sh $app
   done

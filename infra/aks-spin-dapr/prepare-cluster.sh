@@ -67,6 +67,12 @@ if [ $SPIN_DEPLOY = 'operator' ]; then
   SPIN_OPERATOR_VERSION="0.0.2"
 
   kubectl apply -f "https://github.com/spinkube/spin-operator/releases/download/v$SPIN_OPERATOR_VERSION/spin-operator.crds.yaml"
+  # get the full commit sha from the chart's version
+  SPIN_OPERATOR_COMMIT=$(git ls-remote --refs ssh://git@github.com/spinkube/spin-operator.git | grep "${SPIN_OPERATOR_VERSION:(-7)}" | awk '{ print $1 }')
+
+  echo "Applying spin-operator CRDs from ${SPIN_OPERATOR_COMMIT}"
+  kubectl kustomize "ssh://git@github.com/spinkube/spin-operator//config/crd?ref=${SPIN_OPERATOR_COMMIT}" | kubectl apply -f -
+  SPIN_OPERATOR_VERSION="20240306-180611-g6e59d6d"
 
   helm upgrade --install \
     -n spin-operator \
