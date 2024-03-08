@@ -22,9 +22,9 @@ spec:
     - name: queueName
       value: q-order-ingress-spin
     - name: maxActiveMessages
-      value: 900
+      value: 100
     - name: maxConcurrentHandlers
-      value: 9
+      value: 30
 auth:
   secretStore: secretstore
 scopes:
@@ -89,9 +89,9 @@ spec:
     - name: direction
       value: input
     - name: maxActiveMessages
-      value: 900
+      value: 100
     - name: maxConcurrentHandlers
-      value: 9
+      value: 30
 auth:
   secretStore: secretstore
 scopes:
@@ -114,9 +114,9 @@ spec:
     - name: direction
       value: input
     - name: maxActiveMessages
-      value: 900
+      value: 100
     - name: maxConcurrentHandlers
-      value: 9
+      value: 30
 auth:
   secretStore: secretstore
 scopes:
