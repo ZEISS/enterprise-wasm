@@ -299,3 +299,15 @@
 | 2024-03-07T18:13:41.499Z |  58 | spin-dapr-ts                                         |
 | 2024-03-07T18:20:54.745Z |  61 | spin-dapr-ts                                         |
 | 2024-03-07T18:28:04.482Z |  56 | spin-dapr-ts                                         |
+2024-03-08T05:40:22.865Z | 35 | spin-dapr-ts-fixscale-s10-d3
+2024-03-08T05:47:32.132Z | 37 | spin-dapr-ts-fixscale-s10-d3
+2024-03-08T05:53:57.828Z | 39 | spin-dapr-ts-fixscale-s10-d3
+2024-03-08T06:00:28.341Z | 39 | spin-dapr-ts-fixscale-s10-d3
+2024-03-08T06:06:49.154Z | 37 | spin-dapr-ts-fixscale-s10-d3
+2024-03-08T06:13:28.012Z | 37 | spin-dapr-ts-fixscale-s10-d3
+2024-03-08T06:24:25.049Z | 59 | spin-dapr-ts-triggerhappy
+2024-03-08T06:30:57.754Z | 60 | spin-dapr-ts-triggerhappy
+2024-03-08T06:37:37.998Z | 65 | spin-dapr-ts-triggerhappy
+2024-03-08T06:44:32.843Z | 58 | spin-dapr-ts-triggerhappy
+2024-03-08T06:51:16.173Z | 65 | spin-dapr-ts-triggerhappy
+2024-03-08T06:58:01.451Z | 55 | spin-dapr-ts-triggerhappy
