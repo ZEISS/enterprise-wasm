@@ -29,6 +29,7 @@ module "aks" {
   location            = var.location
   resource_group_name = azurerm_resource_group.rg.name
   tags                = local.tags
+  cluster_version     = var.cluster_version
   resource_prefix     = local.base_name
   cluster_admins      = var.cluster_admins
   system_nodepool     = var.system_nodepool

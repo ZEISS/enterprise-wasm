@@ -102,3 +102,5 @@ spec:
               - key: otel-collector-config
                 path: otel-collector-config.yaml
           name: otel-collector-config-vol
+      nodeSelector:
+        agentpool: default
