@@ -52,7 +52,7 @@ done
 
 # ---- send test data
 TARGET_COUNT=10000
-DELAY=1
+DELAY=2
 
 generate_post_data()
 {

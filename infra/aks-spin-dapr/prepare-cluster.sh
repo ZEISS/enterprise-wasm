@@ -52,7 +52,7 @@ if [ $SPIN_DEPLOY = 'operator' ]; then
   make install
   popd
 
-  SPIN_OPERATOR_VERSION="20240227-204645-g6ea5fae"
+  SPIN_OPERATOR_VERSION="20240306-180611-g6e59d6d"
 
   helm upgrade --install \
     -n spin-operator \
