@@ -18,5 +18,3 @@ if [[ ! -z "$NAME" ]]; then
   fi
 fi
 
-
-

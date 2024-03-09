@@ -87,6 +87,19 @@ The spin app consistently processes the 10000 messages in 20 seconds, whereas ex
 | ----------- | -------------- | ----------------------- | -------------------- | ----------------------------- |
 | D2pds       | DS3            | express-dapr-ts-scale-0 | spin-dapr-ts-scale-0 | minReplicas 0, maxReplicas 20 |
 
+## comparison
+
+### performance buckets posture
+
+```
+dependencies
+| where timestamp >= todatetime('2024-03-09T15:18:16.687Z')
+| where name startswith "bindings/q-order"
+| extend case = iff(timestamp>=todatetime('2024-03-09T15:46:26.287Z'),"spin","express")
+| summarize count() by case, performanceBucket
+| render columnchart
+```
+
 ## debugging
 
 ### checking errors Spin from/to Dapr
