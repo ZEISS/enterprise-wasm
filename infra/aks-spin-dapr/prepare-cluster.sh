@@ -65,6 +65,7 @@ if [ $SPIN_DEPLOY = 'operator' ]; then
   # 
   # kubectl apply -f spin-executor-shim.yaml
   SPIN_OPERATOR_VERSION="0.0.2"
+  SPIN_OPERATOR_VERSION="20240308-163342-gfb9c4df"
 
   kubectl apply -f "https://github.com/spinkube/spin-operator/releases/download/v$SPIN_OPERATOR_VERSION/spin-operator.crds.yaml"
   # get the full commit sha from the chart's version
@@ -73,6 +74,7 @@ if [ $SPIN_DEPLOY = 'operator' ]; then
   echo "Applying spin-operator CRDs from ${SPIN_OPERATOR_COMMIT}"
   kubectl kustomize "ssh://git@github.com/spinkube/spin-operator//config/crd?ref=${SPIN_OPERATOR_COMMIT}" | kubectl apply -f -
   SPIN_OPERATOR_VERSION="20240306-180611-g6e59d6d"
+  kubectl kustomize "ssh://git@github.com/spinkube/spin-operator/config/crd?ref=${SPIN_OPERATOR_COMMIT}" | kubectl apply -f -
 
   helm upgrade --install \
     -n spin-operator \
@@ -89,5 +91,27 @@ if [ $SPIN_DEPLOY = 'operator' ]; then
 
   wget "https://raw.githubusercontent.com/spinkube/spin-operator/v$SPIN_OPERATOR_VERSION/config/samples/spin-shim-executor.yaml" -O - -o /dev/null | \
     kubectl apply -f -
+    spin-operator oci://ghcr.io/spinkube/spin-operator
+  #
+  #
+  # SPIN_OPERATOR_VERSION="0.0.1"
+  #
+  # kubectl apply -f "https://github.com/spinkube/spin-operator/releases/download/v$SPIN_OPERATOR_VERSION/spin-operator.crds.yaml"
+  #
+  # helm upgrade --install \
+  #   -n spin-operator \
+  #   --create-namespace \
+  #   --version "$SPIN_OPERATOR_VERSION" \
+  #   --skip-crds \
+  #   --set kwasm-operator.enabled=false \
+  #   --wait \
+  #   spin-operator oci://ghcr.io/spinkube/spin-operator
+  # 
+  # wget "https://github.com/spinkube/spin-operator/releases/download/v$SPIN_OPERATOR_VERSION/spin-operator.runtime-class.yaml" -O - -o /dev/null | \
+  #   yq eval ".scheduling.nodeSelector.agentpool = \"wasm\"" | \
+  #   kubectl apply -f -
+  #
+  # wget "https://raw.githubusercontent.com/spinkube/spin-operator/v$SPIN_OPERATOR_VERSION/config/samples/spin-shim-executor.yaml" -O - -o /dev/null | \
+  #   kubectl apply -f -
 
 fi

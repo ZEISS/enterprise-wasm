@@ -89,6 +89,7 @@ if [ $PATTERN = 'shared' ]; then
       --set shared.deployment.replicas=0 \
       --set shared.daprd.image.tag=$DAPR_VERSION \
       --set shared.appId=$app \
+      --set shared.daprd.appHealth.enabled=true \
       --set shared.daprd.config=appconfig \
       --set shared.remoteURL=$remoteUrl \
       --set shared.remotePort=80 \
