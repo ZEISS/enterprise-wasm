@@ -134,7 +134,7 @@ spec:
       authenticationRef:
         name: azure-servicebus-auth
 ---
-apiVersion: core.spinoperator.dev/v1
+apiVersion: core.spinoperator.dev/v1alpha1
 kind: SpinApp
 metadata:
   name: distributor
@@ -148,7 +148,7 @@ spec:
     - name: dapr_url
       value: "http://distributor-dapr:3500"
 ---
-apiVersion: core.spinoperator.dev/v1
+apiVersion: core.spinoperator.dev/v1alpha1
 kind: SpinApp
 metadata:
   name: receiver-express
@@ -162,7 +162,7 @@ spec:
     - name: dapr_url
       value: "http://receiver-express-dapr:3500"
 ---
-apiVersion: core.spinoperator.dev/v1
+apiVersion: core.spinoperator.dev/v1alpha1
 kind: SpinApp
 metadata:
   name: receiver-standard

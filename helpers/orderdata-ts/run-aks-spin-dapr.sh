@@ -81,9 +81,6 @@ do
 done
 
 # ---- send test data
-TARGET_COUNT=10000
-DELAY=2
-
 generate_post_data()
 {
  jq -n \
