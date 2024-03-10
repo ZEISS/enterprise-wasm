@@ -1,12 +1,12 @@
-apiVersion: keda.sh/v1alpha1
-kind: TriggerAuthentication
-metadata:
-  name: azure-servicebus-auth
-spec:
-  secretTargetRef:
-    - key: connectionString
-      name: servicebus-secret
-      parameter: connection
+# apiVersion: keda.sh/v1alpha1
+# kind: TriggerAuthentication
+# metadata:
+#   name: azure-servicebus-auth
+# spec:
+#   secretTargetRef:
+#     - key: connectionString
+#       name: servicebus-secret
+#       parameter: connection
 # ---
 # apiVersion: keda.sh/v1alpha1
 # kind: ScaledObject
@@ -28,27 +28,27 @@ spec:
 #         messageCount: "100"
 #       authenticationRef:
 #         name: azure-servicebus-auth
----
-apiVersion: keda.sh/v1alpha1
-kind: ScaledObject
-metadata:
-  name: order-ingress-dapr-scaledobject
-  namespace: default
-spec:
-  scaleTargetRef:
-    kind: Deployment
-    name: distributor-dapr
-  pollingInterval: 1
-  cooldownPeriod: 1
-  minReplicaCount: 1
-  maxReplicaCount: 50
-  triggers:
-    - type: azure-servicebus
-      metadata:
-        queueName: q-order-ingress-spin
-        messageCount: "100"
-      authenticationRef:
-        name: azure-servicebus-auth
+# ---
+# apiVersion: keda.sh/v1alpha1
+# kind: ScaledObject
+# metadata:
+#   name: order-ingress-dapr-scaledobject
+#   namespace: default
+# spec:
+#   scaleTargetRef:
+#     kind: Deployment
+#     name: distributor-dapr
+#   pollingInterval: 1
+#   cooldownPeriod: 1
+#   minReplicaCount: 1
+#   maxReplicaCount: 50
+#   triggers:
+#     - type: azure-servicebus
+#       metadata:
+#         queueName: q-order-ingress-spin
+#         messageCount: "100"
+#       authenticationRef:
+#         name: azure-servicebus-auth
 # ---
 # apiVersion: keda.sh/v1alpha1
 # kind: ScaledObject
@@ -70,27 +70,27 @@ spec:
 #         messageCount: "10"
 #       authenticationRef:
 #         name: azure-servicebus-auth
----
-apiVersion: keda.sh/v1alpha1
-kind: ScaledObject
-metadata:
-  name: order-express-dapr-scaledobject
-  namespace: default
-spec:
-  scaleTargetRef:
-    kind: Deployment
-    name: receiver-express-dapr
-  pollingInterval: 1
-  cooldownPeriod: 1
-  minReplicaCount: 1
-  maxReplicaCount: 30
-  triggers:
-    - type: azure-servicebus
-      metadata:
-        queueName: q-order-express-spin
-        messageCount: "10"
-      authenticationRef:
-        name: azure-servicebus-auth
+# ---
+# apiVersion: keda.sh/v1alpha1
+# kind: ScaledObject
+# metadata:
+#   name: order-express-dapr-scaledobject
+#   namespace: default
+# spec:
+#   scaleTargetRef:
+#     kind: Deployment
+#     name: receiver-express-dapr
+#   pollingInterval: 1
+#   cooldownPeriod: 1
+#   minReplicaCount: 1
+#   maxReplicaCount: 30
+#   triggers:
+#     - type: azure-servicebus
+#       metadata:
+#         queueName: q-order-express-spin
+#         messageCount: "10"
+#       authenticationRef:
+#         name: azure-servicebus-auth
 # ---
 # apiVersion: keda.sh/v1alpha1
 # kind: ScaledObject
@@ -112,27 +112,27 @@ spec:
 #         messageCount: "10"
 #       authenticationRef:
 #         name: azure-servicebus-auth
----
-apiVersion: keda.sh/v1alpha1
-kind: ScaledObject
-metadata:
-  name: order-standard-dapr-scaledobject
-  namespace: default
-spec:
-  scaleTargetRef:
-    kind: Deployment
-    name: receiver-standard-dapr
-  pollingInterval: 1
-  cooldownPeriod: 1
-  minReplicaCount: 1
-  maxReplicaCount: 30
-  triggers:
-    - type: azure-servicebus
-      metadata:
-        queueName: q-order-standard-spin
-        messageCount: "100"
-      authenticationRef:
-        name: azure-servicebus-auth
+# ---
+# apiVersion: keda.sh/v1alpha1
+# kind: ScaledObject
+# metadata:
+#   name: order-standard-dapr-scaledobject
+#   namespace: default
+# spec:
+#   scaleTargetRef:
+#     kind: Deployment
+#     name: receiver-standard-dapr
+#   pollingInterval: 1
+#   cooldownPeriod: 1
+#   minReplicaCount: 1
+#   maxReplicaCount: 30
+#   triggers:
+#     - type: azure-servicebus
+#       metadata:
+#         queueName: q-order-standard-spin
+#         messageCount: "100"
+#       authenticationRef:
+#         name: azure-servicebus-auth
 ---
 apiVersion: apps/v1
 kind: Deployment
