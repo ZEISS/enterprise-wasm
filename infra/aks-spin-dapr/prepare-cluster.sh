@@ -44,7 +44,7 @@ if [ $SPIN_DEPLOY = 'operator' ]; then
     --set installCRDs=true \
     --wait
 
-  SPIN_OPERATOR_VERSION="20240306-180611-g6e59d6d"
+  SPIN_OPERATOR_VERSION="20240308-163342-gfb9c4df"
 
   # get the full commit sha from the chart's version
   SPIN_OPERATOR_COMMIT=$(git ls-remote --refs ssh://git@github.com/spinkube/spin-operator.git | grep "${SPIN_OPERATOR_VERSION:(-7)}" | awk '{ print $1 }')
