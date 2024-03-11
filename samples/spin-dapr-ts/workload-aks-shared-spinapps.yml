@@ -20,7 +20,7 @@ spec:
   pollingInterval: 1
   cooldownPeriod: 1
   minReplicaCount: 1
-  maxReplicaCount: 1
+  maxReplicaCount: 7
   triggers:
     - type: azure-servicebus
       metadata:
@@ -40,8 +40,8 @@ spec:
     name: distributor-dapr
   pollingInterval: 1
   cooldownPeriod: 1
-  minReplicaCount: 1
-  maxReplicaCount: 50
+  minReplicaCount: 10
+  maxReplicaCount: 10
   triggers:
     - type: azure-servicebus
       metadata:
@@ -62,7 +62,7 @@ spec:
   pollingInterval: 1
   cooldownPeriod: 1
   minReplicaCount: 1
-  maxReplicaCount: 1
+  maxReplicaCount: 7
   triggers:
     - type: azure-servicebus
       metadata:
@@ -82,8 +82,8 @@ spec:
     name: receiver-express-dapr
   pollingInterval: 1
   cooldownPeriod: 1
-  minReplicaCount: 1
-  maxReplicaCount: 30
+  minReplicaCount: 10
+  maxReplicaCount: 10
   triggers:
     - type: azure-servicebus
       metadata:
@@ -104,7 +104,7 @@ spec:
   pollingInterval: 1
   cooldownPeriod: 1
   minReplicaCount: 1
-  maxReplicaCount: 1
+  maxReplicaCount: 7
   triggers:
     - type: azure-servicebus
       metadata:
@@ -124,8 +124,8 @@ spec:
     name: receiver-standard-dapr
   pollingInterval: 1
   cooldownPeriod: 1
-  minReplicaCount: 1
-  maxReplicaCount: 30
+  minReplicaCount: 10
+  maxReplicaCount: 10
   triggers:
     - type: azure-servicebus
       metadata:
