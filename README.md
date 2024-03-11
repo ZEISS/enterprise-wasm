@@ -61,3 +61,15 @@ optional:
 | ----------------------------------------- | ------------------------------------------------ | ------------------------------------------------ | ------------------------------ | ------------------------------- |
 | Spin with Dapr on AKS, Rust               | [aks-spin-dapr](./infra/aks-spin-dapr/README.md) | [spin-dapr-rs](./samples/spin-dapr-rs/README.md) | `make deploy-aks-spin-dapr-rs` | `make destroy-aks-spin-dapr-rs` |
 | Spin with Dapr on AKS, Node.js/TypeScript | [aks-spin-dapr](./infra/aks-spin-dapr/README.md) | [spin-dapr-ts](./samples/spin-dapr-ts/README.md) | `make deploy-aks-spin-dapr-ts` | `make destroy-aks-spin-dapr-ts` |
+
+
+
+## Compare Express to spin-ts
+
+The goal of this evaluation is to compare the performance of the same application once in the Express Framework, on the other side in WebAssembly facilitating spin. Since one benefit of the WebAssembly Ecosystem is the portability, the spin-ts app will be deployed on an arm nodepool.
+
+In the Setup, dapr is used to fetch and place messages in a service bus queue. Also its used to store the orders of the messages in a storage account. Because we don't want dapr to be a bottleneck for the Comparison, the Instances of Dapr will be set to 10 without any scaling. 
+
+For the spin / express apps we search for the most performant scale setting with the given 10 dapr instances. Which led to 1 to 7 for the spin application and 1 to 10 for the nodejs one.
+
+The spin app consistently processes the 10000 messages in 20 seconds, whereas express is more inconsistent. The processing time for the express app is between 25 and 32 seconds. 
