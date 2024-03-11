@@ -35,4 +35,9 @@ kubectl delete secret servicebus-secret --ignore-not-found
 kubectl delete secret storage-secret --ignore-not-found
 kubectl delete -f ./dapr-components.yml
 
-helm uninstall receiver-standard-dapr receiver-express-dapr distributor-dapr
+if [ $PATTERN == 'shared' ]; then
+
+  helm uninstall receiver-standard-dapr receiver-express-dapr distributor-daprA
+
+fi
+

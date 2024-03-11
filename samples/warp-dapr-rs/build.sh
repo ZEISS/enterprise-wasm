@@ -13,4 +13,5 @@ az acr login -n $AZURE_CONTAINER_REGISTRY_NAME
 
 IMAGE_NAME=$AZURE_CONTAINER_REGISTRY_ENDPOINT/warp-dapr-rs:$REVISION
 
-docker build --push -t $IMAGE_NAME -f ./Dockerfile.static .
+docker build --push -t $IMAGE_NAME .
+# docker build --push -t $IMAGE_NAME -f ./Dockerfile.static .

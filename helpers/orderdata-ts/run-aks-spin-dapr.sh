@@ -10,14 +10,16 @@ usage="  USAGE: ./$(basename $0) [-h] [-d DELAY] [-c COUNT]
     -h            show this help text
     -d <DELAY>    minutes to delay delivery by (default: 1)  
     -c <COUNT>    number of messages to deliver (default: 10000)
+    -f            force generation of test messages (default: only if not already generated)
     
   EXAMPLE: push 20000 events to Azure ServiceBus with a scheduled delivery 5 minutes from now
     ./$(basename $0) -d 5 -c 20000"
 
 TARGET_COUNT=10000
+FORCE_GENERATE=0
 DELAY=1
 
-while getopts ":hd:c:" option; do
+while getopts ":hd:c:f" option; do
    case $option in
       h)
         echo "${usage}"
@@ -28,6 +30,9 @@ while getopts ":hd:c:" option; do
         ;;
       c)
         TARGET_COUNT=$OPTARG
+        ;;
+      f)
+        FORCE_GENERATE=1
         ;;
    esac
 done
@@ -95,7 +100,7 @@ generate_schedule_data()
       '{scheduleDelayMinutes: ($d|tonumber)}'
 }
 
-if [ $(curl -s http://localhost:$APP_PORT/test-data) = "{}" ]; then
+if [ $FORCE_GENERATE == "1" ] || [ $(curl -s http://localhost:$APP_PORT/test-data) = "{}" ]; then
   echo "### generating test data ###"
   curl -s -d "$(generate_post_data)" http://localhost:$APP_PORT/test-data \
       -H 'Content-Type: application/json'
