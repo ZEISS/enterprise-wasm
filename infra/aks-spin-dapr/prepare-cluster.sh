@@ -44,24 +44,44 @@ if [ $SPIN_DEPLOY = 'operator' ]; then
     --set installCRDs=true \
     --wait
 
-  SPIN_OPERATOR_VERSION="20240308-163342-gfb9c4df"
+  # SPIN_OPERATOR_VERSION="20240311-103104-gd80a4a7"
+  #
+  # # get the full commit sha from the chart's version
+  # SPIN_OPERATOR_COMMIT=$(git ls-remote --refs ssh://git@github.com/spinkube/spin-operator.git | grep "${SPIN_OPERATOR_VERSION:(-7)}" | awk '{ print $1 }')
+  #
+  # echo "Applying spin-operator CRDs from ${SPIN_OPERATOR_COMMIT}"
+  # kubectl kustomize "ssh://git@github.com/spinkube/spin-operator//config/crd?ref=${SPIN_OPERATOR_COMMIT}" | kubectl apply -f -
+  #
+  # helm upgrade --install \
+  #   -n spin-operator \
+  #   --create-namespace \
+  #   --version "0.0.0-${SPIN_OPERATOR_VERSION}" \
+  #   --skip-crds \
+  #   --set controllerManager.manager.image.repository=ghcr.io/spinkube/spin-operator \
+  #   --set controllerManager.manager.image.tag="${SPIN_OPERATOR_VERSION}" \
+  #   --set kwasm-operator.enabled=false \
+  #   --wait \
+  #   spin-operator oci://ghcr.io/spinkube/spin-operator
+  # 
+  # kubectl apply -f spin-executor-shim.yaml
+  SPIN_OPERATOR_VERSION="0.0.2"
 
-  # get the full commit sha from the chart's version
-  SPIN_OPERATOR_COMMIT=$(git ls-remote --refs ssh://git@github.com/spinkube/spin-operator.git | grep "${SPIN_OPERATOR_VERSION:(-7)}" | awk '{ print $1 }')
-
-  echo "Applying spin-operator CRDs from ${SPIN_OPERATOR_COMMIT}"
-  kubectl kustomize "ssh://git@github.com/spinkube/spin-operator//config/crd?ref=${SPIN_OPERATOR_COMMIT}" | kubectl apply -f -
+  kubectl apply -f "https://github.com/spinkube/spin-operator/releases/download/v$SPIN_OPERATOR_VERSION/spin-operator.crds.yaml"
 
   helm upgrade --install \
     -n spin-operator \
     --create-namespace \
-    --version "0.0.0-${SPIN_OPERATOR_VERSION}" \
+    --version "$SPIN_OPERATOR_VERSION" \
     --skip-crds \
-    --set controllerManager.manager.image.repository=ghcr.io/spinkube/spin-operator \
-    --set controllerManager.manager.image.tag="${SPIN_OPERATOR_VERSION}" \
     --set kwasm-operator.enabled=false \
     --wait \
-    spin-operator oci://ghcr.io/spinkube/spin-operator
-  
-  kubectl apply -f spin-executor-shim.yaml
+    spin-operator oci://ghcr.io/spinkube/charts/spin-operator
+
+  wget "https://github.com/spinkube/spin-operator/releases/download/v$SPIN_OPERATOR_VERSION/spin-operator.runtime-class.yaml" -O - -o /dev/null | \
+    yq eval ".scheduling.nodeSelector.agentpool = \"wasm\"" | \
+    kubectl apply -f -
+
+  wget "https://raw.githubusercontent.com/spinkube/spin-operator/v$SPIN_OPERATOR_VERSION/config/samples/spin-shim-executor.yaml" -O - -o /dev/null | \
+    kubectl apply -f -
+
 fi
