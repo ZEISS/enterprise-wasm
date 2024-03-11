@@ -60,7 +60,7 @@ if [ $PATTERN = 'shared' ]; then
     helm upgrade --install $app-dapr oci://registry-1.docker.io/daprio/dapr-shared-chart \
       --set fullnameOverride=$app-dapr \
       --set shared.strategy=deployment \
-      --set shared.scheduling.nodeSelector.agentpool=default \
+      --set shared.scheduling.nodeSelector.agentpool=classic \
       --set shared.deployment.replicas=1 \
       --set shared.daprd.image.tag=$DAPR_VERSION \
       --set shared.appId=$app \
@@ -70,7 +70,8 @@ if [ $PATTERN = 'shared' ]; then
       --set shared.controlPlane.placementServerAddress="''" \
       --set shared.daprd.listenAddresses=0.0.0.0 \
       --set shared.daprd.appHealth.enabled=true \
-      --set shared.daprd.appHealth.probeTimeout=1000
+      --set shared.daprd.appHealth.probeTimeout=1000 \
+      --set shared.log.level=debug
 
   done
 fi

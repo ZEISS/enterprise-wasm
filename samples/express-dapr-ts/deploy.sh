@@ -67,7 +67,9 @@ if [ $PATTERN = 'shared' ]; then
       --set shared.daprd.config=appconfig \
       --set shared.remoteURL=$app-svc \
       --set shared.remotePort=80 \
-      --set shared.daprd.listenAddresses=0.0.0.0
+      --set shared.daprd.listenAddresses=0.0.0.0 \
+      --set shared.daprd.appHealth.enabled=true \
+      --set shared.daprd.appHealth.probeTimeout=1000
 
   done
 fi

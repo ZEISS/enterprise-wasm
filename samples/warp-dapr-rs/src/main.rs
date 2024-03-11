@@ -29,7 +29,10 @@ async fn main() {
         .and(warp::path::end())
         .map(|| "Healthy");
 
-    let routes = health.or(dapr_endpoints()).recover(handle_rejection);
+    let routes = health
+        .or(dapr_endpoints())
+        .recover(handle_rejection)
+        .with(warp::trace::request());
 
     warp::serve(routes).run(([0, 0, 0, 0], app_port())).await;
 }

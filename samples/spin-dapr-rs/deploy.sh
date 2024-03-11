@@ -46,7 +46,7 @@ kubectl create secret generic storage-secret --from-literal=accountName=$STORAGE
 kubectl apply -f ./dapr-components.yml
 
 if [ $SPIN_DEPLOY = 'operator' ]; then
-  cat ./workload-aks-shared-spinapps.yml | \
+  cat ./workload-aks-shared-operator.yml | \
   yq eval ".|=select(.metadata.name==\"distributor\")
       .spec.image = \"$IMAGE_NAME\"" | \
   yq eval ".|=select(.metadata.name==\"receiver-express\") 
@@ -85,7 +85,7 @@ if [ $PATTERN = 'shared' ]; then
     helm upgrade --install $app-dapr oci://registry-1.docker.io/daprio/dapr-shared-chart \
       --set fullnameOverride=$app-dapr \
       --set shared.strategy=deployment \
-      --set shared.scheduling.nodeSelector.agentpool=default \
+      --set shared.scheduling.nodeSelector.agentpool=wasm \
       --set shared.deployment.replicas=1 \
       --set shared.daprd.image.tag=$DAPR_VERSION \
       --set shared.appId=$app \
