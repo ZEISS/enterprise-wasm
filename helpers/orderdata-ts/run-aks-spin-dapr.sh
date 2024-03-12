@@ -112,7 +112,7 @@ PUSHRESPONSE=`curl -s -d "$(generate_schedule_data)" http://localhost:$APP_PORT/
 SCHEDULE=`echo $PUSHRESPONSE | jq -r '.scheduledTimestamp'`
 
 # kubectl scale needs a timeout arg otherwise it won't wait
-kubectl get deployments -o name | grep -E '(distributor|receiver)' | xargs -- kubectl scale --timeout=2m --replicas=1
+kubectl get deployments -o name | grep -E '(distributor|receiver)' | grep -vE 'dapr$' | xargs -- kubectl scale --timeout=2m --replicas=1
 
 echo wait ${DELAY}m for scheduled time
 sleep $(( $DELAY * 60 ))

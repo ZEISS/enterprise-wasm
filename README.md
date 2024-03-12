@@ -62,17 +62,18 @@ optional:
 | Spin with Dapr on AKS, Rust               | [aks-spin-dapr](./infra/aks-spin-dapr/README.md) | [spin-dapr-rs](./samples/spin-dapr-rs/README.md) | `make deploy-aks-spin-dapr-rs` | `make destroy-aks-spin-dapr-rs` |
 | Spin with Dapr on AKS, Node.js/TypeScript | [aks-spin-dapr](./infra/aks-spin-dapr/README.md) | [spin-dapr-ts](./samples/spin-dapr-ts/README.md) | `make deploy-aks-spin-dapr-ts` | `make destroy-aks-spin-dapr-ts` |
 
-
+---
 
 ## Compare Express to spin-ts
 
 The goal of this evaluation is to compare the performance of the same application once in the Express Framework, on the other side in WebAssembly facilitating spin. Since one benefit of the WebAssembly Ecosystem is the portability, the spin-ts app will be deployed on an arm nodepool.
 
-In the Setup, dapr is used to fetch and place messages in a service bus queue. Also its used to store the orders of the messages in a storage account. Because we don't want dapr to be a bottleneck for the Comparison, the Instances of Dapr will be set to 10 without any scaling. 
+In the Setup, Dapr is used to fetch and place messages in a service bus queue. Also its used to store the orders of the messages in a storage account. Because we don't want Dapr to be a bottleneck for the Comparison, the Instances of Dapr will be set to 10 without any scaling.
 
-For the spin / express apps we search for the most performant scale setting with the given 10 dapr instances. Which led to 1 to 7 for the spin application and 1 to 10 for the nodejs one.
+For the spin / express apps we search for the most performant scale setting with the given 10 Dapr instances. Which led to 1 to 7 for the spin application and 1 to 10 for the Node.js one.
 
-The spin app consistently processes the 10000 messages in 20 seconds, whereas express is more inconsistent. The processing time for the express app is between 25 and 32 seconds. 
+The Spin app consistently processes the 10000 messages in 20 seconds, whereas Express is more inconsistent. The processing time for the Express app is between 25 and 32 seconds.
+
 ## comparison baseline
 
 | VM SKU   | tech specs                         | relative pricing |
@@ -80,12 +81,6 @@ The spin app consistently processes the 10000 messages in 20 seconds, whereas ex
 | DS3 v2   | 4 vCPUs, 14 GB RAM, 28 GB temp HDD | 1.00             |
 | D2pds v5 | 2 vCPUs, 8 GB RAM, 75 GB temp HDD  | 0.40             |
 | D4pds v5 | 4 vCPU, 16 GB RAM, 150 GB temp HDD | 0.80             |
-
-## comparison history
-
-| config Spin | config classic | LOG entry Spin          | LOG entry classic    | settings                      |
-| ----------- | -------------- | ----------------------- | -------------------- | ----------------------------- |
-| D2pds       | DS3            | express-dapr-ts-scale-0 | spin-dapr-ts-scale-0 | minReplicas 0, maxReplicas 20 |
 
 ## comparison
 
@@ -99,25 +94,6 @@ dependencies
 | summarize count() by case, performanceBucket
 | render columnchart
 ```
-
-## debugging
-
-### checking errors Spin from/to Dapr
-
-```kusto
-ContainerLogV2
-| where TimeGenerated >= todatetime('2024-03-03T09:44:30.509Z')
-| where ContainerName == "daprd"
-| where LogMessage.msg startswith "App handler returned an error"
-| project TimeGenerated, LogMessage
-| order by TimeGenerated asc
-```
-
-## comparison history
-
-| config Spin | config classic | LOG entry Spin          | LOG entry classic    | settings                      |
-| ----------- | -------------- | ----------------------- | -------------------- | ----------------------------- |
-| D2pds       | DS3            | express-dapr-ts-scale-0 | spin-dapr-ts-scale-0 | minReplicas 0, maxReplicas 20 |
 
 ## debugging
 

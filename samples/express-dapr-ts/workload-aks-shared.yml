@@ -70,27 +70,6 @@ spec:
         messageCount: "10"
       authenticationRef:
         name: azure-servicebus-auth
-# ---
-# apiVersion: keda.sh/v1alpha1
-# kind: ScaledObject
-# metadata:
-#   name: order-express-scaledobject
-#   namespace: default
-# spec:
-#   scaleTargetRef:
-#     kind: Deployment
-#     name: receiver-express
-#   pollingInterval: 1
-#   cooldownPeriod: 1
-#   minReplicaCount: 1
-#   maxReplicaCount: 1
-#   triggers:
-#     - type: azure-servicebus
-#       metadata:
-#         queueName: q-order-express-spin
-#         messageCount: "10"
-#       authenticationRef:
-#         name: azure-servicebus-auth
 ---
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
@@ -133,27 +112,6 @@ spec:
         messageCount: "10"
       authenticationRef:
         name: azure-servicebus-auth
-# ---
-# apiVersion: keda.sh/v1alpha1
-# kind: ScaledObject
-# metadata:
-#   name: order-standard-scaledobject
-#   namespace: default
-# spec:
-#   scaleTargetRef:
-#     kind: Deployment
-#     name: receiver-standard
-#   pollingInterval: 1
-#   cooldownPeriod: 1
-#   minReplicaCount: 1
-#   maxReplicaCount: 1
-#   triggers:
-#     - type: azure-servicebus
-#       metadata:
-#         queueName: q-order-standard-spin
-#         messageCount: "10"
-#       authenticationRef:
-#         name: azure-servicebus-auth
 ---
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
