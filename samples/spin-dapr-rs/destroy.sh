@@ -37,7 +37,7 @@ kubectl delete -f ./dapr-components.yml
 
 if [ $PATTERN == 'shared' ]; then
 
-  helm uninstall receiver-standard-dapr receiver-express-dapr distributor-daprA
+  helm uninstall receiver-standard-dapr receiver-express-dapr distributor-dapr
 
 fi
 

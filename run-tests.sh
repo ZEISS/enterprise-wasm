@@ -2,9 +2,37 @@
 
 set -e
 
-CYCLES=${1:-10}
+usage="  USAGE: ./$(basename $0) [-h] [-d DELAY] [-c COUNT]
 
-apps=($(for d in ./samples/*dapr-ts ; do echo ${d##*/}; done))
+  Execute the orderdata-ts helper dapr app locally with processing done in AKS using Azure ServiceBus
+
+  OPTIONS:
+    -h            show this help text
+    -c <CYCLES>   number of cycles
+    -s <SUFFIX>   case suffix rs or ts (default : ts)
+    
+  EXAMPLE: run 5 cycles
+    ./$(basename $0) -d 5"
+
+CYCLES=10
+SUFFIX=ts
+
+while getopts ":hc:s:" option; do
+   case $option in
+      h)
+        echo "${usage}"
+        exit
+        ;;
+      c)
+        CYCLES=$OPTARG
+        ;;
+      s)
+        SUFFIX=$OPTARG
+        ;;
+   esac
+done
+
+apps=($(for d in ./samples/*dapr-$SUFFIX ; do echo ${d##*/}; done))
 
 for app in "${apps[@]}"
 do
