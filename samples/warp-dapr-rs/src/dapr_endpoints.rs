@@ -43,6 +43,7 @@ pub fn dapr_endpoints() -> impl Filter<Extract = impl warp::Reply, Error = warp:
         .or(post_distributor)
         .or(post_receiver_express)
         .or(post_receiver_standard)
+        .with(warp::trace::request())
 }
 
 async fn dapr_metadata() -> Result<impl warp::Reply, warp::Rejection> {
