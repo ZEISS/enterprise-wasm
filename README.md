@@ -6,6 +6,8 @@ Intention is to create an environment similar to a [performance comparison betwe
 
 > STATUS : **UNDER CONSTRUCTION**
 
+![Data flow from generation over distributor to receivers](./media/EnterpriseWasm.png)
+
 ## Prequisites
 
 ### Azure

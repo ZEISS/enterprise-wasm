@@ -1,138 +1,71 @@
-apiVersion: keda.sh/v1alpha1
-kind: TriggerAuthentication
+apiVersion: approuting.kubernetes.azure.com/v1alpha1
+kind: NginxIngressController
 metadata:
-  name: azure-servicebus-auth
+  name: nginx-internal
 spec:
-  secretTargetRef:
-    - key: connectionString
-      name: servicebus-secret
-      parameter: connection
+  ingressClassName: nginx-internal
+  controllerNamePrefix: nginx-internal
+  loadBalancerAnnotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
 ---
-apiVersion: keda.sh/v1alpha1
-kind: ScaledObject
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
-  name: order-ingress-scaledobject
-  namespace: default
+  name: internal-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
-  scaleTargetRef:
-    kind: Deployment
-    name: distributor
-  pollingInterval: 1
-  cooldownPeriod: 1
-  minReplicaCount: 1
-  maxReplicaCount: 10
-  triggers:
-    - type: azure-servicebus
-      metadata:
-        queueName: q-order-ingress-spin
-        messageCount: "10"
-      authenticationRef:
-        name: azure-servicebus-auth
----
-apiVersion: keda.sh/v1alpha1
-kind: ScaledObject
-metadata:
-  name: order-ingress-dapr-scaledobject
-  namespace: default
-spec:
-  scaleTargetRef:
-    kind: Deployment
-    name: distributor-dapr
-  pollingInterval: 1
-  cooldownPeriod: 1
-  minReplicaCount: 10
-  maxReplicaCount: 10
-  triggers:
-    - type: azure-servicebus
-      metadata:
-        queueName: q-order-ingress-spin
-        messageCount: "100"
-      authenticationRef:
-        name: azure-servicebus-auth
----
-apiVersion: keda.sh/v1alpha1
-kind: ScaledObject
-metadata:
-  name: order-express-scaledobject
-  namespace: default
-spec:
-  scaleTargetRef:
-    kind: Deployment
-    name: receiver-express
-  pollingInterval: 1
-  cooldownPeriod: 1
-  minReplicaCount: 1
-  maxReplicaCount: 10
-  triggers:
-    - type: azure-servicebus
-      metadata:
-        queueName: q-order-express-spin
-        messageCount: "10"
-      authenticationRef:
-        name: azure-servicebus-auth
----
-apiVersion: keda.sh/v1alpha1
-kind: ScaledObject
-metadata:
-  name: order-express-dapr-scaledobject
-  namespace: default
-spec:
-  scaleTargetRef:
-    kind: Deployment
-    name: receiver-express-dapr
-  pollingInterval: 1
-  cooldownPeriod: 1
-  minReplicaCount: 10
-  maxReplicaCount: 10
-  triggers:
-    - type: azure-servicebus
-      metadata:
-        queueName: q-order-express-spin
-        messageCount: "100"
-      authenticationRef:
-        name: azure-servicebus-auth
----
-apiVersion: keda.sh/v1alpha1
-kind: ScaledObject
-metadata:
-  name: order-standard-scaledobject
-  namespace: default
-spec:
-  scaleTargetRef:
-    kind: Deployment
-    name: receiver-standard
-  pollingInterval: 1
-  cooldownPeriod: 1
-  minReplicaCount: 1
-  maxReplicaCount: 10
-  triggers:
-    - type: azure-servicebus
-      metadata:
-        queueName: q-order-standard-spin
-        messageCount: "10"
-      authenticationRef:
-        name: azure-servicebus-auth
----
-apiVersion: keda.sh/v1alpha1
-kind: ScaledObject
-metadata:
-  name: order-standard-dapr-scaledobject
-  namespace: default
-spec:
-  scaleTargetRef:
-    kind: Deployment
-    name: receiver-standard-dapr
-  pollingInterval: 1
-  cooldownPeriod: 1
-  minReplicaCount: 10
-  maxReplicaCount: 10
-  triggers:
-    - type: azure-servicebus
-      metadata:
-        queueName: q-order-standard-spin
-        messageCount: "100"
-      authenticationRef:
-        name: azure-servicebus-auth
+  ingressClassName: nginx-internal
+  rules:
+    - http:
+        paths:
+          - path: /distributor(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: distributor-svc
+                port:
+                  number: 80
+    - http:
+        paths:
+          - path: /receiver-express(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: receiver-express-svc
+                port:
+                  number: 80
+    - http:
+        paths:
+          - path: /receiver-standard(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: receiver-standard-svc
+                port:
+                  number: 80
+# ---
+# kind: HTTPScaledObject
+# apiVersion: http.keda.sh/v1alpha1
+# metadata:
+#   name: order-ingress-scaledobject
+#   namespace: default
+# spec:
+#   hosts:
+#     - distributor-svc.default.svc.cluster.local
+#   pathPrefixes:
+#     - "/"
+#   targetPendingRequests: 200
+#   scaleTargetRef:
+#     name: distributor
+#     kind: Deployment
+#     apiVersion: apps/v1
+#     service: distributor-svc
+#     port: 80
+#   replicas:
+#     min: 1
+#     max: 30
 ---
 apiVersion: apps/v1
 kind: Deployment

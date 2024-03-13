@@ -26,9 +26,10 @@ yq eval '. | select(.kind=="Deployment").spec.template.spec.nodeSelector={"agent
 kubectl apply -f -
 kubectl apply -f ./collector-config.yaml
 
-# CLUSTER_NAME=`az resource list -g $RESOURCE_GROUP_NAME --resource-type Microsoft.ContainerService/managedClusters --query '[0].name' -o tsv`
-
+# enable app-routing
+CLUSTER_NAME=`az resource list -g $RESOURCE_GROUP_NAME --resource-type Microsoft.ContainerService/managedClusters --query '[0].name' -o tsv`
 # az aks update -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME --kube-proxy-config kube-proxy.json
+[[ $(az aks show -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME --query "ingressProfile.webAppRouting.enabled" -o tsv) == "" ]] && az aks approuting enable -g $RESOURCE_GROUP_NAME -n $CLUSTER_NAME 
 
 kubectl apply -f runtimeclass.yaml
 
