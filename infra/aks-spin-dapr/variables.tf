@@ -68,7 +68,7 @@ variable "user_nodepools" {
   }))
   default = [{
     name       = "default"
-    size       = "Standard_DS3_v2"
+    size       = "Standard_DS2_v2"
     node_count = 3
     max_pods   = 250
     labels = {
@@ -76,17 +76,16 @@ variable "user_nodepools" {
     taints = []
     }, {
     name       = "wasm"
-    # size       = "Standard_D2pds_v5"
-    size       = "Standard_D2s_v4"
+    size       = "Standard_D2pds_v5"
     node_count = 3
     max_pods   = 250
     labels = {
+      # "kwasm.sh/kwasm-node" = "true"
     }
     taints = []
     }, {
     name       = "classic"
-    # size       = "Standard_DS2_v2"
-    size       = "Standard_D2s_v4"
+    size       = "Standard_DS2_v2"
     node_count = 3
     max_pods   = 250
     labels = {
@@ -153,7 +152,7 @@ variable "kwasm_namespace" {
 
 variable "kwasm_installer_image" {
   type        = string
-  default     = "vdice/kwasm-node-installer:precompilation"
+  default     = "ghcr.io/kwasm/kwasm-node-installer:v0.3.1"
   description = "KWasm installer image to use"
 }
 

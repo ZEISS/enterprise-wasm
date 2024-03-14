@@ -61,15 +61,13 @@ if [ $PATTERN = 'shared' ]; then
       --set fullnameOverride=$app-dapr \
       --set shared.strategy=deployment \
       --set shared.scheduling.nodeSelector.agentpool=classic \
-      --set shared.deployment.replicas=1 \
+      --set shared.deployment.replicas=3 \
       --set shared.daprd.image.tag=$DAPR_VERSION \
       --set shared.appId=$app \
       --set shared.daprd.config=appconfig \
       --set shared.remoteURL=$app-svc \
       --set shared.remotePort=80 \
-      --set shared.daprd.listenAddresses=0.0.0.0 \
-      --set shared.daprd.appHealth.enabled=true \
-      --set shared.daprd.appHealth.probeTimeout=1000
+      --set shared.daprd.listenAddresses=0.0.0.0
 
   done
 fi

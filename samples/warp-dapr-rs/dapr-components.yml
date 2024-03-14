@@ -22,9 +22,11 @@ spec:
     - name: queueName
       value: q-order-ingress-spin
     - name: maxActiveMessages
-      value: 900
+      value: 100
     - name: maxConcurrentHandlers
-      value: 9
+      value: 0
+    - name: handlerTimeoutInSec
+      value: 10
 auth:
   secretStore: secretstore
 scopes:
@@ -89,9 +91,11 @@ spec:
     - name: direction
       value: input
     - name: maxActiveMessages
-      value: 900
+      value: 100
     - name: maxConcurrentHandlers
-      value: 9
+      value: 0
+    - name: handlerTimeoutInSec
+      value: 10
 auth:
   secretStore: secretstore
 scopes:
@@ -114,9 +118,11 @@ spec:
     - name: direction
       value: input
     - name: maxActiveMessages
-      value: 900
+      value: 100
     - name: maxConcurrentHandlers
-      value: 9
+      value: 0
+    - name: handlerTimeoutInSec
+      value: 10
 auth:
   secretStore: secretstore
 scopes:
@@ -167,32 +173,3 @@ auth:
   secretStore: secretstore
 scopes:
   - receiver-standard
-# ---
-# apiVersion: dapr.io/v1alpha1
-# kind: Resiliency
-# metadata:
-#   name: common-resiliency
-# spec:
-#   policies:
-#     retries:
-#       backPressure:
-#         policy: exponential
-#         maxInterval: 100ms
-#         maxRetries: 3
-#   targets:
-#     components:
-#       q-order-ingress:
-#         inbound:
-#           retry: backPressure
-#       q-order-express-in:
-#         inbound:
-#           retry: backPressure
-#       q-order-express-out:
-#         outbound:
-#           retry: backPressure
-#       q-order-standard-in:
-#         inbound:
-#           retry: backPressure
-#       q-order-standard-out:
-#         outbound:
-#           retry: backPressure
