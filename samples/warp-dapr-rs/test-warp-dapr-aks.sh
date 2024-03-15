@@ -52,11 +52,19 @@ echo "::: Dapr health :::"
 curl -v http://127.0.0.1:$LOCAL_SERVICE_PORT/healthz
 echo -e "\r::: Dapr metadata direct :::"
 curl -v http://127.0.0.1:$LOCAL_DAPR_PORT/v1.0/metadata
-echo -e "\r::: Dapr metadata indirect from Spin service :::"
+echo -e "\r::: Dapr metadata indirect from service :::"
 curl -v http://127.0.0.1:$LOCAL_SERVICE_PORT/dapr-metadata
 echo -e "\r"
 
 if [ "$SERVICE" = "distributor-svc" ]; then
+  echo q-order-ingress Standard
+  curl -X POST http://127.0.0.1:$LOCAL_SERVICE_PORT/q-order-ingress \
+    -H "Content-Type: application/json" \
+    -d '{
+            "orderId": 1,
+            "delivery": "Standard"
+        }'
+
   echo q-order-ingress Standard
   curl -X POST http://127.0.0.1:$LOCAL_DAPR_PORT/v1.0/bindings/q-order-ingress \
     -H "Content-Type: application/json" \

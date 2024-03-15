@@ -50,6 +50,8 @@ esac
 # clean up the background port forward process on exit
 trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
 
+# kubectl scale service $SERVICE $DAPR --replicas 1
+
 echo "starting port forward to $SERVICE"
 kubectl port-forward "svc/$SERVICE" $LOCAL_SERVICE_PORT:$POD_SERVICE_PORT > /dev/null 2>&1 &
 kubectl port-forward "svc/$DAPR" $LOCAL_DAPR_PORT:$POD_DAPR_PORT > /dev/null 2>&1 &

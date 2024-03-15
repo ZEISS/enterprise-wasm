@@ -10,14 +10,16 @@ usage="  USAGE: ./$(basename $0) [-h] [-d DELAY] [-c COUNT]
     -h            show this help text
     -d <DELAY>    minutes to delay delivery by (default: 1)  
     -c <COUNT>    number of messages to deliver (default: 10000)
+    -f            force generation of test messages (default: only if not already generated)
     
   EXAMPLE: push 20000 events to Azure ServiceBus with a scheduled delivery 5 minutes from now
     ./$(basename $0) -d 5 -c 20000"
 
 TARGET_COUNT=10000
+FORCE_GENERATE=0
 DELAY=1
 
-while getopts ":hd:c:" option; do
+while getopts ":hd:c:f" option; do
    case $option in
       h)
         echo "${usage}"
@@ -28,6 +30,9 @@ while getopts ":hd:c:" option; do
         ;;
       c)
         TARGET_COUNT=$OPTARG
+        ;;
+      f)
+        FORCE_GENERATE=1
         ;;
    esac
 done
@@ -95,7 +100,7 @@ generate_schedule_data()
       '{scheduleDelayMinutes: ($d|tonumber)}'
 }
 
-if [ $(curl -s http://localhost:$APP_PORT/test-data) = "{}" ]; then
+if [ $FORCE_GENERATE == "1" ] || [ $(curl -s http://localhost:$APP_PORT/test-data) = "{}" ]; then
   echo "### generating test data ###"
   curl -s -d "$(generate_post_data)" http://localhost:$APP_PORT/test-data \
       -H 'Content-Type: application/json'
@@ -107,7 +112,7 @@ PUSHRESPONSE=`curl -s -d "$(generate_schedule_data)" http://localhost:$APP_PORT/
 SCHEDULE=`echo $PUSHRESPONSE | jq -r '.scheduledTimestamp'`
 
 # kubectl scale needs a timeout arg otherwise it won't wait
-kubectl get deployments -o name | grep -E '(distributor|receiver)' | xargs -- kubectl scale --timeout=2m --replicas=1
+kubectl get deployments -o name | grep -E '(distributor|receiver)' | grep -vE 'dapr$' | xargs -- kubectl scale --timeout=2m --replicas=1
 
 echo wait ${DELAY}m for scheduled time
 sleep $(( $DELAY * 60 ))
@@ -153,7 +158,7 @@ last_write_epoch=$(date -u -d $LAST_WRITE +%s)
 runtime_seconds=$(( $last_write_epoch - $schedule_epoch ))
 
 echo "$SCHEDULE | $TARGET_COUNT | $runtime_seconds"
-echo "$SCHEDULE | $TARGET_COUNT | $runtime_seconds | $1" >> $REPO_ROOT/LOG.md
+echo "$SCHEDULE | $runtime_seconds | $1" >> $REPO_ROOT/LOG.md
 
 
 pgrep -P $pid | xargs kill && kill $pid
