@@ -17,7 +17,6 @@ async function getMeta() {
 }
 
 async function distributor(order) {
-  console.log(order);
   const client = new DaprClient({ daprHost, daprPort });
   return await client.binding.send(
     `q-order-${order.delivery.toLowerCase()}-out`,
@@ -27,7 +26,6 @@ async function distributor(order) {
 }
 
 async function receiver(order) {
-  console.log(order);
   const client = new DaprClient({ daprHost, daprPort });
   return await client.binding.send(
     `${order.delivery.toLowerCase()}-outbox`,

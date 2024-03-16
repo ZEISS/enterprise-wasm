@@ -43,6 +43,7 @@ pub fn dapr_endpoints() -> impl Filter<Extract = impl warp::Reply, Error = warp:
         .or(post_distributor)
         .or(post_receiver_express)
         .or(post_receiver_standard)
+        .with(warp::trace::request())
 }
 
 async fn dapr_metadata() -> Result<impl warp::Reply, warp::Rejection> {
@@ -73,7 +74,7 @@ async fn distributor(order: Order) -> Result<impl warp::Reply, warp::Rejection> 
 
     let outbound_message = OutboundMessage::new(&order);
     let body = serde_json::to_string(&outbound_message).expect("serialize outbound message");
-    println!("Distributor body {}", body);
+    tracing::info!("Distributor request {}", body);
 
     let response = reqwest::Client::new()
         .post(url)
@@ -84,6 +85,7 @@ async fn distributor(order: Order) -> Result<impl warp::Reply, warp::Rejection> 
         .text()
         .await
         .map_err(|e| ServiceError::ReqwestError(e))?;
+    tracing::info!("Distributor response {}", response);
 
     Ok(warp::reply::with_status(response, StatusCode::OK))
 }
@@ -96,7 +98,7 @@ async fn receiver(order: Order) -> Result<impl warp::Reply, warp::Rejection> {
 
     let outbox_create = OutboxCreate::new(&order);
     let body = serde_json::to_string(&outbox_create).expect("serialize outbound message");
-    println!("Receiver body {}", body);
+    tracing::info!("Receiver body {}", body);
 
     let response = reqwest::Client::new()
         .post(url)
