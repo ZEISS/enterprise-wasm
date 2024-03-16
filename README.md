@@ -2,9 +2,33 @@
 
 Evaluate various WebAssembly back-end frameworks and tool-chains for enterprise workloads.
 
-Intention is to create an environment similar to a [performance comparison between Dapr and Azure Functions](https://dev.to/kaiwalter/comparing-azure-functions-vs-dapr-on-azure-container-apps-2noh) to get a basic indication on the scaling and performance behavior of various setups.
+The background of this repository is explained in [this post "Taking Spin for a spin on AKS"](https://dev.to/kaiwalter/taking-spin-for-a-spin-on-aks-2lf1).
 
 > STATUS : **UNDER CONSTRUCTION**
+
+## Repository Structure
+
+### `infra`
+
+Currently only contains one flavor of runtime environment `aks-spin-dapr`: an AKS cluster witch hosts Spin and Dapr.
+In further evaluations certain components would be replaced like testing on AWS with e.g. `eks-spin-dapr` or a different Wasm runtime like e.g. `aks-wws-dapr`.
+
+### `samples`
+
+Folder containing the sample workloads which can be used in this infrastructure combinations:
+
+| sample                                       | infrastructure                                   | workload                                         |
+| -------------------------------------------- | ------------------------------------------------ | ------------------------------------------------ |
+| Spin with Dapr on AKS, Rust                  | [aks-spin-dapr](./infra/aks-spin-dapr/README.md) | [spin-dapr-rs](./samples/spin-dapr-rs/README.md) |
+| Spin with Dapr on AKS, Node.js/TypeScript    | [aks-spin-dapr](./infra/aks-spin-dapr/README.md) | [spin-dapr-ts](./samples/spin-dapr-ts/README.md) |
+| Warp with Dapr on AKS, Rust                  | [aks-spin-dapr](./infra/aks-spin-dapr/README.md) | [warp-dapr-rs](./samples/warp-dapr-rs/)          |
+| Express with Dapr on AKS, Node.js/TypeScript | [aks-spin-dapr](./infra/aks-spin-dapr/README.md) | [express-dapr-ts](./samples/express-dapr-ts/)    |
+
+Each of the infrastructure and workload folders contains a `Makefile` with a `make deploy` and `make destroy` rule.
+
+### `helpers`
+
+Helper application and tools like `orderdata-ts` to generate and schedule the test dataset.
 
 ## Prequisites
 
@@ -55,21 +79,48 @@ optional:
 
 - [terraform-docs](https://terraform-docs.io/user-guide/installation/) >= `0.16.0`
 
-## Sample Workloads
+---
 
-| sample                                    | infrastructure                                   | workload                                         | deploy sample                  | destroy sample                  |
-| ----------------------------------------- | ------------------------------------------------ | ------------------------------------------------ | ------------------------------ | ------------------------------- |
-| Spin with Dapr on AKS, Rust               | [aks-spin-dapr](./infra/aks-spin-dapr/README.md) | [spin-dapr-rs](./samples/spin-dapr-rs/README.md) | `make deploy-aks-spin-dapr-rs` | `make destroy-aks-spin-dapr-rs` |
-| Spin with Dapr on AKS, Node.js/TypeScript | [aks-spin-dapr](./infra/aks-spin-dapr/README.md) | [spin-dapr-ts](./samples/spin-dapr-ts/README.md) | `make deploy-aks-spin-dapr-ts` | `make destroy-aks-spin-dapr-ts` |
+## Compare Express to Spin-ts
 
+The goal of this evaluation is to compare the performance of the same application once in the Express Framework, on the other side in WebAssembly facilitating Spin. Since one benefit of the WebAssembly Ecosystem is the portability, the `spin-dapr-ts` app will be deployed on an ARM nodepool.
 
+In the Setup, Dapr is used to fetch and place messages in a Service Bus queue. Also its used to store the orders of the messages in a storage account. Because we don't want Dapr to be a bottleneck for the Comparison, the Instances of Dapr will be set to 10 without any scaling.
 
-## Compare Express to spin-ts
+For the Spin / Express apps we search for the most performant scale setting with the given 10 Dapr instances. Which led to 1 to 7 for the spin application and 1 to 10 for the Node.js one.
 
-The goal of this evaluation is to compare the performance of the same application once in the Express Framework, on the other side in WebAssembly facilitating spin. Since one benefit of the WebAssembly Ecosystem is the portability, the spin-ts app will be deployed on an arm nodepool.
+The Spin app consistently processes the 10000 messages in 20 seconds, whereas Express is more inconsistent. The processing time for the Express app is between 25 and 32 seconds.
 
-In the Setup, dapr is used to fetch and place messages in a service bus queue. Also its used to store the orders of the messages in a storage account. Because we don't want dapr to be a bottleneck for the Comparison, the Instances of Dapr will be set to 10 without any scaling. 
+## comparison baseline
 
-For the spin / express apps we search for the most performant scale setting with the given 10 dapr instances. Which led to 1 to 7 for the spin application and 1 to 10 for the nodejs one.
+| VM SKU   | tech specs                         | relative pricing |
+| -------- | ---------------------------------- | ---------------- |
+| DS3 v2   | 4 vCPUs, 14 GB RAM, 28 GB temp HDD | 1.00             |
+| D2pds v5 | 2 vCPUs, 8 GB RAM, 75 GB temp HDD  | 0.40             |
+| D4pds v5 | 4 vCPU, 16 GB RAM, 150 GB temp HDD | 0.80             |
 
-The spin app consistently processes the 10000 messages in 20 seconds, whereas express is more inconsistent. The processing time for the express app is between 25 and 32 seconds. 
+## comparison
+
+### performance buckets posture
+
+```
+dependencies
+| where timestamp >= todatetime('2024-03-09T15:18:16.687Z')
+| where name startswith "bindings/q-order"
+| extend case = iff(timestamp>=todatetime('2024-03-09T15:46:26.287Z'),"spin","express")
+| summarize count() by case, performanceBucket
+| render columnchart
+```
+
+## debugging
+
+### checking errors Spin from/to Dapr
+
+```kusto
+ContainerLogV2
+| where TimeGenerated >= todatetime('2024-03-03T09:44:30.509Z')
+| where ContainerName == "daprd"
+| where LogMessage.msg startswith "App handler returned an error"
+| project TimeGenerated, LogMessage
+| order by TimeGenerated asc
+```
