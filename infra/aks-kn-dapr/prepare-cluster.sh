@@ -15,6 +15,15 @@ do
 done
 
 AZURE_CONTAINER_REGISTRY_ENDPOINT=`az acr show -n $AZURE_CONTAINER_REGISTRY_NAME --query loginServer -o tsv`
+APPINSIGHTS_ID=`az resource list -g $RESOURCE_GROUP_NAME --resource-type Microsoft.Insights/components --query '[0].id' -o tsv` 
+INSTRUMENTATION_KEY=`az monitor app-insights component show --ids $APPINSIGHTS_ID --query instrumentationKey -o tsv`
+
+# ---- install OpenTelemetry
+cat ./open-telemetry-collector-appinsights.yaml | \
+sed "s/<INSTRUMENTATION-KEY>/$INSTRUMENTATION_KEY/" | \
+yq eval '. | select(.kind=="Deployment").spec.template.spec.nodeSelector={"agentpool":"default"}' | \
+kubectl apply -f -
+kubectl apply -f ./collector-config.yaml
 
 KNATIVE_VERSION=1.13.1
 kubectl apply -f https://github.com/knative/serving/releases/download/knative-v$KNATIVE_VERSION/serving-crds.yaml
@@ -28,3 +37,7 @@ kubectl patch configmap/config-domain \
   -n knative-serving \
   --type merge \
   -p '{"data":{"127.0.0.1.sslip.io":""}}'
+kubectl patch configmap/config-features \
+  -n knative-serving \
+  --type merge \
+  -p '{"data":{"kubernetes.podspec-nodeselector":"enabled"}}'
