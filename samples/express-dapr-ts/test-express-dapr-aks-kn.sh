@@ -42,19 +42,20 @@ esac
 trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
 
 echo "starting port forward to $SERVICE"
-kubectl port-forward "svc/$SERVICE" $LOCAL_SERVICE_PORT:$POD_SERVICE_PORT > /dev/null 2>&1 &
+# kubectl port-forward "svc/$SERVICE" $LOCAL_SERVICE_PORT:$POD_SERVICE_PORT > /dev/null 2>&1 &
 kubectl port-forward "svc/$DAPR" $LOCAL_DAPR_PORT:$POD_DAPR_PORT > /dev/null 2>&1 &
 
 echo "waiting for port forward to be ready"
-timeout 15 sh -c 'until nc -z $0 $1; do sleep 1; done' '127.0.0.1' $LOCAL_SERVICE_PORT
+# timeout 15 sh -c 'until nc -z $0 $1; do sleep 1; done' '127.0.0.1' $LOCAL_SERVICE_PORT
+timeout 15 sh -c 'until nc -z $0 $1; do sleep 1; done' '127.0.0.1' $LOCAL_DAPR_PORT
 
 echo -e "\r::: Dapr metadata direct :::"
 curl -v http://127.0.0.1:$LOCAL_DAPR_PORT/v1.0/metadata
 echo -e "\r::: Dapr metadata indirect from service :::"
-curl -v http://127.0.0.1:$LOCAL_SERVICE_PORT/dapr-metadata
+# curl -v http://127.0.0.1:$LOCAL_SERVICE_PORT/dapr-metadata
 echo -e "\r"
 
-if [ "$SERVICE" = "distributor-svc" ]; then
+# if [ "$SERVICE" = "distributor-svc" ]; then
   echo q-order-ingress Standard
   curl -X POST http://127.0.0.1:$LOCAL_DAPR_PORT/v1.0/bindings/q-order-ingress \
     -H "Content-Type: application/json" \
@@ -82,4 +83,4 @@ if [ "$SERVICE" = "distributor-svc" ]; then
           },
           "operation": "create"
         }'
-fi
+# fi
