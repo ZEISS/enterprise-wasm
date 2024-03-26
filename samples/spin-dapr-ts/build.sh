@@ -15,7 +15,7 @@ if [ "$1" == "docker" ]; then
   az acr login -n $AZURE_CONTAINER_REGISTRY_NAME
 
   if [[ -z $(docker buildx ls | grep wasm-builder) ]]; then
-    docker buildx create --name wasm-builder --platform wasi/wasm,linux/amd64
+    docker buildx create --name wasm-builder --platform wasi/wasm
   fi
 
   IMAGE_NAME=$AZURE_CONTAINER_REGISTRY_ENDPOINT/spin-dapr-ts:$REVISION

@@ -19,12 +19,12 @@ spec:
     name: distributor
   pollingInterval: 1
   minReplicaCount: 1
-  maxReplicaCount: 7
+  maxReplicaCount: 5
   advanced:
     horizontalPodAutoscalerConfig:
       behavior:
         scaleDown:
-          stabilizationWindowSeconds: 15
+          stabilizationWindowSeconds: 30
         scaleUp:
           stabilizationWindowSeconds: 0
           policies:
@@ -70,12 +70,12 @@ spec:
     name: receiver-express
   pollingInterval: 1
   minReplicaCount: 1
-  maxReplicaCount: 7
+  maxReplicaCount: 5
   advanced:
     horizontalPodAutoscalerConfig:
       behavior:
         scaleDown:
-          stabilizationWindowSeconds: 15
+          stabilizationWindowSeconds: 30
         scaleUp:
           stabilizationWindowSeconds: 0
           policies:
@@ -121,12 +121,12 @@ spec:
     name: receiver-standard
   pollingInterval: 1
   minReplicaCount: 1
-  maxReplicaCount: 7
+  maxReplicaCount: 5
   advanced:
     horizontalPodAutoscalerConfig:
       behavior:
         scaleDown:
-          stabilizationWindowSeconds: 15
+          stabilizationWindowSeconds: 30
         scaleUp:
           stabilizationWindowSeconds: 0
           policies:

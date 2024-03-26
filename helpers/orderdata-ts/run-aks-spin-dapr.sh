@@ -2,6 +2,28 @@
 
 set -e
 
+bar_size=40
+bar_char_done="#"
+bar_char_todo="-"
+bar_percentage_scale=2
+
+function show_progress {
+    current="$1"
+    total="$2"
+    percent=$(bc <<< "scale=$bar_percentage_scale; 100 * $current / $total" )
+    done=$(bc <<< "scale=0; $bar_size * $percent / 100" )
+    todo=$(bc <<< "scale=0; $bar_size - $done" )
+
+    done_sub_bar=$(printf "%${done}s" | tr " " "${bar_char_done}")
+    todo_sub_bar=$(printf "%${todo}s" | tr " " "${bar_char_todo}")
+
+    echo "Progress: [${done_sub_bar}${todo_sub_bar}] ${percent}%"
+
+    if [ $total -eq $current ]; then
+        echo -e "\nDONE"
+    fi
+}
+
 usage="  USAGE: ./$(basename $0) [-h] [-d DELAY] [-c COUNT]
 
   Execute the orderdata-ts helper dapr app locally with processing done in AKS using Azure ServiceBus
@@ -11,6 +33,7 @@ usage="  USAGE: ./$(basename $0) [-h] [-d DELAY] [-c COUNT]
     -d <DELAY>    minutes to delay delivery by (default: 1)  
     -c <COUNT>    number of messages to deliver (default: 10000)
     -f            force generation of test messages (default: only if not already generated)
+    -b            show the progress bar when running the tests
     
   EXAMPLE: push 20000 events to Azure ServiceBus with a scheduled delivery 5 minutes from now
     ./$(basename $0) -d 5 -c 20000"
@@ -18,8 +41,9 @@ usage="  USAGE: ./$(basename $0) [-h] [-d DELAY] [-c COUNT]
 TARGET_COUNT=10000
 FORCE_GENERATE=0
 DELAY=1
+SHOW_PROGRESS_BAR=0
 
-while getopts ":hd:c:f" option; do
+while getopts ":hd:c:f:b" option; do
    case $option in
       h)
         echo "${usage}"
@@ -33,6 +57,9 @@ while getopts ":hd:c:f" option; do
         ;;
       f)
         FORCE_GENERATE=1
+        ;;
+      b)
+        SHOW_PROGRESS_BAR=1
         ;;
    esac
 done
@@ -134,7 +161,11 @@ do
 
   echo $ACTUAL_COUNT of $TARGET_COUNT
 
-  if [ $ACTUAL_COUNT -lt $TARGET_COUNT ]; then sleep 10; fi
+  if [ $SHOW_PROGRESS_BAR -eq 1 ];
+    then show_progress $ACTUAL_COUNT $TARGET_COUNT;
+  fi
+
+  if [ $ACTUAL_COUNT -lt $TARGET_COUNT ]; then sleep 5; fi
 done
 
 # ---- detect when last blob has been written

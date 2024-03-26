@@ -85,7 +85,7 @@ if [ $PATTERN = 'shared' ]; then
     helm upgrade --install $app-dapr oci://registry-1.docker.io/daprio/dapr-shared-chart \
       --set fullnameOverride=$app-dapr \
       --set shared.strategy=deployment \
-      --set shared.scheduling.nodeSelector.agentpool=wasm \
+      --set shared.scheduling.nodeSelector.agentpool=default \
       --set shared.deployment.replicas=0 \
       --set shared.daprd.image.tag=$DAPR_VERSION \
       --set shared.appId=$app \
