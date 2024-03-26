@@ -1,0 +1,205 @@
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: azure-servicebus-auth
+spec:
+  secretTargetRef:
+    - key: connectionString
+      name: servicebus-secret
+      parameter: connection
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: order-ingress-scaledobject
+  namespace: default
+spec:
+  scaleTargetRef:
+    kind: Deployment
+    name: distributor
+  pollingInterval: 1
+  minReplicaCount: 1
+  maxReplicaCount: 5
+  advanced:
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleDown:
+          stabilizationWindowSeconds: 30
+        scaleUp:
+          stabilizationWindowSeconds: 0
+          policies:
+          - type: Pods
+            value: 9
+            periodSeconds: 1
+  triggers:
+    - type: azure-servicebus
+      metadata:
+        queueName: q-order-ingress-spin
+        messageCount: "10"
+      authenticationRef:
+        name: azure-servicebus-auth
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: order-ingress-dapr-scaledobject
+  namespace: default
+spec:
+  scaleTargetRef:
+    kind: Deployment
+    name: distributor-dapr
+  pollingInterval: 60
+  minReplicaCount: 10
+  maxReplicaCount: 10
+  triggers:
+    - type: azure-servicebus
+      metadata:
+        queueName: q-order-ingress-spin
+        messageCount: "1000"
+      authenticationRef:
+        name: azure-servicebus-auth
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: order-express-scaledobject
+  namespace: default
+spec:
+  scaleTargetRef:
+    kind: Deployment
+    name: receiver-express
+  pollingInterval: 1
+  minReplicaCount: 1
+  maxReplicaCount: 5
+  advanced:
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleDown:
+          stabilizationWindowSeconds: 30
+        scaleUp:
+          stabilizationWindowSeconds: 0
+          policies:
+          - type: Pods
+            value: 9
+            periodSeconds: 1
+  triggers:
+    - type: azure-servicebus
+      metadata:
+        queueName: q-order-express-spin
+        messageCount: "10"
+      authenticationRef:
+        name: azure-servicebus-auth
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: order-express-dapr-scaledobject
+  namespace: default
+spec:
+  scaleTargetRef:
+    kind: Deployment
+    name: receiver-express-dapr
+  pollingInterval: 60
+  minReplicaCount: 10
+  maxReplicaCount: 10
+  triggers:
+    - type: azure-servicebus
+      metadata:
+        queueName: q-order-express-spin
+        messageCount: "1000"
+      authenticationRef:
+        name: azure-servicebus-auth
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: order-standard-scaledobject
+  namespace: default
+spec:
+  scaleTargetRef:
+    kind: Deployment
+    name: receiver-standard
+  pollingInterval: 1
+  minReplicaCount: 1
+  maxReplicaCount: 5
+  advanced:
+    horizontalPodAutoscalerConfig:
+      behavior:
+        scaleDown:
+          stabilizationWindowSeconds: 30
+        scaleUp:
+          stabilizationWindowSeconds: 0
+          policies:
+          - type: Pods
+            value: 9
+            periodSeconds: 1
+  triggers:
+    - type: azure-servicebus
+      metadata:
+        queueName: q-order-standard-spin
+        messageCount: "10"
+      authenticationRef:
+        name: azure-servicebus-auth
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: order-standard-dapr-scaledobject
+  namespace: default
+spec:
+  scaleTargetRef:
+    kind: Deployment
+    name: receiver-standard-dapr
+  pollingInterval: 60
+  cooldownPeriod: 60
+  minReplicaCount: 10
+  maxReplicaCount: 10
+  triggers:
+    - type: azure-servicebus
+      metadata:
+        queueName: q-order-standard-spin
+        messageCount: "1000"
+      authenticationRef:
+        name: azure-servicebus-auth
+---
+apiVersion: core.spinoperator.dev/v1alpha1
+kind: SpinApp
+metadata:
+  name: distributor
+spec:
+  image: { will be replaced by deployment script }
+  executor: containerd-shim-spin
+  enableAutoscaling: true
+  deploymentAnnotations:
+    scheduler.alpha.kubernetes.io/node-selector: agentpool=wasm
+  variables:
+    - name: dapr_url
+      value: "http://distributor-dapr:3500"
+---
+apiVersion: core.spinoperator.dev/v1alpha1
+kind: SpinApp
+metadata:
+  name: receiver-express
+spec:
+  image: { will be replaced by deployment script }
+  executor: containerd-shim-spin
+  enableAutoscaling: true
+  deploymentAnnotations:
+    scheduler.alpha.kubernetes.io/node-selector: agentpool=wasm
+  variables:
+    - name: dapr_url
+      value: "http://receiver-express-dapr:3500"
+---
+apiVersion: core.spinoperator.dev/v1alpha1
+kind: SpinApp
+metadata:
+  name: receiver-standard
+spec:
+  image: { will be replaced by deployment script }
+  executor: containerd-shim-spin
+  enableAutoscaling: true
+  deploymentAnnotations:
+    scheduler.alpha.kubernetes.io/node-selector: agentpool=wasm
+  variables:
+    - name: dapr_url
+      value: "http://receiver-standard-dapr:3500"

@@ -9,6 +9,8 @@
    - The project relies on the ASP.NET runtime for web application development.
    - You can download the ASP.NET runtime along with the .NET SDK. If you've installed the .NET SDK, the runtime is usually included.
 
+3. **Wizer 5.0.0**
+   - This was only correctly tested with the exact 5.0.0 Wizer version.
 
 ### build & run on AKS with Azure resources
 
