@@ -2,6 +2,13 @@
 
 set -eoux pipefail
 
+# set environment to deployed stack
+REPO_ROOT=`git rev-parse --show-toplevel`
+SCRIPT_PATH=`git ls-files --full $BASH_SOURCE`
+INFRA_FOLDER=`dirname $SCRIPT_PATH`
+STACK=`basename $INFRA_FOLDER`
+echo -e "INFRA_FOLDER=$INFRA_FOLDER\nSTACK=$STACK" > $REPO_ROOT/.env
+
 terraform output -raw kube_config > ~/.kube/config
 RESOURCE_GROUP_NAME=`terraform output -json script_vars | jq -r .resource_group`
 SPIN_DEPLOY=`terraform output -json script_vars | jq -r .spin_deploy`

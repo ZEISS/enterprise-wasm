@@ -22,8 +22,6 @@ resource "azurerm_servicebus_topic" "workload_topics" {
 
   name         = var.topics[count.index].name
   namespace_id = azurerm_servicebus_namespace.sb.id
-
-  enable_partitioning = true
 }
 
 resource "azurerm_servicebus_queue" "workload_queues" {
@@ -31,6 +29,4 @@ resource "azurerm_servicebus_queue" "workload_queues" {
 
   name         = var.queues[count.index].name
   namespace_id = azurerm_servicebus_namespace.sb.id
-
-  enable_partitioning = true
 }

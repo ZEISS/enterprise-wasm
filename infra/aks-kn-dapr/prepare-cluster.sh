@@ -2,6 +2,13 @@
 
 set -eoux pipefail
 
+# set environment to deployed stack
+REPO_ROOT=`git rev-parse --show-toplevel`
+SCRIPT_PATH=`git ls-files --full $BASH_SOURCE`
+INFRA_FOLDER=`dirname $SCRIPT_PATH`
+STACK=`basename $INFRA_FOLDER`
+echo -e "INFRA_FOLDER=$INFRA_FOLDER\nSTACK=$STACK" > $REPO_ROOT/.env
+
 terraform output -raw kube_config > ~/.kube/config
 RESOURCE_GROUP_NAME=`terraform output -json script_vars | jq -r .resource_group`
 
@@ -25,27 +32,16 @@ yq eval '. | select(.kind=="Deployment").spec.template.spec.nodeSelector={"agent
 kubectl apply -f -
 kubectl apply -f ./collector-config.yaml
 
-KNATIVE_VERSION=1.13.1
-kubectl apply -f https://github.com/knative/serving/releases/download/knative-v$KNATIVE_VERSION/serving-crds.yaml
-kubectl apply -f https://github.com/knative/serving/releases/download/knative-v$KNATIVE_VERSION/serving-core.yaml
-kubectl apply -f https://github.com/knative/net-contour/releases/download/knative-v1.13.0/contour.yaml
-kubectl apply -f https://github.com/knative/net-contour/releases/download/knative-v1.13.0/net-contour.yaml
-kubectl patch configmap/config-network \
-  --namespace knative-serving \
-  --type merge \
-  --patch '{"data":{"ingress-class":"contour.ingress.networking.knative.dev"}}'
-kubectl apply -f https://github.com/knative/serving/releases/download/knative-v$KNATIVE_VERSION/serving-default-domain.yaml
+# ---- https://knative.dev/docs/install/yaml-install/serving/install-serving-with-yaml/#install-a-networking-layer
+kubectl apply -f https://github.com/knative/serving/releases/latest/download/serving-crds.yaml
+kubectl apply -f https://github.com/knative/serving/releases/latest/download/serving-core.yaml
 
-# kubectl apply -f https://github.com/knative/net-kourier/releases/latest/download/kourier.yaml
-# kubectl patch configmap/config-network \
-#   -n knative-serving \
-#   --type merge \
-#   -p '{"data":{"ingress.class":"kourier.ingress.networking.knative.dev"}}'
-# kubectl patch configmap/config-domain \
-#   -n knative-serving \
-#   --type merge \
-#   -p '{"data":{"127.0.0.1.sslip.io":""}}'
-#
+kubectl apply -f https://github.com/knative/net-kourier/releases/latest/download/kourier.yaml
+kubectl patch configmap/config-network \
+  -n knative-serving \
+  --type merge \
+  -p '{"data":{"ingress.class":"kourier.ingress.networking.knative.dev"}}'
+
 kubectl patch configmap/config-features \
   -n knative-serving \
   --type merge \

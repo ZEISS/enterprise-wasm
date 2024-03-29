@@ -1,7 +1,9 @@
 #!/bin/bash
 
-case "$1" in
-  ""|shared)
+set -eoux pipefail
+
+case "${1:-shared}" in
+  shared)
     PATTERN=shared
     ;;
   sidecar)
@@ -15,7 +17,10 @@ esac
 # ---- init
 
 REPO_ROOT=`git rev-parse --show-toplevel`
-TARGET_INFRA_FOLDER=../../infra/aks-spin-dapr
+source <(cat $REPO_ROOT/.env)
+RUNTIME=`echo $STACK | awk -F'-' '{print $1 "-" $2}'`
+TARGET_INFRA_FOLDER=$REPO_ROOT/$INFRA_FOLDER
+
 RESOURCE_GROUP_NAME=`terraform -chdir=$TARGET_INFRA_FOLDER output -json script_vars | jq -r .resource_group`
 
 APP=express-dapr-ts
@@ -38,14 +43,27 @@ kubectl create secret generic storage-secret --from-literal=accountName=$STORAGE
 
 kubectl apply -f ./dapr-components.yml
 
-cat ./workload-aks-$PATTERN.yml | \
-yq eval ".spec|=select(.selector.matchLabels.app==\"distributor\")
-    .template.spec.containers[0].image = \"$IMAGE_NAME\"" | \
-yq eval ".spec|=select(.selector.matchLabels.app==\"receiver-express\") 
-    .template.spec.containers[0].image = \"$IMAGE_NAME\"" | \
-yq eval ".spec|=select(.selector.matchLabels.app==\"receiver-standard\")
-    .template.spec.containers[0].image = \"$IMAGE_NAME\"" | \
-kubectl apply -f -
+if [[ "$STACK" =~ "-kn-" ]]; then
+  SVC_SUFFIX=.default.svc.cluster.local
+  cat ./workload-$RUNTIME-$PATTERN.yml | \
+  yq eval ".|=select(.metadata.name==\"distributor\")
+      .spec.template.spec.containers[0].image = \"$IMAGE_NAME\""  | \
+  yq eval ".|=select(.metadata.name==\"receiver-express\")
+      .spec.template.spec.containers[0].image = \"$IMAGE_NAME\""  | \
+  yq eval ".|=select(.metadata.name==\"receiver-standard\")
+      .spec.template.spec.containers[0].image = \"$IMAGE_NAME\""  | \
+  kubectl apply -f -
+else
+  SVC_SUFFIX=-svc
+  cat ./workload-$RUNTIME-$PATTERN.yml | \
+  yq eval ".spec|=select(.selector.matchLabels.app==\"distributor\")
+      .template.spec.containers[0].image = \"$IMAGE_NAME\"" | \
+  yq eval ".spec|=select(.selector.matchLabels.app==\"receiver-express\") 
+      .template.spec.containers[0].image = \"$IMAGE_NAME\"" | \
+  yq eval ".spec|=select(.selector.matchLabels.app==\"receiver-standard\")
+      .template.spec.containers[0].image = \"$IMAGE_NAME\"" | \
+  kubectl apply -f -
+fi
 
 DAPR_VERSION=$(helm get metadata dapr -n dapr-system -o yaml | yq -r .appVersion)
 
@@ -61,14 +79,16 @@ if [ $PATTERN = 'shared' ]; then
       --set fullnameOverride=$app-dapr \
       --set shared.strategy=deployment \
       --set shared.scheduling.nodeSelector.agentpool=classic \
-      --set shared.deployment.replicas=3 \
+      --set shared.deployment.replicas=10 \
       --set shared.daprd.image.tag=$DAPR_VERSION \
       --set shared.appId=$app \
       --set shared.daprd.config=appconfig \
-      --set shared.remoteURL=$app-svc \
+      --set shared.remoteURL=$app$SVC_SUFFIX \
       --set shared.remotePort=80 \
-      --set shared.daprd.listenAddresses=0.0.0.0
+      --set shared.controlPlane.placementServerAddress="''" \
+      --set shared.daprd.listenAddresses=0.0.0.0 \
+      --set shared.daprd.appHealth.enabled=true \
+      --set shared.daprd.appHealth.probeTimeout=1000
 
   done
 fi
-

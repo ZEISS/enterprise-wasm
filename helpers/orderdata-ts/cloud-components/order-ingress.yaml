@@ -11,7 +11,7 @@ spec:
         name: SERVICEBUS_CONNECTION
         key: SERVICEBUS_CONNECTION
     - name: queueName
-      value: q-order-ingress-spin
+      value: q-order-ingress
     - name: direction
       value: output
 auth:

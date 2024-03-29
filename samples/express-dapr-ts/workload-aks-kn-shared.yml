@@ -24,6 +24,9 @@ spec:
               port: 8080
             initialDelaySeconds: 45
             periodSeconds: 3
+  traffic:
+    - latestRevision: true
+      percent: 100
 ---
 apiVersion: serving.knative.dev/v1
 kind: Service
@@ -44,13 +47,16 @@ spec:
         - image: { will be replaced by deployment script }
           env:
             - name: DAPR_HTTP_HOST
-              value: "distributor-dapr"
+              value: "receiver-express-dapr"
           livenessProbe:
             httpGet:
               path: healthz
               port: 8080
             initialDelaySeconds: 45
             periodSeconds: 3
+  traffic:
+    - latestRevision: true
+      percent: 100
 ---
 apiVersion: serving.knative.dev/v1
 kind: Service
@@ -71,10 +77,13 @@ spec:
         - image: { will be replaced by deployment script }
           env:
             - name: DAPR_HTTP_HOST
-              value: "distributor-dapr"
+              value: "receiver-standard-dapr"
           livenessProbe:
             httpGet:
               path: healthz
               port: 8080
             initialDelaySeconds: 45
             periodSeconds: 3
+  traffic:
+    - latestRevision: true
+      percent: 100

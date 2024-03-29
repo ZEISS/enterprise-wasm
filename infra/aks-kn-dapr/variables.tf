@@ -99,11 +99,11 @@ variable "queues" {
     name = string
   }))
   default = [{
-    name = "q-order-ingress-kn"
+    name = "q-order-ingress"
     }, {
-    name = "q-order-express-kn"
+    name = "q-order-express"
     }, {
-    name = "q-order-standard-kn"
+    name = "q-order-standard"
   }]
 }
 

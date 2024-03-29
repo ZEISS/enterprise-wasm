@@ -20,7 +20,7 @@ spec:
         name: servicebus-secret
         key: connectionString
     - name: queueName
-      value: q-order-ingress-spin
+      value: q-order-ingress
     - name: maxActiveMessages
       value: 100
     - name: maxConcurrentHandlers
@@ -45,7 +45,7 @@ spec:
         name: servicebus-secret
         key: connectionString
     - name: queueName
-      value: q-order-express-spin
+      value: q-order-express
     - name: direction
       value: output
 auth:
@@ -66,7 +66,7 @@ spec:
         name: servicebus-secret
         key: connectionString
     - name: queueName
-      value: q-order-standard-spin
+      value: q-order-standard
     - name: direction
       value: output
 auth:
@@ -87,7 +87,7 @@ spec:
         name: servicebus-secret
         key: connectionString
     - name: queueName
-      value: q-order-express-spin
+      value: q-order-express
     - name: direction
       value: input
     - name: maxActiveMessages
@@ -114,7 +114,7 @@ spec:
         name: servicebus-secret
         key: connectionString
     - name: queueName
-      value: q-order-standard-spin
+      value: q-order-standard
     - name: direction
       value: input
     - name: maxActiveMessages
