@@ -32,6 +32,8 @@ yq eval '. | select(.kind=="Deployment").spec.template.spec.nodeSelector={"agent
 kubectl apply -f -
 kubectl apply -f ./collector-config.yaml
 
+kubectl apply -f ./runtimeclass.yaml
+
 # ---- https://knative.dev/docs/install/yaml-install/serving/install-serving-with-yaml/#install-a-networking-layer
 kubectl apply -f https://github.com/knative/serving/releases/latest/download/serving-crds.yaml
 kubectl apply -f https://github.com/knative/serving/releases/latest/download/serving-core.yaml
@@ -41,6 +43,10 @@ kubectl patch configmap/config-network \
   -n knative-serving \
   --type merge \
   -p '{"data":{"ingress.class":"kourier.ingress.networking.knative.dev"}}'
+kubectl patch configmap/config-features \
+  -n knative-serving \
+  --type merge \
+  --patch '{"data":{"kubernetes.podspec-runtimeclassname":"enabled"}}'
 
 kubectl patch configmap/config-features \
   -n knative-serving \
