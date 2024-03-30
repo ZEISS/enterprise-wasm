@@ -1,0 +1,18 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: q-order-express-in
+spec:
+  type: bindings.azure.storagequeues
+  version: v1
+  metadata:
+    - name: accountName
+      value: "azurerite"
+    - name: accountKey
+      value: "bm9rZXkK"
+    - name: endpoint
+      value: "http://127.0.0.1:10001"
+    - name: queueName
+      value: q-order-express-spin
+    - name: direction
+      value: input

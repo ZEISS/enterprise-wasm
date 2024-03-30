@@ -1,11 +1,5 @@
 # Spin with Dapr in Rust
 
-The current version assumes, that following GitHub repositories are cloned locally to folders with the same parent folder as this repository:
-
-| repository                                    | branch | folder      |
-| --------------------------------------------- | ------ | ----------- |
-| <https://github.com/dapr-sandbox/dapr-shared> | main   | dapr-shared |
-
 ## build (locally)
 
 ```
