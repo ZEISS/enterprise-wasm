@@ -1,7 +1,6 @@
 #!/bin/bash
 
 set -e
-
 REPO_ROOT=`git rev-parse --show-toplevel`
 source <(cat $REPO_ROOT/.env)
 TARGET_INFRA_FOLDER=$REPO_ROOT/$INFRA_FOLDER
@@ -14,11 +13,15 @@ REVISION=`date +"%s"`
 
 az acr login -n $AZURE_CONTAINER_REGISTRY_NAME
 
-IMAGE_NAME=$AZURE_CONTAINER_REGISTRY_ENDPOINT/express-dapr-ts:$REVISION
+cargo build --target wasm32-wasi --release
+wasmedge compile target/wasm32-wasi/release/warpwasi_dapr_rs.wasm warpwasi_dapr_rs.wasm
 
-if [[ "$STACK" =~ "-kn" ]]; then
-  docker buildx create --use
-  docker buildx build --platform=linux/amd64,linux/arm64 --push -t $IMAGE_NAME .
-else
-  docker build --push -t $IMAGE_NAME .
+if [[ -z $(docker buildx ls | grep wasm-builder) ]]; then
+  docker buildx create --name wasm-builder --platform wasi/wasm,linux/amd64
 fi
+
+IMAGE_NAME=$AZURE_CONTAINER_REGISTRY_ENDPOINT/warpwasi-dapr-rs:$REVISION
+
+docker buildx use wasm-builder
+docker buildx build --platform=wasi/wasm --provenance=false --push -t $IMAGE_NAME .
+docker buildx use default

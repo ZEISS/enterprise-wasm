@@ -128,37 +128,3 @@ module "kwasm" {
     module.aks
   ]
 }
-
-# module "cert_manager" {
-#   count              = var.spin_deploy == "operator" ? 1 : 0
-#   source             = "../modules/helm/cert-manager"
-#   providers = {
-#     kubernetes = kubernetes
-#   }
-#   depends_on = [
-#     module.aks
-#   ]
-# }
-#
-# module "spin_operator" {
-#   count              = var.spin_deploy == "operator" ? 1 : 0
-#   source             = "../modules/helm/spin-operator"
-#   providers = {
-#     kubernetes = kubernetes
-#   }
-#   depends_on = [
-#     module.cert_manager
-#   ]
-# }
-#
-module "keda" {
-  count     = var.keda_deploy ? 1 : 0
-  source    = "../modules/helm/keda"
-  namespace = var.keda_namespace
-  providers = {
-    kubernetes = kubernetes
-  }
-  depends_on = [
-    module.aks
-  ]
-}

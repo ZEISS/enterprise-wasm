@@ -1,0 +1,77 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: distributor
+  namespace: default
+spec:
+  template:
+    metadata:
+      annotations:
+        module.wasm.image/variant: compat-smart
+    spec:
+      runtimeClassName: wasmedge-v1
+      timeoutSeconds: 1
+      containers:
+        - name: http-server
+          image: { will be replaced by deployment script }
+          env:
+            - name: DAPR_URL
+              value: "http://distributor-dapr:3500"
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+---
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: receiver-express
+  namespace: default
+spec:
+  template:
+    metadata:
+      annotations:
+        module.wasm.image/variant: compat-smart
+    spec:
+      runtimeClassName: wasmedge-v1
+      timeoutSeconds: 1
+      containers:
+        - name: http-server
+          image: { will be replaced by deployment script }
+          env:
+            - name: DAPR_URL
+              value: "http://receiver-express-dapr:3500"
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+---
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: receiver-standard
+  namespace: default
+spec:
+  template:
+    metadata:
+      annotations:
+        module.wasm.image/variant: compat-smart
+    spec:
+      runtimeClassName: wasmedge-v1
+      timeoutSeconds: 1
+      containers:
+        - name: http-server
+          image: { will be replaced by deployment script }
+          env:
+            - name: DAPR_URL
+              value: "http://receiver-standard-dapr:3500"
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: 8080

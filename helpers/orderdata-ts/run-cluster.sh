@@ -67,7 +67,8 @@ done
 npx tsc
 
 REPO_ROOT=`git rev-parse --show-toplevel`
-TARGET_INFRA_FOLDER=$REPO_ROOT/infra/aks-spin-dapr
+source <(cat $REPO_ROOT/.env)
+TARGET_INFRA_FOLDER=$REPO_ROOT/$INFRA_FOLDER
 RESOURCE_GROUP_NAME=`terraform -chdir=$TARGET_INFRA_FOLDER output -json script_vars | jq -r .resource_group`
 
 SERVICEBUS_NAMESPACE=`az resource list -g $RESOURCE_GROUP_NAME --resource-type Microsoft.ServiceBus/namespaces --query '[0].name' -o tsv`
@@ -99,7 +100,7 @@ JSON_STRING=$( jq -n \
 echo $JSON_STRING > ./.secrets.json
 
 [ -d .dapr ] && rm -rf .dapr
-dapr run --dapr-http-max-request-size 16 -f ./run-aks-spin-dapr.yml &
+dapr run --dapr-http-max-request-size 16 -f ./run-cluster.yml &
 pid=$!
 
 trap "pgrep -P $pid | xargs kill && kill $pid" INT HUP ERR
@@ -139,7 +140,9 @@ PUSHRESPONSE=`curl -s -d "$(generate_schedule_data)" http://localhost:$APP_PORT/
 SCHEDULE=`echo $PUSHRESPONSE | jq -r '.scheduledTimestamp'`
 
 # kubectl scale needs a timeout arg otherwise it won't wait
-kubectl get deployments -o name | grep -E '(distributor|receiver)' | grep -vE 'dapr$' | xargs -- kubectl scale --timeout=2m --replicas=1
+if [[ "$STACK" =~ "-spin-" ]]; then
+  kubectl get deployments -o name | grep -E '(distributor|receiver)' | grep -vE 'dapr$' | xargs -- kubectl scale --timeout=2m --replicas=1
+fi
 
 echo wait ${DELAY}m for scheduled time
 sleep $(( $DELAY * 60 ))

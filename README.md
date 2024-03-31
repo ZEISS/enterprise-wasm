@@ -4,25 +4,52 @@ Evaluate various WebAssembly back-end frameworks and tool-chains for enterprise 
 
 The background of this repository is explained in [this post "Taking Spin for a spin on AKS"](https://dev.to/kaiwalter/taking-spin-for-a-spin-on-aks-2lf1).
 
-> STATUS : **UNDER CONSTRUCTION**
+## Acknowledgements
+
+- Team at Fermyon for all the support in helping with the sample setup of Spin and [SpinKube](https://spinkube.dev)
+- all the contributors from LiquidReply, Microsoft and others for the components in the background: [Dapr](https://dapr.io), [runwasi](https://github.com/containerd/runwasi), [Kwasm](https://github.com/kwasm), [cert-manager](https://cert-manager.io/)
+
+## General Assumptions
+
+- basic infrastructure code for cloud resources and clusters that could be implemented in a straight-forward way is provided with Terraform and Helm
+- additional setup code which required some "incremental development" is in Bash with plain Yaml files (not to bring in additional layers or requirements like Helm, Kustomize)
+- for each Wasm variant like Spin/TypeScript, Spin/Rust, WasmEdge/Rust there should be an equivalent for performance comparison in a conventional container based setup like Express/TypeScript or Warp/Rust
+- [Dapr](https://dapr.io)
 
 ## Repository Structure
 
 ### `infra`
 
-Currently only contains one flavor of runtime environment `aks-spin-dapr`: an AKS cluster witch hosts Spin and Dapr.
-In further evaluations certain components would be replaced like testing on AWS with e.g. `eks-spin-dapr` or a different Wasm runtime like e.g. `aks-wws-dapr`.
+Currently this repository contains 2 stacks:
+
+- `aks-spin-dapr` : Spin with Dapr on AKS, Spin as Wasm runtime
+- `aks-kn-dapr` : Knative with Dapr on AKS, WasmEdge as Wasm runtime
+
+During deployment with `make deploy` from these 2 infra folders, a `.env` file is written to repository root to guide subsequent scripts on which stack has been deployed:
+
+```
+INFRA_FOLDER=infra/aks-spin-dapr
+STACK=aks-spin-dapr
+```
+
+or
+
+```
+INFRA_FOLDER=infra/aks-kn-dapr
+STACK=aks-kn-dapr
+```
 
 ### `samples`
 
 Folder containing the sample workloads which can be used in this infrastructure combinations:
 
-| sample                                       | infrastructure                                   | workload                                         |
-| -------------------------------------------- | ------------------------------------------------ | ------------------------------------------------ |
-| Spin with Dapr on AKS, Rust                  | [aks-spin-dapr](./infra/aks-spin-dapr/README.md) | [spin-dapr-rs](./samples/spin-dapr-rs/README.md) |
-| Spin with Dapr on AKS, Node.js/TypeScript    | [aks-spin-dapr](./infra/aks-spin-dapr/README.md) | [spin-dapr-ts](./samples/spin-dapr-ts/README.md) |
-| Warp with Dapr on AKS, Rust                  | [aks-spin-dapr](./infra/aks-spin-dapr/README.md) | [warp-dapr-rs](./samples/warp-dapr-rs/)          |
-| Express with Dapr on AKS, Node.js/TypeScript | [aks-spin-dapr](./infra/aks-spin-dapr/README.md) | [express-dapr-ts](./samples/express-dapr-ts/)    |
+| sample                                       | infrastructure                                                                                    | workload                                         |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| Express with Dapr on AKS, Node.js/TypeScript | [aks-spin-dapr](./infra/aks-spin-dapr/README.md)<br/>[aks-kn-dapr](./infra/aks-kn-dapr/README.md) | [express-dapr-ts](./samples/express-dapr-ts/)    |
+| Spin with Dapr on AKS, Node.js/TypeScript    | [aks-spin-dapr](./infra/aks-spin-dapr/README.md)                                                  | [spin-dapr-ts](./samples/spin-dapr-ts/README.md) |
+| Spin with Dapr on AKS, Rust                  | [aks-spin-dapr](./infra/aks-spin-dapr/README.md)                                                  | [spin-dapr-rs](./samples/spin-dapr-rs/README.md) |
+| Warp / Wasi with Dapr on AKS, Rust           | [aks-kn-dapr](./infra/aks-kn-dapr/README.md)                                                      | [warpwasi-dapr-rs](./samples/warpwasi-dapr-rs/)  |
+| Warp with Dapr on AKS, Rust                  | [aks-spin-dapr](./infra/aks-spin-dapr/README.md)                                                  | [warp-dapr-rs](./samples/warp-dapr-rs/)          |
 
 Each of the infrastructure and workload folders contains a `Makefile` with a `make deploy` and `make destroy` rule.
 

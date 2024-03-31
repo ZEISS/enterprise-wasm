@@ -1,0 +1,89 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: distributor
+  namespace: default
+  labels:
+    networking.knative.dev/visibility: cluster-local
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/target: "10"
+    spec:
+      nodeSelector:
+        agentpool: classic
+      containers:
+        - image: { will be replaced by deployment script }
+          env:
+            - name: DAPR_HTTP_HOST
+              value: "distributor-dapr"
+          livenessProbe:
+            httpGet:
+              path: healthz
+              port: 8080
+            initialDelaySeconds: 45
+            periodSeconds: 3
+  traffic:
+    - latestRevision: true
+      percent: 100
+---
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: receiver-express
+  namespace: default
+  labels:
+    networking.knative.dev/visibility: cluster-local
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/target: "10"
+    spec:
+      nodeSelector:
+        agentpool: classic
+      containers:
+        - image: { will be replaced by deployment script }
+          env:
+            - name: DAPR_HTTP_HOST
+              value: "receiver-express-dapr"
+          livenessProbe:
+            httpGet:
+              path: healthz
+              port: 8080
+            initialDelaySeconds: 45
+            periodSeconds: 3
+  traffic:
+    - latestRevision: true
+      percent: 100
+---
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: receiver-standard
+  namespace: default
+  labels:
+    networking.knative.dev/visibility: cluster-local
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/target: "10"
+    spec:
+      nodeSelector:
+        agentpool: classic
+      containers:
+        - image: { will be replaced by deployment script }
+          env:
+            - name: DAPR_HTTP_HOST
+              value: "receiver-standard-dapr"
+          livenessProbe:
+            httpGet:
+              path: healthz
+              port: 8080
+            initialDelaySeconds: 45
+            periodSeconds: 3
+  traffic:
+    - latestRevision: true
+      percent: 100

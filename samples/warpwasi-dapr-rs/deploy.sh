@@ -23,7 +23,7 @@ TARGET_INFRA_FOLDER=$REPO_ROOT/$INFRA_FOLDER
 
 RESOURCE_GROUP_NAME=`terraform -chdir=$TARGET_INFRA_FOLDER output -json script_vars | jq -r .resource_group`
 
-APP=express-dapr-ts
+APP=warpwasi-dapr-rs
 SERVICEBUS_NAMESPACE=`az resource list -g $RESOURCE_GROUP_NAME --resource-type Microsoft.ServiceBus/namespaces --query '[0].name' -o tsv`
 SERVICEBUS_CONNECTION=`az servicebus namespace authorization-rule keys list -g $RESOURCE_GROUP_NAME --namespace-name $SERVICEBUS_NAMESPACE -n RootManageSharedAccessKey --query primaryConnectionString -o tsv`
 STORAGE_NAME=`az resource list -g $RESOURCE_GROUP_NAME --resource-type Microsoft.Storage/storageAccounts --query '[0].name' -o tsv`
@@ -79,7 +79,7 @@ if [ $PATTERN = 'shared' ]; then
       --set fullnameOverride=$app-dapr \
       --set shared.strategy=deployment \
       --set shared.scheduling.nodeSelector.agentpool=classic \
-      --set shared.deployment.replicas=10 \
+      --set shared.deployment.replicas=1 \
       --set shared.daprd.image.tag=$DAPR_VERSION \
       --set shared.appId=$app \
       --set shared.daprd.config=appconfig \

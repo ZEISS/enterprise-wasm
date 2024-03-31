@@ -1,4 +1,9 @@
-import { DaprClient, DaprServer, CommunicationProtocolEnum } from "@dapr/dapr";
+import {
+  DaprClient,
+  DaprServer,
+  LogLevel,
+  CommunicationProtocolEnum,
+} from "@dapr/dapr";
 
 const daprHost = process.env.DAPR_HTTP_HOST || "127.0.0.1";
 const daprPort = process.env.DAPR_HTTP_PORT || "3500";
@@ -45,6 +50,7 @@ async function start() {
     clientOptions: {
       daprHost,
       daprPort,
+      logger: { level: LogLevel.Error },
     },
   });
 

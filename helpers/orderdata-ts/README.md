@@ -52,5 +52,5 @@ curl -v -d '{}' http://localhost:3000/schedule-test -H 'Content-Type: applicatio
 > deploy all required Azure resources from [Rust sample](../../samples/spin-dapr-rs/README.md)
 
 ```
-./run-aks-spin-dapr.sh
+./run-cluster.sh
 ```

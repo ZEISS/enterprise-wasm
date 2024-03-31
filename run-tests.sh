@@ -54,7 +54,7 @@ do
   pushd ./helpers/orderdata-ts
   for i in $(seq 1 $CYCLES);
   do
-    ./run-aks-spin-dapr.sh $app
+    ./run-cluster.sh $app
   done
   popd
 
