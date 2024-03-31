@@ -1,0 +1,92 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: distributor
+  namespace: default
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/min-scale: "1"
+        autoscaling.knative.dev/max-scale: "10"
+    spec:
+      runtimeClassName: wasmtime-spin-v2
+      timeoutSeconds: 1
+      containers:
+        - name: http-server
+          image: { will be replaced by deployment script }
+          command: ["/"]
+          env:
+            - name: SPIN_VARIABLE_DAPR_URL
+              value: "http://distributor-dapr:3500"
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: 80
+  traffic:
+    - latestRevision: true
+      percent: 100
+---
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: receiver-express
+  namespace: default
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/min-scale: "1"
+        autoscaling.knative.dev/max-scale: "10"
+    spec:
+      runtimeClassName: wasmtime-spin-v2
+      timeoutSeconds: 1
+      containers:
+        - name: http-server
+          image: { will be replaced by deployment script }
+          command: ["/"]
+          env:
+            - name: SPIN_VARIABLE_DAPR_URL
+              value: "http://receiver-express-dapr:3500"
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: 80
+  traffic:
+    - latestRevision: true
+      percent: 100
+---
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: receiver-standard
+  namespace: default
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/min-scale: "1"
+        autoscaling.knative.dev/max-scale: "10"
+    spec:
+      runtimeClassName: wasmtime-spin-v2
+      timeoutSeconds: 1
+      containers:
+        - name: http-server
+          image: { will be replaced by deployment script }
+          command: ["/"]
+          env:
+            - name: SPIN_VARIABLE_DAPR_URL
+              value: "http://receiver-standard-dapr:3500"
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: 80
+  traffic:
+    - latestRevision: true
+      percent: 100
