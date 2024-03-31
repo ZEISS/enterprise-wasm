@@ -14,7 +14,7 @@ The background of this repository is explained in [this post "Taking Spin for a 
 - basic infrastructure code for cloud resources and clusters that could be implemented in a straight-forward way is provided with Terraform and Helm
 - additional setup code which required some "incremental development" is in Bash with plain Yaml files (not to bring in additional layers or requirements like Helm, Kustomize)
 - for each Wasm variant like Spin/TypeScript, Spin/Rust, WasmEdge/Rust there should be an equivalent for performance comparison in a conventional container based setup like Express/TypeScript or Warp/Rust
-- [Dapr](https://dapr.io)
+- [Dapr](https://dapr.io) is used to compensate for the lack of span of cloud resources Wasm runtimes currently have implemented, exploiting these cloud resources via plain HTTP to the runtimes
 
 ## Repository Structure
 
@@ -43,13 +43,14 @@ STACK=aks-kn-dapr
 
 Folder containing the sample workloads which can be used in this infrastructure combinations:
 
-| sample                                       | infrastructure                                                                                    | workload                                         |
-| -------------------------------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| Express with Dapr on AKS, Node.js/TypeScript | [aks-spin-dapr](./infra/aks-spin-dapr/README.md)<br/>[aks-kn-dapr](./infra/aks-kn-dapr/README.md) | [express-dapr-ts](./samples/express-dapr-ts/)    |
-| Spin with Dapr on AKS, Node.js/TypeScript    | [aks-spin-dapr](./infra/aks-spin-dapr/README.md)                                                  | [spin-dapr-ts](./samples/spin-dapr-ts/README.md) |
-| Spin with Dapr on AKS, Rust                  | [aks-spin-dapr](./infra/aks-spin-dapr/README.md)                                                  | [spin-dapr-rs](./samples/spin-dapr-rs/README.md) |
-| Warp / Wasi with Dapr on AKS, Rust           | [aks-kn-dapr](./infra/aks-kn-dapr/README.md)                                                      | [warpwasi-dapr-rs](./samples/warpwasi-dapr-rs/)  |
-| Warp with Dapr on AKS, Rust                  | [aks-spin-dapr](./infra/aks-spin-dapr/README.md)                                                  | [warp-dapr-rs](./samples/warp-dapr-rs/)          |
+| sample                                       | infrastructure                                                                  | workload                                        |
+| -------------------------------------------- | ------------------------------------------------------------------------------- | ----------------------------------------------- |
+| Express/Node.js with Dapr on AKS, TypeScript | [aks-spin-dapr](./infra/aks-spin-dapr/)<br/>[aks-kn-dapr](./infra/aks-kn-dapr/) | [express-dapr-ts](./samples/express-dapr-ts/)   |
+| Spin with Dapr on AKS, TypeScript            | [aks-spin-dapr](./infra/aks-spin-dapr/)                                         | [spin-dapr-ts](./samples/spin-dapr-ts/)         |
+| Spin with Dapr on AKS, Rust                  | [aks-spin-dapr](./infra/aks-spin-dapr/)                                         | [spin-dapr-rs](./samples/spin-dapr-rs/)         |
+| Spin with Dapr on AKS, C#                    | [aks-spin-dapr](./infra/aks-spin-dapr/)                                         | [spin-dapr-dotnet](./samples/spin-dapr-dotnet/) |
+| Warp / Wasi with Dapr on AKS, Rust           | [aks-kn-dapr](./infra/aks-kn-dapr/)                                             | [warpwasi-dapr-rs](./samples/warpwasi-dapr-rs/) |
+| Warp with Dapr on AKS, Rust                  | [aks-spin-dapr](./infra/aks-spin-dapr/)                                         | [warp-dapr-rs](./samples/warp-dapr-rs/)         |
 
 Each of the infrastructure and workload folders contains a `Makefile` with a `make deploy` and `make destroy` rule.
 
