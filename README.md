@@ -25,6 +25,12 @@ Currently this repository contains 2 stacks:
 - `aks-spin-dapr` : Spin with Dapr on AKS, Spin as Wasm runtime
 - `aks-kn-dapr` : Knative with Dapr on AKS, WasmEdge as Wasm runtime
 
+where the nomenclature is `{cluster/hosting}-{orchestrator}-{integration}`
+
+- `cluster/hosting` : `aks`=Azure Kubernetes Services
+- `orchestrator` and scaler : `spin`=SpinKube/SpinOperator, `kn`=Knative Serving
+- `integration` to cloud resources : `dapr`=Distributed Application Runtime
+
 During deployment with `make deploy` from these 2 infra folders, a `.env` file is written to repository root to guide subsequent scripts on which stack has been deployed:
 
 ```
@@ -39,6 +45,11 @@ INFRA_FOLDER=infra/aks-kn-dapr
 STACK=aks-kn-dapr
 ```
 
+#### Spin `operator` and `deploy`
+
+Mainly Spin is deployed with its own `operator` providing better scaling and caching of the process architecture's binary.
+Older verions of the repository worked with the conventional Kubernetes deployment of Spin containers - the mode called `deploy` in this repo. After `operator` deployments showed substantial performance gains, `deploy` variant was not maintained anymore and should be considered **broken** at the moment.
+
 ### `samples`
 
 Folder containing the sample workloads which can be used in this infrastructure combinations:
@@ -47,12 +58,22 @@ Folder containing the sample workloads which can be used in this infrastructure 
 | -------------------------------------------- | ------------------------------------------------------------------------------- | ----------------------------------------------- |
 | Express/Node.js with Dapr on AKS, TypeScript | [aks-spin-dapr](./infra/aks-spin-dapr/)<br/>[aks-kn-dapr](./infra/aks-kn-dapr/) | [express-dapr-ts](./samples/express-dapr-ts/)   |
 | Spin with Dapr on AKS, TypeScript            | [aks-spin-dapr](./infra/aks-spin-dapr/)                                         | [spin-dapr-ts](./samples/spin-dapr-ts/)         |
-| Spin with Dapr on AKS, Rust                  | [aks-spin-dapr](./infra/aks-spin-dapr/)                                         | [spin-dapr-rs](./samples/spin-dapr-rs/)         |
+| Spin with Dapr on AKS, Rust                  | [aks-spin-dapr](./infra/aks-spin-dapr/)<br/>[aks-kn-dapr](./infra/aks-kn-dapr/) | [spin-dapr-rs](./samples/spin-dapr-rs/)         |
 | Spin with Dapr on AKS, C#                    | [aks-spin-dapr](./infra/aks-spin-dapr/)                                         | [spin-dapr-dotnet](./samples/spin-dapr-dotnet/) |
 | Warp / Wasi with Dapr on AKS, Rust           | [aks-kn-dapr](./infra/aks-kn-dapr/)                                             | [warpwasi-dapr-rs](./samples/warpwasi-dapr-rs/) |
 | Warp with Dapr on AKS, Rust                  | [aks-spin-dapr](./infra/aks-spin-dapr/)                                         | [warp-dapr-rs](./samples/warp-dapr-rs/)         |
 
 Each of the infrastructure and workload folders contains a `Makefile` with a `make deploy` and `make destroy` rule.
+
+For samples the nomenclature is `{runtime/sdk}-{integration}-{language/framework}`
+
+- `runtime/sdk` : `express`=Node.js/Express for non-Wasm comparison, `spin`=Spin, `warpwasi`=Warp with Wasi, `warp`=Warp for non-Wasm comparison
+- `integration` to cloud resources : `dapr`=Distributed Application Runtime
+- `language/framework` : `ts`=TypeScript, `rs`=Rust, `dotnet`=.NET C#
+
+#### Dapr `shared` and `sidecar`
+
+All samples can be deployed with `Dapr-Shared` (Dapr in a separate deployment integrating with the workload). For some samples a `sidecar` deployment is included for performance / scaling comparison.
 
 ### `helpers`
 
