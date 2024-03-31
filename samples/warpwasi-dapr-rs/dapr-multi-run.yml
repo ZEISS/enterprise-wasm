@@ -17,8 +17,6 @@ apps:
         "DAPR_URL=http://localhost:3501",
         "target/warpwasi_dapr_rs.wasm",
       ]
-    env:
-      DAPR_URL: http://localhost:3501
   - appID: receiver-express
     appDirPath: .
     resourcesPath: ./components-receiver-express
@@ -33,11 +31,9 @@ apps:
         "--env",
         "APP_PORT=3002",
         "--env",
-        "DAPR_URL=http://localhost:3501",
+        "DAPR_URL=http://localhost:3502",
         "target/warpwasi_dapr_rs.wasm",
       ]
-    env:
-      DAPR_URL: http://localhost:3502
   - appID: receiver-standard
     appDirPath: .
     resourcesPath: ./components-receiver-standard
@@ -52,11 +48,9 @@ apps:
         "--env",
         "APP_PORT=3003",
         "--env",
-        "DAPR_URL=http://localhost:3501",
+        "DAPR_URL=http://localhost:3503",
         "target/warpwasi_dapr_rs.wasm",
       ]
-    env:
-      DAPR_URL: http://localhost:3503
   - appID: test-data
     appDirPath: ../../helpers/orderdata-ts/
     resourcesPath: ./local-components

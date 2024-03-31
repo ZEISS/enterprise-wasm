@@ -15,10 +15,13 @@ esac
 # ---- init
 
 REPO_ROOT=`git rev-parse --show-toplevel`
-TARGET_INFRA_FOLDER=../../infra/aks-kn-dapr
+source <(cat $REPO_ROOT/.env)
+RUNTIME=`echo $STACK | awk -F'-' '{print $1 "-" $2}'`
+TARGET_INFRA_FOLDER=$REPO_ROOT/$INFRA_FOLDER
+
 RESOURCE_GROUP_NAME=`terraform -chdir=$TARGET_INFRA_FOLDER output -json script_vars | jq -r .resource_group`
 
-kubectl delete -f ./workload-aks-kn-$PATTERN.yml
+kubectl delete -f ./workload-$RUNTIME-$PATTERN.yml
 kubectl delete secret servicebus-secret --ignore-not-found
 kubectl delete secret storage-secret --ignore-not-found
 kubectl delete -f ./dapr-components.yml

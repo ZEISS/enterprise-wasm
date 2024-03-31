@@ -14,6 +14,9 @@ spec:
       containers:
         - name: http-server
           image: kw6e61040aacr.azurecr.io/warpwasi-dapr-rs:1711727994
+          env:
+            - name: DAPR_URL
+              value: "http://distributor-dapr:3500"
           ports:
             - containerPort: 8080
               protocol: TCP
