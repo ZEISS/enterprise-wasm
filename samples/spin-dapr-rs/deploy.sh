@@ -4,29 +4,8 @@ set -e
 
 # ---- init
 
-REPO_ROOT=`git rev-parse --show-toplevel`
-source <(cat $REPO_ROOT/.env)
-RUNTIME=`echo $STACK | awk -F'-' '{print $1 "-" $2}'`
-TARGET_INFRA_FOLDER=$REPO_ROOT/$INFRA_FOLDER
-
-RESOURCE_GROUP_NAME=`terraform -chdir=$TARGET_INFRA_FOLDER output -json script_vars | jq -r .resource_group`
-SPIN_DEPLOY=`terraform -chdir=$TARGET_INFRA_FOLDER output -json script_vars | jq -r .spin_deploy`
-
-case "$1" in
-  ""|shared)
-    PATTERN=shared
-    ;;
-  sidecar)
-    if [ $SPIN_DEPLOY = 'operator' ]; then
-      echo "sidecar deployment not allowed with Spin operator deployment"
-      exit 1
-    fi
-    PATTERN=sidecar
-    ;;
-  *)
-    echo "usage: deploy.sh (shared|sidecar)"
-    exit 1
-esac
+source <(cat ../../helpers/common.sh)
+get_deployment_configuration $1
 
 APP=spin-dapr-rs
 SERVICEBUS_NAMESPACE=`az resource list -g $RESOURCE_GROUP_NAME --resource-type Microsoft.ServiceBus/namespaces --query '[0].name' -o tsv`
@@ -50,7 +29,7 @@ kubectl apply -f ./dapr-components.yml
 
 if [ $SPIN_DEPLOY = 'operator' ]; then
   SVC_SUFFIX=
-  cat ./workload-aks-shared-operator.yml | \
+  cat $WORKLOAD | \
   yq eval ".|=select(.metadata.name==\"distributor\")
       .spec.image = \"$IMAGE_NAME\"" | \
   yq eval ".|=select(.metadata.name==\"receiver-express\") 
@@ -61,7 +40,7 @@ if [ $SPIN_DEPLOY = 'operator' ]; then
 else
   if [[ "$STACK" =~ "-kn-" ]]; then
     SVC_SUFFIX=.default.svc.cluster.local
-    cat ./workload-$RUNTIME-$PATTERN.yml | \
+    cat $WORKLOAD | \
     yq eval ".|=select(.metadata.name==\"distributor\")
         .spec.template.spec.containers[0].image = \"$IMAGE_NAME\""  | \
     yq eval ".|=select(.metadata.name==\"receiver-express\")
@@ -71,7 +50,7 @@ else
     kubectl apply -f -
   else
     SVC_SUFFIX=-svc
-    cat ./workload-aks-$PATTERN.yml | \
+    cat $WORKLOAD | \
     yq eval ".spec|=select(.selector.matchLabels.app==\"distributor\")
         .template.spec.containers[0].image = \"$IMAGE_NAME\"" | \
     yq eval ".spec|=select(.selector.matchLabels.app==\"receiver-express\") 
