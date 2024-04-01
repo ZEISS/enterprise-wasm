@@ -1,11 +1,7 @@
 #!/bin/bash
 
-set -e
-
-# ---- init
-
-source <(cat ../../helpers/common.sh)
-get_deployment_configuration $1
+source ../../helpers/common.sh
+get_deployment_configuration ${1:-shared}
 
 kubectl delete -f $WORKLOAD
 
@@ -18,4 +14,3 @@ if [ $PATTERN == 'shared' ]; then
   helm uninstall receiver-standard-dapr receiver-express-dapr distributor-dapr
 
 fi
-

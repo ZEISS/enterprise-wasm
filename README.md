@@ -45,6 +45,8 @@ INFRA_FOLDER=infra/aks-kn-dapr
 STACK=aks-kn-dapr
 ```
 
+As Terraform IaC creates resources based on a random string, both stacks can be deployed in parallel and then `./prepare-cluster.sh` in the corresponding infrastructure sub-folders can be used to reconfigure above environment and `kubectl` context.
+
 #### Spin `operator` and `deploy`
 
 Mainly Spin is deployed with its own `operator` providing better scaling and caching of the process architecture's binary.

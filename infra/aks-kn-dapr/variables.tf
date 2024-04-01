@@ -15,7 +15,7 @@ variable "tags" {
   description = "A map of the tags to use on the resources that are deployed with this module."
 
   default = {
-    project = "Spin with Dapr on AKS"
+    project = "Knative with Dapr on AKS"
   }
 }
 

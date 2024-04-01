@@ -1,11 +1,7 @@
 #!/bin/bash
 
-set -e
-
-# ---- init
-
-source <(cat ../../helpers/common.sh)
-get_deployment_configuration $1
+source ../../helpers/common.sh
+get_deployment_configuration ${1:-shared}
 
 APP=spin-dapr-rs
 SERVICEBUS_NAMESPACE=`az resource list -g $RESOURCE_GROUP_NAME --resource-type Microsoft.ServiceBus/namespaces --query '[0].name' -o tsv`
@@ -63,7 +59,7 @@ fi
 
 DAPR_VERSION=$(helm get metadata dapr -n dapr-system -o yaml | yq -r .appVersion)
 
-if [ $PATTERN = 'shared' ]; then
+if [[ $PATTERN =~ 'shared' ]]; then
 
   apps=("distributor" "receiver-express" "receiver-standard")
 

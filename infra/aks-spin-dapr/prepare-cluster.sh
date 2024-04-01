@@ -76,7 +76,7 @@ if [ $SPIN_DEPLOY = 'operator' ]; then
   #   kubectl apply -f -
   #   spin-operator oci://ghcr.io/spinkube/spin-operator
 
-  SPIN_OPERATOR_VERSION="0.0.2"
+  SPIN_OPERATOR_VERSION="0.1.0"
 
   kubectl apply -f "https://github.com/spinkube/spin-operator/releases/download/v$SPIN_OPERATOR_VERSION/spin-operator.crds.yaml"
 

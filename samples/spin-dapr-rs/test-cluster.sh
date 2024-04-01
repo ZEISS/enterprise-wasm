@@ -11,7 +11,7 @@ LOCAL_SERVICE_PORT=8080
 LOCAL_DAPR_PORT=8081
 POD_SERVICE_PORT=80
 
-if [ "$STACK" =~ "-kn-" ] || [ $SPIN_DEPLOY = 'operator' ]; then
+if [[ "$STACK" =~ "-kn-" ]] || [[ $SPIN_DEPLOY = 'operator' ]]; then
   SVC_SUFFIX=""
 else
   SVC_SUFFIX="-svc"

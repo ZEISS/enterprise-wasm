@@ -2,7 +2,7 @@
 
 # define common variables for deployment patterns and runtime
 
-set -e
+set -eoux pipefail
 
 REPO_ROOT=`git rev-parse --show-toplevel`
 source <(cat $REPO_ROOT/.env)
