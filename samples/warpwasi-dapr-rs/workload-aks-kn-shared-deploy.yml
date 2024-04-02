@@ -5,9 +5,9 @@ metadata:
   namespace: default
 spec:
   template:
-    metadata:
-      annotations:
-        module.wasm.image/variant: compat-smart
+    # metadata:
+    #   annotations:
+    #     module.wasm.image/variant: compat-smart
     spec:
       runtimeClassName: wasmedge-v1
       timeoutSeconds: 1
@@ -17,6 +17,8 @@ spec:
           env:
             - name: DAPR_URL
               value: "http://distributor-dapr:3500"
+            - name: DNS_SERVER
+              value: 127.0.0.1:53
           ports:
             - containerPort: 8080
               protocol: TCP
@@ -31,9 +33,9 @@ metadata:
   namespace: default
 spec:
   template:
-    metadata:
-      annotations:
-        module.wasm.image/variant: compat-smart
+    # metadata:
+    # annotations:
+    #   module.wasm.image/variant: compat-smart
     spec:
       runtimeClassName: wasmedge-v1
       timeoutSeconds: 1
@@ -43,6 +45,8 @@ spec:
           env:
             - name: DAPR_URL
               value: "http://receiver-express-dapr:3500"
+            - name: DNS_SERVER
+              value: 168.63.129.16:53
           ports:
             - containerPort: 8080
               protocol: TCP
@@ -57,9 +61,9 @@ metadata:
   namespace: default
 spec:
   template:
-    metadata:
-      annotations:
-        module.wasm.image/variant: compat-smart
+    # metadata:
+    #   annotations:
+    #     module.wasm.image/variant: compat-smart
     spec:
       runtimeClassName: wasmedge-v1
       timeoutSeconds: 1

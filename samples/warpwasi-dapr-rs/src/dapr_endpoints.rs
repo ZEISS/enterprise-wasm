@@ -46,9 +46,11 @@ pub fn dapr_endpoints() -> impl Filter<Extract = impl warp::Reply, Error = warp:
 }
 
 async fn dapr_metadata() -> Result<impl warp::Reply, warp::Rejection> {
-    let dapr_url = dapr_url();
-    let mut url = url::Url::parse(&dapr_url).map_err(|e| ServiceError::ParseError(e))?;
-    url.set_path("v1.0/metadata");
+    // let dapr_url = dapr_url();
+    // let mut url = url::Url::parse(&dapr_url).map_err(|e| ServiceError::ParseError(e))?;
+    // url.set_path("v1.0/metadata");
+    let url =
+        url::Url::parse("http://eu.httpbin.org/ip").map_err(|e| ServiceError::ParseError(e))?;
 
     let response = reqwest::Client::new()
         .get(url)
