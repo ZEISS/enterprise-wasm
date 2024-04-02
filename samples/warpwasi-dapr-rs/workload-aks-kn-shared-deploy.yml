@@ -5,9 +5,6 @@ metadata:
   namespace: default
 spec:
   template:
-    # metadata:
-    #   annotations:
-    #     module.wasm.image/variant: compat-smart
     spec:
       runtimeClassName: wasmedge-v1
       timeoutSeconds: 1
@@ -25,6 +22,9 @@ spec:
           livenessProbe:
             tcpSocket:
               port: 8080
+  traffic:
+    - latestRevision: true
+      percent: 100
 ---
 apiVersion: serving.knative.dev/v1
 kind: Service
@@ -33,9 +33,6 @@ metadata:
   namespace: default
 spec:
   template:
-    # metadata:
-    # annotations:
-    #   module.wasm.image/variant: compat-smart
     spec:
       runtimeClassName: wasmedge-v1
       timeoutSeconds: 1
@@ -53,6 +50,9 @@ spec:
           livenessProbe:
             tcpSocket:
               port: 8080
+  traffic:
+    - latestRevision: true
+      percent: 100
 ---
 apiVersion: serving.knative.dev/v1
 kind: Service
@@ -61,9 +61,6 @@ metadata:
   namespace: default
 spec:
   template:
-    # metadata:
-    #   annotations:
-    #     module.wasm.image/variant: compat-smart
     spec:
       runtimeClassName: wasmedge-v1
       timeoutSeconds: 1
@@ -79,3 +76,6 @@ spec:
           livenessProbe:
             tcpSocket:
               port: 8080
+  traffic:
+    - latestRevision: true
+      percent: 100

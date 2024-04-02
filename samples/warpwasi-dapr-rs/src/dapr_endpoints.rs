@@ -51,6 +51,7 @@ async fn dapr_metadata() -> Result<impl warp::Reply, warp::Rejection> {
     // url.set_path("v1.0/metadata");
     let url =
         url::Url::parse("http://eu.httpbin.org/ip").map_err(|e| ServiceError::ParseError(e))?;
+    tracing::info!("test url {}", url);
 
     let response = reqwest::Client::new()
         .get(url)
@@ -75,7 +76,7 @@ async fn distributor(order: Order) -> Result<impl warp::Reply, warp::Rejection> 
 
     let outbound_message = OutboundMessage::new(&order);
     let body = serde_json::to_string(&outbound_message).expect("serialize outbound message");
-    tracing::info!("Distributor request {}", body);
+    tracing::info!("Distributor push request {}", body);
 
     let response = reqwest::Client::new()
         .post(url)
@@ -98,7 +99,7 @@ async fn receiver(order: Order) -> Result<impl warp::Reply, warp::Rejection> {
 
     let outbox_create = OutboxCreate::new(&order);
     let body = serde_json::to_string(&outbox_create).expect("serialize outbound message");
-    tracing::info!("Receiver body {}", body);
+    tracing::info!("Receiver store request {}", body);
 
     let response = reqwest::Client::new()
         .post(url)

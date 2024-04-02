@@ -14,7 +14,7 @@ REVISION=`date +"%s"`
 az acr login -n $AZURE_CONTAINER_REGISTRY_NAME
 
 cargo build --target wasm32-wasi --release
-wasmedge compile target/wasm32-wasi/release/warpwasi_dapr_rs.wasm warpwasi_dapr_rs.wasm
+wasmedge compile target/wasm32-wasi/release/warpwasi_dapr_rs.wasm target/warpwasi_dapr_rs.wasm
 
 if [[ -z $(docker buildx ls | grep wasm-builder) ]]; then
   docker buildx create --name wasm-builder --platform wasi/wasm,linux/amd64
