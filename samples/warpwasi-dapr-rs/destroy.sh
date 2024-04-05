@@ -1,5 +1,6 @@
 #!/bin/bash
 
+set -eoux pipefail
 source ../../helpers/common.sh
 get_deployment_configuration ${1:-shared}
 

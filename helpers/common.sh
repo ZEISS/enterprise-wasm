@@ -2,8 +2,6 @@
 
 # define common variables for deployment patterns and runtime
 
-set -eoux pipefail
-
 REPO_ROOT=`git rev-parse --show-toplevel`
 source <(cat $REPO_ROOT/.env)
 RUNTIME=`echo $STACK | awk -F'-' '{print $1 "-" $2}'`

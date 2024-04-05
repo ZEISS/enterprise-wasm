@@ -1,9 +1,7 @@
 #!/bin/bash
 
 set -eoux pipefail
-
-REPO_ROOT=`git rev-parse --show-toplevel`
-source <(cat $REPO_ROOT/.env)
+source ../../helpers/common.sh
 
 LOCAL_SERVICE_PORT=8080
 LOCAL_DAPR_PORT=8081

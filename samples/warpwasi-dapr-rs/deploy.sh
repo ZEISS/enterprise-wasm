@@ -1,5 +1,6 @@
 #!/bin/bash
 
+set -eoux pipefail
 source ../../helpers/common.sh
 get_deployment_configuration ${1:-shared}
 
@@ -59,7 +60,7 @@ if [[ $PATTERN =~ 'shared' ]]; then
       --set fullnameOverride=$app-dapr \
       --set shared.strategy=deployment \
       --set shared.scheduling.nodeSelector.agentpool=classic \
-      --set shared.deployment.replicas=1 \
+      --set shared.deployment.replicas=10 \
       --set shared.daprd.image.tag=$DAPR_VERSION \
       --set shared.appId=$app \
       --set shared.daprd.config=appconfig \
