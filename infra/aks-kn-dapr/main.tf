@@ -58,6 +58,7 @@ module "grafana" {
   loganalytics_id     = module.loganalytics.LOGANALYTICS_ID
   cluster_id          = module.aks.CLUSTER_ID
   cluster_name        = module.aks.CLUSTER_NAME
+  cluster_admins      = var.cluster_admins
 }
 
 module "container-insights" {

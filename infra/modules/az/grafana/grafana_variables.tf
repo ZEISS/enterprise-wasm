@@ -8,6 +8,12 @@ variable "cluster_id" {
   type        = string
 }
 
+variable "cluster_admins" {
+  type        = list(string)
+  default     = []
+  description = "List of cluster administrators"
+}
+
 variable "loganalytics_id" {
   description = "Resource Id of Log Analytics."
   type        = string

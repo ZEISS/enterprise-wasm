@@ -568,3 +568,14 @@ avg by (instance) ((irate(windows_logical_disk_read_seconds_total{job="windows-e
 EOF
   }
 }
+
+# assign role for Grafana cluster admins
+
+resource "azurerm_role_assignment" "grafana_admin_role_assignment" {
+  for_each             = toset(var.cluster_admins)
+  principal_id         = each.value
+  scope                = var.cluster_id
+  role_definition_name = "Grafana Admin"
+}
+
+
