@@ -58,6 +58,9 @@ resource "azurerm_dashboard_grafana" "grafana" {
   name                = "${var.resource_prefix}-grafana"
   resource_group_name = var.resource_group_name
   location            = var.location
+  api_key_enabled                   = true
+  deterministic_outbound_ip_enabled = true
+  public_network_access_enabled     = true
 
   identity {
     type = "SystemAssigned"
@@ -68,9 +71,30 @@ resource "azurerm_dashboard_grafana" "grafana" {
   }
 }
 
+data "azurerm_subscription" "current" {}
+
+resource "azurerm_role_assignment" "monitoring_reader" {
+  scope                = data.azurerm_subscription.current.id
+  role_definition_name = "Monitoring Reader"
+  principal_id         = azurerm_dashboard_grafana.grafana.identity[0].principal_id
+}
+
+resource "azurerm_role_assignment" "monitoring_data_reader" {
+  scope                = data.azurerm_subscription.current.id
+  role_definition_name = "Monitoring Data Reader"
+  principal_id         = azurerm_dashboard_grafana.grafana.identity[0].principal_id
+}
+
+resource "azurerm_role_assignment" "grafana_admin_role_assignment" {
+  for_each             = toset(var.cluster_admins)
+  principal_id         = each.value
+  scope                = azurerm_dashboard_grafana.grafana.id
+  role_definition_name = "Grafana Admin"
+}
+
 resource "azurerm_role_assignment" "datareaderrole" {
   scope              = azurerm_monitor_workspace.amw.id
-  role_definition_id = "/subscriptions/${split("/", azurerm_monitor_workspace.amw.id)[2]}/providers/Microsoft.Authorization/roleDefinitions/b0d8363b-8ddd-447d-831f-62ca05bff136"
+  role_definition_id = "${data.azurerm_subscription.current.id}/providers/Microsoft.Authorization/roleDefinitions/b0d8363b-8ddd-447d-831f-62ca05bff136"
   principal_id       = azurerm_dashboard_grafana.grafana.identity.0.principal_id
 }
 
@@ -568,14 +592,4 @@ avg by (instance) ((irate(windows_logical_disk_read_seconds_total{job="windows-e
 EOF
   }
 }
-
-# assign role for Grafana cluster admins
-
-resource "azurerm_role_assignment" "grafana_admin_role_assignment" {
-  for_each             = toset(var.cluster_admins)
-  principal_id         = each.value
-  scope                = var.cluster_id
-  role_definition_name = "Grafana Admin"
-}
-
 
