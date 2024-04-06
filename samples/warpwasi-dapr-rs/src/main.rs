@@ -19,7 +19,7 @@ fn app_port() -> u16 {
 #[tokio::main(flavor = "current_thread")]
 async fn main() {
     let subscriber = tracing_subscriber::FmtSubscriber::builder()
-        .with_max_level(tracing::Level::INFO)
+        .with_max_level(tracing::Level::WARN)
         .finish();
 
     tracing::subscriber::set_global_default(subscriber).expect("setting default subscriber failed");

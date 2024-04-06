@@ -122,8 +122,15 @@
 | 2024-03-31T16:37:39.312Z |  38 | kn-spin                                              |
 | 2024-03-31T16:52:30.555Z |  42 | kn-spin                                              |
 | 2024-03-31T16:57:48.769Z |  36 | kn-spin                                              |
-2024-04-01T07:30:08.144Z | 24 | aks-spin-rs
-2024-04-01T07:40:08.437Z | 26 | aks-spin-rs
-2024-04-01T17:20:08.698Z | 49 | aks-kn-rs
-2024-04-05T12:41:51.595Z | 53 | wasmedge-1
-2024-04-05T12:49:26.203Z | 50 | wasmedge-2
+| 2024-04-01T07:30:08.144Z |  24 | aks-spin-rs                                          |
+| 2024-04-01T07:40:08.437Z |  26 | aks-spin-rs                                          |
+| 2024-04-01T17:20:08.698Z |  49 | aks-kn-rs                                            |
+| 2024-04-05T12:41:51.595Z |  53 | wasmedge-replicas-d1-kn1                             |
+| 2024-04-05T12:49:26.203Z |  50 | wasmedge-replicas-d1-kn10                            |
+| 2024-04-05T16:26:42.283Z |  48 | wasmedge-replicas-d1-kn1                             |
+| 2024-04-05T16:37:40.377Z |  49 | wasmedge-replicas-d1-kn10                            |
+| 2024-04-05T16:45:10.877Z |  53 | wasmedge-replicas-d4-kn10                            |
+| 2024-04-06T04:23:19.667Z |  46 | wasmedge-replicas-d1-kn10                            |
+| 2024-04-06T04:33:36.942Z |  47 | wasmedge-replicas-d1-kn10                            |
+| 2024-04-06T10:36:25.210Z |  46 | wasmedge-replicas-d1-kn10                            |
+| 2024-04-06T10:45:10.876Z |  44 | wasmedge-replicas-d2-kn10                            |
