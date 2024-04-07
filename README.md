@@ -8,6 +8,7 @@ The background of this repository is explained in [this post "Taking Spin for a 
 
 - Team at Fermyon for all the support in helping with the sample setup of Spin and [SpinKube](https://spinkube.dev)
 - all the contributors from LiquidReply, Microsoft and others for the components in the background: [Dapr](https://dapr.io), [runwasi](https://github.com/containerd/runwasi), [Kwasm](https://github.com/kwasm), [cert-manager](https://cert-manager.io/)
+- Jess Miles for the [Terraform / AKS / Grafana sample repository](https://github.com/jeffwmiles/aks-prometheus-grafana/blob/part3/terraform/main.tf)
 
 ## General Assumptions
 

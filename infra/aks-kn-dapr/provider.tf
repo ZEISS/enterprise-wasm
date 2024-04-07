@@ -2,16 +2,28 @@ terraform {
   required_version = "~>1.6.6"
   required_providers {
     azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~>3.85.0"
+      source  = "registry.terraform.io/hashicorp/azurerm"
+      version = "~>3.98"
     }
-    helm = {
-      source  = "hashicorp/helm"
-      version = "~>2.12.1"
+    azapi = {
+      source  = "registry.terraform.io/Azure/azapi"
+      version = "~>1.12"
     }
     kubernetes = {
-      source  = "hashicorp/kubernetes"
-      version = "~>2.26.0"
+      source  = "registry.terraform.io/hashicorp/kubernetes"
+      version = "~>2.27"
+    }
+    kubectl = {
+      source  = "gavinbunney/kubectl"
+      version = "~>1.14"
+    }
+    helm = {
+      source  = "registry.terraform.io/hashicorp/helm"
+      version = "~>2.13"
+    }
+    random = {
+      source  = "registry.terraform.io/hashicorp/random"
+      version = "~>3.6"
     }
   }
 }

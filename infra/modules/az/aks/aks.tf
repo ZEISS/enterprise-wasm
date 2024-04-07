@@ -37,6 +37,11 @@ resource "azurerm_kubernetes_cluster" "aks" {
     log_analytics_workspace_id      = var.loganalytics_id
     msi_auth_for_monitoring_enabled = true
   }
+
+  monitor_metrics {
+    annotations_allowed = null
+    labels_allowed      = null
+  }
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "user_nodepools" {
