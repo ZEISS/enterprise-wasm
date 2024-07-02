@@ -1,0 +1,18 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: q-order-express-out
+spec:
+  type: bindings.azure.servicebusqueues
+  version: v1
+  metadata:
+    - name: connectionString
+      secretKeyRef:
+        name: serviceBusConnectionString
+        key: serviceBusConnectionString
+    - name: queueName
+      value: q-order-express
+    - name: direction
+      value: output
+auth:
+  secretStore: local-secret-store

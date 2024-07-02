@@ -5,6 +5,9 @@
 *.tfstate
 *.tfstate.*
 
+# dapr secrets for aspire
+secrets.json
+
 # Crash log files
 crash.log
 crash.*.log

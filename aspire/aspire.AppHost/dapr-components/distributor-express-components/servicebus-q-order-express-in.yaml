@@ -1,0 +1,22 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: q-order-express-in
+spec:
+  type: bindings.azure.servicebusqueues
+  version: v1
+  metadata:
+    - name: connectionString
+      secretKeyRef:
+        name: serviceBusConnectionString
+        key: serviceBusConnectionString
+    - name: queueName
+      value: q-order-express
+    - name: direction
+      value: input
+    - name: maxActiveMessages
+      value: 15
+    - name: maxConcurrentHandlers
+      value: 10
+auth:
+  secretStore: local-secret-store
