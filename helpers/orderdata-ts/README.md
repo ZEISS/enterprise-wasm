@@ -1,5 +1,32 @@
 # Helper to generate test data
 
+## setup spin otel collector (for local development)
+Ensure using the latest version of spin.
+
+Run:
+```
+spin plugins update
+spin plugins install otel
+```
+
+Start the Spin Otel resources: (docker required)
+```
+spin otel setup
+```
+
+use the dashboard of your choice:
+```
+spin otel open grafana
+spin otel open jaeger
+spin otel open prometheus
+```
+
+important: stop the resources if you don't need them anymore:
+```
+spin otel cleanup
+```
+
+
 ## local test local resources
 
 ```

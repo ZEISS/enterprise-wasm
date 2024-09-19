@@ -7,7 +7,7 @@ apps:
     appProtocol: http
     appPort: 3001
     daprHTTPPort: 3501
-    command: ["spin", "up", "--listen", "localhost:3001"]
+    command: ["spin", "otel", "up", "--", "--listen", "localhost:3001"]
     env:
       SPIN_VARIABLE_DAPR_URL: http://localhost:3501
   - appID: receiver-express
@@ -17,7 +17,7 @@ apps:
     appProtocol: http
     appPort: 3002
     daprHTTPPort: 3502
-    command: ["spin", "up", "--listen", "localhost:3002"]
+    command: ["spin", "otel", "up", "--", "--listen", "localhost:3002"]
     env:
       SPIN_VARIABLE_DAPR_URL: http://localhost:3502
   - appID: receiver-standard
@@ -27,7 +27,7 @@ apps:
     appProtocol: http
     appPort: 3003
     daprHTTPPort: 3503
-    command: ["spin", "up", "--listen", "localhost:3003"]
+    command: ["spin", "otel", "up", "--", "--listen", "localhost:3003"]
     env:
       SPIN_VARIABLE_DAPR_URL: http://localhost:3503
   - appID: test-data
