@@ -1,0 +1,24 @@
+spin_manifest_version = 2
+[application]
+authors = ["Florian Lutz <florian.lutz@zeiss.com>"]
+description = "Creating a Spin Project using new dotnet sdk and dapr for Requests."
+name = "spin-newdotnet-dapr"
+version = "1.0.0"
+
+# here the potential variables are to be defined
+[variables]
+dapr_url = { default = "http://localhost:3500" }
+
+[[trigger.http]]
+route = "/..."
+component = "spin-newdotnet-dapr"
+
+[component.spin-newdotnet-dapr]
+source = "bin/Release/net9.0/wasi-wasm/publish/App.wasm"
+allowed_outbound_hosts = [ "https://*:*", "http://*:*"]
+
+[component.spin-newdotnet-dapr.variables]
+dapr_url = "{{dapr_url}}"
+
+[component.spin-newdotnet-dapr.build]
+command = "dotnet publish App.csproj"

@@ -38,19 +38,19 @@ in another terminal session:
 create test data in Blob
 
 ```
-curl -d '{"count":100}' http://localhost:3000/test-data  -H 'Content-Type: application/json'
+curl -d '{"count":100}' http://localhost:3004/test-data  -H 'Content-Type: application/json'
 ```
 
 query test data from Blob
 
 ```
-curl http://localhost:3000/test-data
+curl http://localhost:3004/test-data
 ```
 
 schedule a test
 
 ```
-curl -d '{}' http://localhost:3000/schedule-test
+curl -d '{}' http://localhost:3004/schedule-test
 ```
 
 ## use with local resources / Rust implementation

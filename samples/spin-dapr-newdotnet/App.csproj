@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <LangVersion>preview</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <PlatformTarget>AnyCPU</PlatformTarget>
+        <UseAppHost>false</UseAppHost>
+        <MSBuildEnableWorkloadResolver>false</MSBuildEnableWorkloadResolver>
+        <SelfContained>true</SelfContained>
+        <RuntimeIdentifier>wasi-wasm</RuntimeIdentifier>
+        <PublishTrimmed>true</PublishTrimmed>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <_hostArch>$([System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture.ToString().ToLowerInvariant)</_hostArch>
+        <_hostOS>linux</_hostOS>
+        <_hostOS Condition="$([MSBuild]::IsOSPlatform('OSX'))">osx</_hostOS>
+        <_hostOS Condition="$([MSBuild]::IsOSPlatform('WINDOWS'))">win</_hostOS>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Fermyon.Spin.SDK" Version="0.1.0-dev"/>
+        <PackageReference Include="Microsoft.DotNet.ILCompiler.LLVM" Version="9.0.0-dev"/>
+        <PackageReference Include="runtime.$(_hostOS)-$(_hostArch).Microsoft.DotNet.ILCompiler.LLVM" Version="9.0.0-dev"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Shared\Shared.csproj"/>
+    </ItemGroup>
+</Project>
