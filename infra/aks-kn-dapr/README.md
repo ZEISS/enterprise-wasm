@@ -22,7 +22,8 @@ dapr_deploy  = true
 
 <!-- markdownlint-disable-next-line MD029 -->
 
-3. review deployment plan with `terraform plan`
+3. `export ARM_SUBSCRIPTION_ID=$(az account show --query id -o tsv)` to address [AzureRM Terraform provider v4.0 requirement](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/4.0-upgrade-guide#specifying-subscription-id-is-now-mandatory)
+1. review deployment plan with `terraform plan`
 1. deploy with `terraform apply`
 1. finalize cluster with `./prepare-cluster.sh`
 
