@@ -3,6 +3,6 @@
 set -eoux pipefail
 source ../../helpers/common.sh
 
-WORKLOAD=./workload-svc.yml
+WORKLOAD=./workload-kn.yml
 
 kubectl delete -f $WORKLOAD
