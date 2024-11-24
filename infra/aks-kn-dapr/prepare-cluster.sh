@@ -39,16 +39,13 @@ kubectl apply -f https://github.com/knative/serving/releases/latest/download/ser
 kubectl apply -f https://github.com/knative/serving/releases/latest/download/serving-core.yaml
 
 kubectl apply -f https://github.com/knative/net-kourier/releases/latest/download/kourier.yaml
+
 kubectl patch configmap/config-network \
   -n knative-serving \
   --type merge \
   -p '{"data":{"ingress.class":"kourier.ingress.networking.knative.dev"}}'
-kubectl patch configmap/config-features \
-  -n knative-serving \
-  --type merge \
-  --patch '{"data":{"kubernetes.podspec-runtimeclassname":"enabled"}}'
 
-kubectl patch configmap/config-features \
+kubectl create configmap config-features \
   -n knative-serving \
-  --type merge \
-  -p '{"data":{"kubernetes.podspec-nodeselector":"enabled"}}'
+  --from-file ./kn-configmap.properties \
+  --dry-run=client -o yaml | kubectl apply -f -
