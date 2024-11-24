@@ -1,0 +1,10 @@
+[package]
+name = "http_server"
+version = "0.1.0"
+authors = ["csh"]
+edition = "2018"
+
+[dependencies]
+httpcodec = "0.2.3"
+bytecodec = "0.4.15"
+wasmedge_wasi_socket = "0.5.5"
