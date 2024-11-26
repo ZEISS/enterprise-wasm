@@ -1,17 +1,29 @@
 terraform {
-  required_version = "~>1.6.6"
+  required_version = "~>1.6"
   required_providers {
     azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~>3.85.0"
+      source  = "registry.terraform.io/hashicorp/azurerm"
+      version = "~>4.11"
     }
-    helm = {
-      source  = "hashicorp/helm"
-      version = "~>2.12.1"
+    azapi = {
+      source  = "registry.terraform.io/Azure/azapi"
+      version = "~>2.0"
     }
     kubernetes = {
-      source  = "hashicorp/kubernetes"
-      version = "~>2.26.0"
+      source  = "registry.terraform.io/hashicorp/kubernetes"
+      version = "~>2.33"
+    }
+    helm = {
+      source  = "registry.terraform.io/hashicorp/helm"
+      version = "~>2.16"
+    }
+    kubectl = {
+      source  = "gavinbunney/kubectl"
+      version = "~>1.14"
+    }
+    random = {
+      source  = "registry.terraform.io/hashicorp/random"
+      version = "~>3.6"
     }
   }
 }
@@ -34,16 +46,16 @@ provider "azurerm" {
 
 provider "helm" {
   kubernetes {
-    host                   = module.aks.KUBE_ADMIN_CONFIG.0.host
-    client_certificate     = base64decode(module.aks.KUBE_ADMIN_CONFIG.0.client_certificate)
-    client_key             = base64decode(module.aks.KUBE_ADMIN_CONFIG.0.client_key)
-    cluster_ca_certificate = base64decode(module.aks.KUBE_ADMIN_CONFIG.0.cluster_ca_certificate)
+    host                   = module.aks.KUBE_ADMIN_CONFIG[0].host
+    client_certificate     = base64decode(module.aks.KUBE_ADMIN_CONFIG[0].client_certificate)
+    client_key             = base64decode(module.aks.KUBE_ADMIN_CONFIG[0].client_key)
+    cluster_ca_certificate = base64decode(module.aks.KUBE_ADMIN_CONFIG[0].cluster_ca_certificate)
   }
 }
 
 provider "kubernetes" {
-  host                   = module.aks.KUBE_ADMIN_CONFIG.0.host
-  client_certificate     = base64decode(module.aks.KUBE_ADMIN_CONFIG.0.client_certificate)
-  client_key             = base64decode(module.aks.KUBE_ADMIN_CONFIG.0.client_key)
-  cluster_ca_certificate = base64decode(module.aks.KUBE_ADMIN_CONFIG.0.cluster_ca_certificate)
+  host                   = module.aks.KUBE_ADMIN_CONFIG[0].host
+  client_certificate     = base64decode(module.aks.KUBE_ADMIN_CONFIG[0].client_certificate)
+  client_key             = base64decode(module.aks.KUBE_ADMIN_CONFIG[0].client_key)
+  cluster_ca_certificate = base64decode(module.aks.KUBE_ADMIN_CONFIG[0].cluster_ca_certificate)
 }

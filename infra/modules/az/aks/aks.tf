@@ -16,7 +16,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
     name                         = var.system_nodepool.name
     node_count                   = var.system_nodepool.min
     vm_size                      = var.system_nodepool.size
-    enable_auto_scaling          = var.system_nodepool.min != var.system_nodepool.max
+    auto_scaling_enabled         = true
     min_count                    = var.system_nodepool.min != var.system_nodepool.max ? var.system_nodepool.min : null
     max_count                    = var.system_nodepool.min != var.system_nodepool.max ? var.system_nodepool.max : null
     only_critical_addons_enabled = true
@@ -28,7 +28,6 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   role_based_access_control_enabled = true
   azure_active_directory_role_based_access_control {
-    managed            = true
     tenant_id          = data.azurerm_client_config.current.tenant_id
     azure_rbac_enabled = true
   }
