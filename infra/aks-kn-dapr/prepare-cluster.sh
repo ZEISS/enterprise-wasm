@@ -47,5 +47,5 @@ kubectl patch configmap/config-network \
 
 kubectl create configmap config-features \
   -n knative-serving \
-  --from-file ./kn-configmap.properties \
+  --from-literal=kubernetes.podspec-runtimeclassname=enabled \
   --dry-run=client -o yaml | kubectl apply -f -

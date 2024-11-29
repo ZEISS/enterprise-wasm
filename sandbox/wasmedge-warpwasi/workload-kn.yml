@@ -5,9 +5,6 @@ metadata:
   namespace: default
 spec:
   template:
-    metadata:
-      annotations:
-        module.wasm.image/variant: compat-smart
     spec:
       runtimeClassName: wasmedge-v1
       timeoutSeconds: 1
